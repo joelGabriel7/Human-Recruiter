@@ -1,0 +1,32 @@
+{% extends 'login.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% block content %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+    <link rel="icon" href="{% static 'img/favicon.ico' %}">
+        <title>{{ title }}</title>
+
+</head>
+<body>
+
+    <div>
+      <a class="nav-link deslogueo" href="{% url 'logout' %}">
+            <i class="fas fa-power-off" aria-hidden="true">  Deslogueo</i>
+        </a>
+
+    </div>
+
+
+
+    <header>
+        <h1>Probando redireccion cuando el usuario se logue correctamente</h1>
+    </header>
+
+{% endblock %}
+
+
+
+</body>
+</html>
