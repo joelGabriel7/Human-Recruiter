@@ -1,32 +1,65 @@
-{% extends 'login.html' %}
+{% extends 'layouts.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
+
+
 {% block content %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
-    <link rel="icon" href="{% static 'img/favicon.ico' %}">
-        <title>{{ title }}</title>
+    <!-- Main content -->
+    <section class="content">
 
-</head>
-<body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Default box -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fa fa-search"></i> {{ title }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">First</th>
+                                    <th scope="col">Last</th>
+                                    <th scope="col">Handle</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Jacob</td>
+                                    <td>Thornton</td>
+                                    <td>@fat</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td colspan="2">Larry the Bird</td>
+                                    <td>@twitter</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                           <button type="button" class="btn btn-primary">Add</button>
+                           <button type="button" class="btn btn-danger">Cancelar</button>
 
-    <div>
-      <a class="nav-link deslogueo" href="{% url 'logout' %}">
-            <i class="fas fa-power-off" aria-hidden="true">  Deslogueo</i>
-        </a>
-
+                        </div>
+                        <!-- /.card-footer-->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
     </div>
-
-
-
-    <header>
-        <h1>Probando redireccion cuando el usuario se logue correctamente</h1>
-    </header>
-
+    <!-- /.content-wrapper -->
 {% endblock %}
-
-
-
-</body>
 </html>

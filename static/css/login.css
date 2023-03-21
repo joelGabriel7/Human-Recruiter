@@ -3,13 +3,7 @@
 	padding: 0px ;
 	margin: 0px ;
 }
-.deslogueo{
-	text-decoration: none;
-	color: #7F7F7F;
-	padding: 25px;
 
-
-}
 body{
 	background-color: #F2F2F2 ;
 	color: #282828 ;
@@ -26,7 +20,7 @@ input, button, label, select, textarea{
 	font-size: 14px ;
 	color: #282828 ;
 }
-.container{
+.contenedor{
 	width: calc(100vw - 40px) ;
 	max-width: 300px ;
 	border-radius: 2.5px ;

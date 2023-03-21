@@ -16,6 +16,7 @@ class UserForm(ModelForm):
             'username': TextInput(
                 attrs={
                     'placeholder': 'Usuario',
+                    'autocomplete':'off'
 
                 }
             ),

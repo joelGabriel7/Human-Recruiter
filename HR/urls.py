@@ -20,6 +20,6 @@ from core.dashboard.views import DashboardView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', include('core.login.url')),
+    path('', include('core.login.url')),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
 ]

@@ -1,0 +1,34 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+{#    <link rel="stylesheet" type="text/css" href="{% static 'css/general.css' %}">#}
+{#    <link rel="stylesheet" type="text/css" href="{% static 'css/general.css' %}">#}
+    <link rel="icon" href="{% static 'img/favicon.ico' %}">
+</head>
+    <link rel="stylesheet" href="{% static 'lib/adminlt3/plugins/fontawesome-free/css/all.min.css' %}">
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'lib/adminlt3/css/adminlte.min.css' %}">
+    {#    <!-- Google Font: Source Sans Pro -->#}
+    {#    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">#}
+    <!-- jQuery -->
+    <script src="{% static 'lib/adminlt3/plugins/jquery/jquery.min.js' %}"></script>
+    <!-- Bootstrap 5 -->
+    <script src="{% static 'lib/adminlt3/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'lib/adminlt3/js/adminlte.min.js' %}"></script>
+    <!-- Sweetalert2 -->
+    <script src="{% static 'lib/sweetalert2-9.10.0/sweetalert2.all.min.js' %}"></script>
+    <!-- Customer style -->
+{#     <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">#}
+
+
+</head>
+{% block body %}
+
+{% endblock %}
+</html>
