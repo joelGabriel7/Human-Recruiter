@@ -245,7 +245,7 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
       if (modeCfg.highlightFormatting) state.formatting = "code-block";
       state.code = -1
       return getType(state);
-    // SETEXT has lowest block-scope precedence after HR, so check it after
+    // SETEXT has lowest block-scope precedence after config, so check it after
     //  the others (code, blockquote, list...)
     } else if (
       // if setext set, indicates line after ---/===

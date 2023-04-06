@@ -2,7 +2,7 @@ from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
 from django.views.generic import RedirectView
 
-import HR.settings as setting
+import config.settings as setting
 from django.contrib.auth import login, logout
 
 

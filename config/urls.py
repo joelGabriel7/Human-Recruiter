@@ -1,4 +1,4 @@
-"""HR URL Configuration
+"""config URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from core.dashboard.views import DashboardView
+# from core.erp.views import *
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.login.url')),
+    path('erp', include('core.erp.urls')),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
 ]

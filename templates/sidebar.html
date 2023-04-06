@@ -1,5 +1,5 @@
 {% load static %}
-<aside class="main-sidebar sidebar-light-primary elevation-4">
+<aside class="main-sidebar sidebar-dark-blue elevation-4">
     <a href="#" class="brand-link">
         <img src="{% static 'img/favicon.ico' %}"
              alt="AdminLTE Logo"
@@ -10,7 +10,7 @@
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-{#                <img src="#" class="img-circle" alt="User Image">#}
+                {#                <img src="#" class="img-circle" alt="User Image">#}
             </div>
             <div class="info">
                 <a href="#" class="d-block">Nombre Usuario</a>
@@ -22,76 +22,108 @@
                 <li class="nav-item menu-is-opening menu-open">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-users"></i>
-                    <p>
-                        Gestion Humana
-                    <i class="fas fa-angle-left right"></i>
-                    </p>
+                        <p>
+                            Recursos Humano
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
                     </a>
                     <ul class="nav nav-treeview" style="display: block;">
                         <li class="nav-item">
-                        <a href="#" class="nav-link ">
-                        <i class="nav-icon fas fa-user-circle"></i>
-                        <p>Personas</p>
-                        </a>
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-user-clock"></i>
+                                <p>Empleados</p>
+                            </a>
                         </li>
                         <li class="nav-item">
-                        <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>Empleados</p>
-                        </a>
+                            <a href="#" class="nav-link">
+                                <i class=" nav-icon  fas fa-clock"></i>
+                                <p>
+                                    Asistencias
+                                </p>
+                            </a>
                         </li>
-                    
-                        </ul>
-                    </li>
-               
-                <li class="nav-item">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class=" nav-icon  fas fa-layer-group"></i>
+                                <p>
+                                    Departamentos
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class=" nav-icon  fas fa-suitcase"></i>
+                                <p>
+                                    Puestos Trabajo
+                                </p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li class="nav-item menu-is-opening menu-open">
                     <a href="#" class="nav-link">
-                      <i class="nav-icon fas fa-plane-departure"></i>
+                        <i class="nav-icon fas fa-search"></i>
                         <p>
-                            Vacaciones
+                            Reclutadores
+                            <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
+                    <ul class="nav-treeview" style="display: block;">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-suitcase"></i>
+                                <p>
+                                    Vacantes
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-user"></i>
+                                <p>
+                                    Candidatos
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+
                 </li>
-                <li class="nav-item">
+                <li class="nav-item menu-is-opening menu-open">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-calendar-day"></i>
+                        <i class="nav-icon fas fa-lock"></i>
                         <p>
-                            Horarios
+                            Seguridad
+                            <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-suitcase"></i>
-                        <p>
-                            Vacantes
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                       <i class=" nav-icon  fas fa-clock"></i>
-                        <p>
-                            Asistencias
-                        </p>
-                    </a>
-                </li>
-                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                       <i class=" nav-icon  fas fa-file-contract"></i>
-                        <p>
-                            Reportes
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-user-friends"></i>
-                        <p>
-                            Usuarios
-                        </p>
-                    </a>
-                </li>
+                      <ul class="nav-treeview" style="display: block;">
+                          <li class="nav-item">
+                              <a href="#" class="nav-link">
+                                  <i class="fas fa-key mr-2"></i>
+                                  <p>
+                                      Cambiar Password
+                                  </p>
+                              </a>
+                          </li>
+                          <li class="nav-item">
+                              <a href="#" class="nav-link">
+                                  <i class="nav-icon fas fa-user-friends"></i>
+                                  <p>
+                                      Usuarios
+                                  </p>
+                              </a>
+                          </li>
+                          <li class="nav-item">
+                              <a href="#" class="nav-link">
+                                  <i class="fas fa-edit mr-2"></i>
+                                  <p>
+                                      Editar Perfil
+                                  </p>
+                              </a>
+                          </li>
+                      </ul>
+                 </li>
             </ul>
         </nav>
     </div>

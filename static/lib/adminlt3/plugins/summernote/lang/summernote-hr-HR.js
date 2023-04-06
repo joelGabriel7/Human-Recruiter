@@ -181,4 +181,4 @@ var __webpack_exports__ = {};
 /******/ })()
 ;
 });
-//# sourceMappingURL=summernote-hr-HR.js.map
+//# sourceMappingURL=summernote-hr-config.js.map
