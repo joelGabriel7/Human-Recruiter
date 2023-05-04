@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from core.erp.forms import DepartmentsForm
 from core.erp.models import *
@@ -40,8 +40,6 @@ class DepartamentListView(ListView):
         context['list_url'] = reverse_lazy('erp:departaments_list')
         context['entity'] = 'Departamentos'
         return context
-
-
 class DepartamentCreateView(CreateView):
     model = Departments
     form_class = DepartmentsForm
@@ -65,7 +63,6 @@ class DepartamentCreateView(CreateView):
             data['error'] = str(e)
         return JsonResponse(data)
 
-
     # def post(self, request, *args, **kwargs):
     #     print(request.POST)
     #     form = DepartmentsForm(request.POST)
@@ -84,4 +81,59 @@ class DepartamentCreateView(CreateView):
         context['list_url'] = reverse_lazy('erp:departaments_list')
         context['entity'] = 'Departamentos'
         context['action'] = 'add'
+        return context
+class DepartamentUpdateView(UpdateView):
+    model = Departments
+    form_class = DepartmentsForm
+    template_name = 'departaments/create.html'
+    success_url = reverse_lazy('erp:departaments_list')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'edit':
+                form = self.get_form()
+                data = form.save()
+
+            else:
+                data['error'] = 'No ha ingresado a ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edicion de un Departamento'
+        context['create_url'] = reverse_lazy('erp:departaments_create')
+        context['list_url'] = reverse_lazy('erp:departaments_list')
+        context['entity'] = 'Departamentos'
+        context['action'] = 'edit'
+        return context
+class DepartamentDeleteView(DeleteView):
+    model = Departments
+    template_name = 'departaments/delete.html'
+    success_url = reverse_lazy('erp:departaments_list')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            self.object.delete()
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Eliminación de un Departamento'
+        context['entity'] = 'Departamentos'
+        context['list_url'] = self.success_url
         return context
