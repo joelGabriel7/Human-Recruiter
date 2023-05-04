@@ -1,7 +1,7 @@
 from django.db import models
 import datetime
-
-
+from django.utils import timezone
+from django.forms import model_to_dict
 # Create your models here.
 
 class Address(models.Model):
@@ -31,7 +31,7 @@ class People(models.Model):
     cedula = models.CharField(max_length=64, null=False, unique=True)
     firstname = models.CharField(max_length=64, verbose_name='Nombre')
     lastname = models.CharField(max_length=64, verbose_name='Apellido')
-    birthdate = models.DateField(default=datetime.date.today(), verbose_name='Fecha de nacimiento')
+    birthdate = models.DateField(default=timezone.now, verbose_name='Fecha de nacimiento')
     gender = models.CharField(max_length=10, choices=gender_choiches, default='Masculino')
     phone = models.CharField(max_length=64, null=True, blank=True, verbose_name='Teléfono')
     email = models.CharField(max_length=64, null=True, blank=True, verbose_name='Email')
@@ -97,9 +97,12 @@ class EmployeePositions(models.Model):
 
 
 class Departments(models.Model):
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=32, unique=True,)
     description = models.CharField(max_length=512, null=True, blank=True)
 
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
     def __str__(self):
         return f'{self.name}'
 
@@ -111,8 +114,8 @@ class Departments(models.Model):
 
 class EmployeeTurn(models.Model):
     name = models.CharField(max_length=64)
-    start_turn = models.DateField(default=datetime.datetime.now(), verbose_name='Incio del turno')
-    end_turn = models.DateField(default=datetime.datetime.now(), verbose_name='Incio del turno')
+    start_turn = models.DateField(default=timezone.now, verbose_name='Incio del turno')
+    end_turn = models.DateField(default=timezone.now, verbose_name='Incio del turno')
 
     class Meta:
         verbose_name = 'Turno'
@@ -137,7 +140,7 @@ class Employee(models.Model):
 class Attendance(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name='Empleado')
     observation = models.CharField(max_length=512, null=True, blank=True)
-    date = models.DateField(default=datetime.date.today(), verbose_name='Fecha')
+    date = models.DateField(default=timezone.now, verbose_name='Fecha')
     attendance = models.BooleanField(default=True,verbose_name='Asistencia')
 
     class Meta:

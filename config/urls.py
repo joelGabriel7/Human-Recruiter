@@ -22,6 +22,6 @@ from core.dashboard.views import DashboardView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.login.url')),
-    path('erp', include('core.erp.urls')),
+    path('erp/', include('core.erp.urls')),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
 ]

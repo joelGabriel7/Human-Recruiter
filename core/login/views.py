@@ -1,9 +1,9 @@
+from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
 from django.views.generic import RedirectView
 
 import config.settings as setting
-from django.contrib.auth import login, logout
 
 
 class LoginHumanRecruiterView(LoginView):
