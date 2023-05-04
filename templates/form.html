@@ -6,7 +6,11 @@
         <div class="card card-default">
             <div class="card-header">
                 <h3 class="card-title">
-                    <i class="fas fa-plus"></i>
+                    {% if action == 'add' %}
+                        <i class="fas fa-plus"></i>
+                    {% else %}
+                        <i class="fas fa-edit"></i>
+                    {% endif %}
                     {{ title }}
                 </h3>
             </div>
@@ -51,20 +55,39 @@
             });
         {% endif %}
 
-         $('form').on('submit', function (e) {
-            e.preventDefault();
-            let parameters = new FormData(this);
-            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de realizar la siguiente acción?', parameters,  () => {
-                Swal.fire({
-                    title: 'Alerta!',
-                    text: 'Registro agregado correctamente!',
-                    icon: 'success',
-                    timer: 2000,
-                    onClose: () => {
-                        location.href = '{{ list_url }}';
-                    }
+        {% if action == 'add' %}
+            $('form').on('submit', function (e) {
+                e.preventDefault();
+                let parameters = new FormData(this);
+                submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de realizar la siguiente acción?', parameters, () => {
+                    Swal.fire({
+                        title: 'Alerta!',
+                        text: 'Registro agregado correctamente!',
+                        icon: 'success',
+                        timer: 2000,
+                        onClose: () => {
+                            location.href = '{{ list_url }}';
+                        }
+                    });
                 });
             });
-        });
+        {% else %}
+            $('form').on('submit', function (e) {
+                e.preventDefault();
+                let parameters = new FormData(this);
+                submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de realizar la siguiente acción?', parameters, () => {
+
+                    Swal.fire({
+                        title: 'Alerta!',
+                        text: 'Registro actualizdo correctamente!',
+                        icon: 'success',
+                        timer: 2000,
+                        onClose: () => {
+                            location.href = '{{ list_url }}';
+                        }
+                    });
+                });
+            });
+        {% endif %}
     </script>
 {% endblock %}

@@ -85,31 +85,42 @@ class Vacants(models.Model):
         verbose_name_plural = 'Vacantes'
         # ordering = [id]
 
-
-class EmployeePositions(models.Model):
-    name = models.CharField(max_length=64)
-    description = models.CharField(max_length=512, null=True, blank=True)
-
-    class Meta:
-        verbose_name = 'Posición'
-        verbose_name_plural = 'Posiciones'
-        # ordering = [id]
+    def __str(self):
+        return self.name
 
 
 class Departments(models.Model):
     name = models.CharField(max_length=32, unique=True,)
     description = models.CharField(max_length=512, null=True, blank=True)
 
+    def __str__(self):
+        return f'{self.name}'
     def toJSON(self):
         item = model_to_dict(self)
         return item
-    def __str__(self):
-        return f'{self.name}'
+
 
     class Meta:
         verbose_name = 'Departamento'
         verbose_name_plural = 'Departamentos'
         # ordering = [id]
+
+class EmployeePositions(models.Model):
+    name = models.CharField(max_length=64, verbose_name='Nombre')
+    description = models.CharField(max_length=512, null=True, blank=True, verbose_name='Descripcion')
+    departament = models.ForeignKey(Departments,on_delete=models.CASCADE, verbose_name='Departamentos')
+
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name = 'Posición'
+        verbose_name_plural = 'Posiciones'
+        # ordering = [id]
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['departament'] = self.departament.toJSON()
+        return item
 
 
 class EmployeeTurn(models.Model):
@@ -121,6 +132,9 @@ class EmployeeTurn(models.Model):
         verbose_name = 'Turno'
         verbose_name_plural = 'Turnos'
         # ordering = [id]
+
+    def __str(self):
+        return self.name
 
 
 class Employee(models.Model):
@@ -136,6 +150,9 @@ class Employee(models.Model):
         verbose_name_plural = 'Empleados'
         # ordering = [id]
 
+    def __str(self):
+        return self.name
+
 
 class Attendance(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name='Empleado')
@@ -147,3 +164,6 @@ class Attendance(models.Model):
         verbose_name = 'Asistencia'
         verbose_name_plural = 'Asistencias'
         # ordering = [id]
+
+    def __str(self):
+        return self.name
