@@ -40,6 +40,8 @@ class DepartamentListView(ListView):
         context['list_url'] = reverse_lazy('erp:departaments_list')
         context['entity'] = 'Departamentos'
         return context
+
+
 class DepartamentCreateView(CreateView):
     model = Departments
     form_class = DepartmentsForm
@@ -82,6 +84,8 @@ class DepartamentCreateView(CreateView):
         context['entity'] = 'Departamentos'
         context['action'] = 'add'
         return context
+
+
 class DepartamentUpdateView(UpdateView):
     model = Departments
     form_class = DepartmentsForm
@@ -114,6 +118,8 @@ class DepartamentUpdateView(UpdateView):
         context['entity'] = 'Departamentos'
         context['action'] = 'edit'
         return context
+
+
 class DepartamentDeleteView(DeleteView):
     model = Departments
     template_name = 'departaments/delete.html'

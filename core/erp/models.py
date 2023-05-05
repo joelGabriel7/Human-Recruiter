@@ -2,6 +2,8 @@ from django.db import models
 import datetime
 from django.utils import timezone
 from django.forms import model_to_dict
+
+
 # Create your models here.
 
 class Address(models.Model):
@@ -79,7 +81,6 @@ class Vacants(models.Model):
     max_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,
                                      verbose_name='Máximo salario')
 
-
     class Meta:
         verbose_name = 'Vacante'
         verbose_name_plural = 'Vacantes'
@@ -90,28 +91,30 @@ class Vacants(models.Model):
 
 
 class Departments(models.Model):
-    name = models.CharField(max_length=32, unique=True,)
+    name = models.CharField(max_length=32, unique=True, )
     description = models.CharField(max_length=512, null=True, blank=True)
 
     def __str__(self):
         return f'{self.name}'
+
     def toJSON(self):
         item = model_to_dict(self)
         return item
-
 
     class Meta:
         verbose_name = 'Departamento'
         verbose_name_plural = 'Departamentos'
         # ordering = [id]
 
+
 class EmployeePositions(models.Model):
     name = models.CharField(max_length=64, verbose_name='Nombre')
     description = models.CharField(max_length=512, null=True, blank=True, verbose_name='Descripcion')
-    departament = models.ForeignKey(Departments,on_delete=models.CASCADE, verbose_name='Departamentos')
+    departament = models.ForeignKey(Departments, on_delete=models.CASCADE, verbose_name='Departamentos')
 
     def __str__(self):
         return self.name
+
     class Meta:
         verbose_name = 'Posición'
         verbose_name_plural = 'Posiciones'
@@ -124,17 +127,25 @@ class EmployeePositions(models.Model):
 
 
 class EmployeeTurn(models.Model):
-    name = models.CharField(max_length=64)
-    start_turn = models.DateField(default=timezone.now, verbose_name='Incio del turno')
-    end_turn = models.DateField(default=timezone.now, verbose_name='Incio del turno')
+    name = models.CharField(max_length=64, verbose_name='Nombre')
+    start_turn = models.DateField(verbose_name='Incio del turno')
+    end_turn = models.DateField(verbose_name='Fin del turno')
+
+    def __str__(self):
+        return f'{self.name}'
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['start_turn'] = item['start_turn'].strftime('%Y-%m-%d %H:%M:%S')
+        item['end_turn'] = item['end_turn'].strftime('%Y-%m-%d %H:%M:%S')
+        return item
 
     class Meta:
         verbose_name = 'Turno'
         verbose_name_plural = 'Turnos'
         # ordering = [id]
 
-    def __str(self):
-        return self.name
+    #
 
 
 class Employee(models.Model):
@@ -151,14 +162,14 @@ class Employee(models.Model):
         # ordering = [id]
 
     def __str(self):
-        return self.name
+        return self.person
 
 
 class Attendance(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name='Empleado')
     observation = models.CharField(max_length=512, null=True, blank=True)
     date = models.DateField(default=timezone.now, verbose_name='Fecha')
-    attendance = models.BooleanField(default=True,verbose_name='Asistencia')
+    attendance = models.BooleanField(default=True, verbose_name='Asistencia')
 
     class Meta:
         verbose_name = 'Asistencia'
