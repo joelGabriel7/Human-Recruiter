@@ -2,45 +2,34 @@ from django.db import models
 import datetime
 from django.utils import timezone
 from django.forms import model_to_dict
+from django.contrib.auth.models import AbstractUser
 
 
 # Create your models here.
-
-class Address(models.Model):
-    country = models.CharField(max_length=64, verbose_name='País')
-    municipality = models.CharField(max_length=32, verbose_name='Municipio')
-    province = models.CharField(max_length=32, verbose_name='Provincia')
-    street = models.CharField(max_length=64, null=True, blank=True, verbose_name='Calle')
-    local_number = models.IntegerField(null=True, blank=True, verbose_name='Número de casa')
-    postal_code = models.IntegerField(null=True, blank=True, verbose_name='Código postal')
-    description = models.CharField(max_length=512, null=True, blank=True, verbose_name='Descripción')
-
-    def __str__(self):
-        return f' {self.province} {self.country} {self.municipality} {self.street}  '
-
-    class Meta:
-        verbose_name = 'Direccion'
-        verbose_name_plural = 'Direcciones'
-        # ordering = [id]
-
-
-class People(models.Model):
+class Candidatos(models.Model):
     gender_choiches = (
-        (1, 'Masculino'),
-        (2, 'Femenino')
+        ('Male', 'Masculino'),
+        ('Female', 'Femenino')
     )
 
     cedula = models.CharField(max_length=64, null=False, unique=True)
     firstname = models.CharField(max_length=64, verbose_name='Nombre')
     lastname = models.CharField(max_length=64, verbose_name='Apellido')
-    birthdate = models.DateField(default=timezone.now, verbose_name='Fecha de nacimiento')
-    gender = models.CharField(max_length=10, choices=gender_choiches, default='Masculino')
+    birthdate = models.DateField(verbose_name='Fecha de nacimiento')
+    gender = models.CharField(max_length=10, choices=gender_choiches, default='male')
     phone = models.CharField(max_length=64, null=True, blank=True, verbose_name='Teléfono')
     email = models.CharField(max_length=64, null=True, blank=True, verbose_name='Email')
-    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    address = models.CharField(max_length=64, null=True, blank=True, verbose_name='Direcciones')
 
-    def get_full_name(self):
+    def __str__(self):
         return f'{self.firstname} {self.lastname}'
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['gender'] = {'id': self.gender, 'name': self.get_gender_display()}
+        item['birthdate'] = self.birthdate.strftime('%Y-%m-%d')
+        item['fullname'] = self.firstname + ' ' + self.lastname
+        return item
 
     class Meta:
         verbose_name = 'Candidato'
@@ -74,7 +63,7 @@ class AccountsBank(models.Model):
 
 class Vacants(models.Model):
     name = models.CharField(max_length=64, verbose_name='Nombre')
-    person = models.ForeignKey(People, on_delete=models.CASCADE, verbose_name='Persona')
+    person = models.ForeignKey(Candidatos, on_delete=models.CASCADE, verbose_name='Candidatos')
     description = models.CharField(max_length=512, null=True, blank=True)
     min_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,
                                      verbose_name='Mínimo salario')
@@ -148,7 +137,6 @@ class EmployeeTurn(models.Model):
 
         return item
 
-
         # item['end_turn'] = item['end_turn'].strftime('%H:%M:%S')
 
     class Meta:
@@ -160,12 +148,13 @@ class EmployeeTurn(models.Model):
 
 
 class Employee(models.Model):
-    person = models.OneToOneField(People, on_delete=models.CASCADE, verbose_name='Empleado')
+    person = models.OneToOneField(Candidatos, on_delete=models.CASCADE, verbose_name='Empleado')
     department = models.ForeignKey(Departments, on_delete=models.CASCADE, verbose_name='Departamento')
     position = models.ForeignKey(EmployeePositions, on_delete=models.CASCADE, verbose_name='Posición')
     turn = models.ForeignKey(EmployeeTurn, on_delete=models.CASCADE, verbose_name='Turno')
     salary = models.DecimalField(max_digits=8, decimal_places=2, null=False, verbose_name='Salario')
     accounts = models.ForeignKey(AccountsBank, on_delete=models.CASCADE, verbose_name='Cuenta de banco')
+    address = models.CharField(max_length=64, null=True, blank=True, verbose_name='Direcciones')
 
     class Meta:
         verbose_name = 'Empleado'

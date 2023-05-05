@@ -49,7 +49,6 @@ class DepartmentsForm(ModelForm):
             data['error'] = str(e)
         return data
 
-
 class PositionsForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -143,7 +142,93 @@ class EmployeeTurnForm(ModelForm):
 
         }
 
+    def save(self, commit=True):
+        data = {}
+        form = super()
+        try:
+            if form.is_valid():
+                form.save()
+            else:
+                data['error'] = form.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return data
 
+
+class CandidateForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs["class"] = 'form-control'
+            form.field.widget.attrs["autocomplete"] = 'off'
+        self.fields['cedula'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = Candidatos
+        fields = '__all__'
+        # labels = {
+        #     'firstname': '',
+        #     'cedula': '',
+        #     'lastname': '',
+        #     'birthdate': '',
+        #     'gender': '',
+        #     'phone': '',
+        #     'email': '',
+        #     'address': '',
+        #
+        # }
+        widgets = {
+            'firstname': TextInput(
+                attrs={
+                    'placeholder': 'Escriba su nombre',
+                }
+            ),
+
+            'cedula': TextInput(
+                attrs={
+                    'placeholder': 'Escriba su cedula'
+                }
+            ),
+            'lastname': TextInput(
+                attrs={
+                    'placeholder': 'Escriba su apellido',
+                }
+            ),
+            'birthdate': DateInput(
+                format='%Y-%m-%d',
+                attrs={
+                    # 'class': 'form-control',
+                    # 'value': datetime.datetime.now().strftime('%Y-%m-%d'),
+                    'autocomplete': 'off',
+                    'class': ' input-group timepicker-input',
+                    'id': 'birthdate',
+                    'data-target': '#birthdate',
+                    'data-toggle': 'datetimepicker'
+
+                }
+            ),
+            'gender': Select(
+                attrs={
+                    'class': 'select2',
+                    'style': 'width: 100%'
+                }
+            ),
+            'phone': TextInput(
+                attrs={
+                    'placeholder': 'Escriba su número telefonico'
+                }
+            ),
+            'email': EmailInput(
+                attrs={
+                    'placeholder': 'Escriba su email'
+                }
+            ),
+            'address': TextInput(
+                attrs={
+                    'placeholder': 'Escriba su direccion'
+                }
+            )
+        }
 
     def save(self, commit=True):
         data = {}
