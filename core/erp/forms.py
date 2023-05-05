@@ -120,29 +120,30 @@ class EmployeeTurnForm(ModelForm):
                 }
             ),
 
-            'start_turn': DateInput(
-                format='%Y-%m-%d',
+            'start_turn': TimeInput(
+                format='%I:%M %p',
                 attrs={
-                    'value': datetime.datetime.now().strftime('%d/%m/%Y %H:%M'),
                     'autocomplete': 'off',
-                    'class': 'form-control input-group date  datetimepicker-input',
+                    'class': 'form-control input-group timepicker-input',
                     'id': 'start_turn',
                     'data-target': '#start_turn',
                     'data-toggle': 'datetimepicker'
                 }
             ),
-            'end_turn': DateInput(
-                format='%d/%m/%Y %H:%M',
+            'end_turn': TimeInput(
+                format='%I:%M %p',
                 attrs={
-                    'value': datetime.datetime.now().strftime('%d/%m/%Y %H:%M'),
                     'autocomplete': 'off',
-                    'class': 'form-control input-group date  datetimepicker-input',
+                    'class': 'form-control input-group timepicker-input',
                     'id': 'end_turn',
                     'data-target': '#end_turn',
                     'data-toggle': 'datetimepicker'
                 }
             )
+
         }
+
+
 
     def save(self, commit=True):
         data = {}

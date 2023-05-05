@@ -4,7 +4,6 @@
  {% endblock %}
 {% block content %}
     <form method="post" action=".">
-
         <div class="card card-default">
             <div class="card-header">
                 <h3 class="card-title">
@@ -44,31 +43,24 @@
    <script type="text/javascript">
        $(function () {
            $('#start_turn').datetimepicker({
-               format: 'DD/MM/YYYY HH:mm A',
-               //format: 'YYYY-MM-DD',
-               date: moment().format("DD/MM/YYYY hh:mm A"),
-               //date: moment().format("YYYY-MM-DD"),
+               format: 'HH:mm ',
                locale: 'es',
                icons: {
                    time: 'far fa-clock'
-               },
-               minDate: moment().format("DD/MM/YYYY hh:mm A")
-           })
+               }
+           });
        });
 
        $(function () {
            $('#end_turn').datetimepicker({
-               format: 'DD/MM/YYYY HH:mm A',
-               //format: 'YYYY-MM-DD',
-               date: moment().format("DD/MM/YYYY hh:mm A"),
-               //date: moment().format("YYYY-MM-DD"),
+               format: 'HH:mm ',
                locale: 'es',
                icons: {
                    time: 'far fa-clock'
-               },
-               {#minDate: moment().format("DD/MM/YYYY hh:mm A")#}
-           })
+               }
+           });
        });
+
 
 </script>
 

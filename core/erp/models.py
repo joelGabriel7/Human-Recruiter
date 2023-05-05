@@ -128,17 +128,28 @@ class EmployeePositions(models.Model):
 
 class EmployeeTurn(models.Model):
     name = models.CharField(max_length=64, verbose_name='Nombre')
-    start_turn = models.DateField(verbose_name='Incio del turno')
-    end_turn = models.DateField(verbose_name='Fin del turno')
+    start_turn = models.TimeField(verbose_name='Inicio del turno', default=datetime.time(0, 0))
+    end_turn = models.TimeField(verbose_name='Fin del turno', default=datetime.time(0, 0))
 
     def __str__(self):
         return f'{self.name}'
 
     def toJSON(self):
         item = model_to_dict(self)
-        item['start_turn'] = item['start_turn'].strftime('%Y-%m-%d %H:%M:%S')
-        item['end_turn'] = item['end_turn'].strftime('%Y-%m-%d %H:%M:%S')
+        if item['start_turn'] is not None:
+            item['start_turn'] = item['start_turn'].strftime('%I:%M %p')
+        else:
+            item['start_turn'] = ''
+
+        if item['end_turn'] is not None:
+            item['end_turn'] = item['end_turn'].strftime('%I:%M %p')
+        else:
+            item['end_turn'] = ''
+
         return item
+
+
+        # item['end_turn'] = item['end_turn'].strftime('%H:%M:%S')
 
     class Meta:
         verbose_name = 'Turno'
@@ -167,14 +178,14 @@ class Employee(models.Model):
 
 class Attendance(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name='Empleado')
-    observation = models.CharField(max_length=512, null=True, blank=True)
+    observation = models.CharField(max_length=512, null=True, blank=True, verbose_name='Observacion')
     date = models.DateField(default=timezone.now, verbose_name='Fecha')
     attendance = models.BooleanField(default=True, verbose_name='Asistencia')
+
+    def __str(self):
+        return self.date
 
     class Meta:
         verbose_name = 'Asistencia'
         verbose_name_plural = 'Asistencias'
         # ordering = [id]
-
-    def __str(self):
-        return self.name

@@ -22,6 +22,8 @@ urlpatterns = [
     #Turno trabajo
     path('turno_trabajo/list/', TurnJobListView.as_view(), name='turno_trabajo_list'),
     path('turno_trabajo/add/', TurnJobCreateView.as_view(), name='turno_trabajo_create'),
+    path('turno_trabajo/edit/<int:pk>/', TurnJobUpdateView.as_view(), name='turno_trabajo_update'),
+    path('turno_trabajo/delete/<int:pk>/', TurnJobDeleteView.as_view(), name='turno_trabajo_delete'),
 
 ]
 

@@ -1,39 +1,65 @@
 {% load static %}
 
 <head>
+
     <title>{{ title }}</title>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
-{#    <link rel="stylesheet" type="text/css" href="{% static 'css/general.css' %}">#}
-{#    <link rel="stylesheet" type="text/css" href="{% static 'css/general.css' %}">#}
     <link rel="icon" href="{% static 'img/favicon.ico' %}">
 </head>
-    <link rel="stylesheet" href="{% static 'lib/adminlt3/plugins/fontawesome-free/css/all.min.css' %}">
 
+
+<!-- Functions -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="icon" href="{% static 'img/empty.png' %}" type="image/png"/>
+    <title>{{ title }}</title>
+    <!-- Font Awesome Icons -->
+    <!-- Functions -->
+    <script src="{% static 'js/functions.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/adminlte-3.0.4/plugins/font-awesome-5.11.1/css/all.min.css' %}">
     <!-- Theme style -->
-    <link rel="stylesheet" href="{% static 'lib/adminlt3/css/adminlte.min.css' %}">
-    {#    <!-- Google Font: Source Sans Pro -->#}
-    {#    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">#}
+    <link rel="stylesheet" href="{% static 'lib/adminlte-3.0.4/css/adminlte.min.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <!-- jQuery -->
-    <script src="{% static 'lib/adminlt3/plugins/jquery/jquery.min.js' %}"></script>
-    <!-- Bootstrap 5 -->
-    <script src="{% static 'lib/adminlt3/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'lib/adminlte-3.0.4/plugins/jquery/jquery.min.js' %}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{% static 'lib/adminlte-3.0.4/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <!-- AdminLTE App -->
-    <script src="{% static 'lib/adminlt3/js/adminlte.min.js' %}"></script>
+    <script src="{% static 'lib/adminlte-3.0.4/js/adminlte.min.js' %}"></script>
     <!-- Sweetalert2 -->
     <script src="{% static 'lib/sweetalert2-9.10.0/sweetalert2.all.min.js' %}"></script>
-    <script src="{% static 'js/functions.js' %}"></script>
- <link rel="stylesheet" href="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
+    <!-- Jquery Confirm -->
+    <link rel="stylesheet" href="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
     <script src="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
-    <!-- Customer style -->
-{#     <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">#}
-{% block head %}
+    <!-- My css -->
+
+    {#    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css">#}
+    {#    <link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/jquery.dataTables.min.css' %}">#}
 
 
-{% endblock %}
 
-   {% block head_form %}
+    <!-- Block head -->
+    {% block head %}
 
     {% endblock %}
+</head>
+
+</html>
+
+<!-- My css -->
+
+{#     <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">#}
+
+{% block head_form %}
+
+{% endblock %}
 
 {% block body %}
 
