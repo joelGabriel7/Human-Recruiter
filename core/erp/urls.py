@@ -3,7 +3,9 @@ from django.urls import path
 from core.erp.views.candidate.views import *
 from core.erp.views.departaments.view import *
 from core.erp.views.puesto_trabajo.views import *
+from core.erp.views.seleccionados.views import SelectListView
 from core.erp.views.turnos_trabajo.views import *
+from core.erp.views.vacante.views import *
 
 app_name = 'erp'
 
@@ -32,5 +34,16 @@ urlpatterns = [
     path('candidato/add/', CandidateCreateView.as_view(), name='candidatos_create'),
     path('candidato/edit/<int:pk>/', CandidateUpdateView.as_view(), name='candidatos_update'),
     path('candidato/delete/<int:pk>/', CandidateDeleteView.as_view(), name='candidatos_delete'),
+
+    # Vacantes
+    path('vacante/list/', VacantsListView.as_view(), name='vacante_list'),
+    path('vacante/add/', VacantsCreateView.as_view(), name='vacante_create'),
+    path('vacante/edit/<int:pk>/', VacantsUpdateView.as_view(), name='vacante_update'),
+    path('vacante/delete/<int:pk>/', VacantsDeleteView.as_view(), name='vacante_delete'),
+
+    # Seleccionados
+
+    path('select/list/', SelectListView.as_view(), name='select_list')
+
 ]
 

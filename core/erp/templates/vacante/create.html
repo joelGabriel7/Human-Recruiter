@@ -1,0 +1,38 @@
+{% extends 'form.html' %}
+{% load static %}
+
+{% block formulario-body %}
+    <div class="card-body">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="{{ action }}">
+        <div class="form-row">
+            <div class="col form-group">
+                <label>Nombre</label>
+                {{ form.name }}
+            </div>
+            <div class="col form-group">
+                <label>Salario Maximo</label>
+                {{ form.max_salary }}
+            </div>
+
+        </div>
+        <div class="form-row">
+
+        </div>
+
+        <div class="form-row">
+            <div class="col form-group">
+                <label>Descripción</label>
+                {{ form.description }}
+            </div>
+            <div class="col form-group">
+                <label>Salario Minimo</label>
+                {{ form.min_salary }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+{% endblock %}

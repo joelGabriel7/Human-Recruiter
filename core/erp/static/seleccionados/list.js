@@ -1,4 +1,4 @@
-$( function () {
+$(function () {
     $('#data').DataTable({
         responsive: true,
         autoWidth: false,
@@ -14,22 +14,18 @@ $( function () {
         },
         columns: [
             {"data": "id"},
-            {"data": "name"},
-            {"data": "description"},
-            {"data": "departament.name"},
+            {"data": "person.firstname"},
+            {"data": "vacants.name"},
             {"data": "desc"},
         ],
         columnDefs: [
-
-
-
             {
                 targets: [-1],
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {
-                    var buttons = '<a href="/erp/puesto/update/' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
-                    buttons += '<a href="/erp/puesto/delete/' + row.id + '/" type="button" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
+                    var buttons = '<a href="/erp/vacante/edit/' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
+                    buttons += '<a href="/erp/vacante/delete/' + row.id + '/" type="button" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
                     return buttons;
                 }
             },

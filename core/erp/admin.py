@@ -11,5 +11,6 @@ admin.site.register(Vacants)
 admin.site.register(Employee)
 admin.site.register(EmployeePositions)
 admin.site.register(EmployeeTurn)
+admin.site.register(Selection)
 admin.site.register(Attendance)
 

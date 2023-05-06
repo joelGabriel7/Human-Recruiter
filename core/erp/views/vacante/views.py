@@ -4,16 +4,13 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-
-from core.erp.forms import CandidateForm
+from core.erp.forms import *
 from core.erp.models import *
 
 
-# Create your views here.
-
-class CandidateListView(ListView):
-    model = Candidatos
-    template_name = 'candidatos/list.html'
+class VacantsListView(ListView):
+    model = Vacants
+    template_name = 'vacante/list.html'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -25,7 +22,7 @@ class CandidateListView(ListView):
             action = request.POST['action']
             if action == 'searchdata':
                 data = []
-                for i in Candidatos.objects.all():
+                for i in Vacants.objects.all():
                     data.append(i.toJSON())
             else:
                 data['error'] = 'Ha ocurrido un error'
@@ -35,18 +32,17 @@ class CandidateListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Listados de Candidatos'
-        context['create_url'] = reverse_lazy('erp:candidatos_create')
-        context['list_url'] = reverse_lazy('erp:candidatos_list')
-        context['entity'] = 'Candidatos'
+        context['title'] = 'Listados de Vacantes'
+        context['create_url'] = reverse_lazy('erp:vacante_create')
+        context['list_url'] = reverse_lazy('erp:vacante_list')
+        context['entity'] = 'Vacantes'
         return context
 
 
-class CandidateCreateView(CreateView):
-    model = Candidatos
-    form_class = CandidateForm
-    template_name = 'candidatos/create.html'
-    success_url = reverse_lazy('erp:candidatos_list')
+class VacantsCreateView(CreateView):
+    model = Vacants
+    form_class = VacantsForm
+    template_name = 'vacante/create.html'
 
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -58,27 +54,25 @@ class CandidateCreateView(CreateView):
             if action == 'add':
                 form = self.get_form()
                 data = form.save()
-            else:
-                data['error'] = 'Ha ocurrido un error'
+
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Creación de un candidato'
-        context['entity'] = 'Candidatos'
-        context['list_url'] = reverse_lazy('erp:candidatos_list')
+        context['title'] = 'Crea una Vacantes'
+        context['entity'] = 'Vacantes'
         context['action'] = 'add'
-        context['create_url'] = reverse_lazy('erp:candidatos_create')
+        context['list_url'] = reverse_lazy('erp:vacante_list')
+        context['create_url'] = reverse_lazy('erp:vacante_create')
         return context
 
 
-class CandidateUpdateView(UpdateView):
-    model = Candidatos
-    form_class = CandidateForm
-    template_name = 'candidatos/create.html'
-    success_url = reverse_lazy('erp:candidatos_list')
+class VacantsUpdateView(UpdateView):
+    model = Vacants
+    form_class = VacantsForm
+    template_name = 'vacante/create.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -91,27 +85,24 @@ class CandidateUpdateView(UpdateView):
             if action == 'edit':
                 form = self.get_form()
                 data = form.save()
-            else:
-                data['error'] = 'Ha ocurrido un error'
+
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Edicion de un candidato'
-        context['entity'] = 'Candidatos'
-        context['list_url'] = reverse_lazy('erp:candidatos_list')
+        context['title'] = 'Edita una Vacantes'
+        context['entity'] = 'Vacantes'
         context['action'] = 'edit'
-        context['create_url'] = reverse_lazy('erp:candidatos_create')
+        context['list_url'] = reverse_lazy('erp:vacante_list')
+        context['create_url'] = reverse_lazy('erp:vacante_create')
         return context
 
 
-class CandidateDeleteView(DeleteView):
-    model = Candidatos
-    form_class = CandidateForm
-    template_name = 'candidatos/delete.html'
-    success_url = reverse_lazy('erp:candidatos_list')
+class VacantsDeleteView(DeleteView):
+    model = Vacants
+    template_name = 'vacante/delete.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -127,8 +118,8 @@ class CandidateDeleteView(DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Eliminacion de  un candidato'
-        context['entity'] = 'Candidatos'
-        context['list_url'] = reverse_lazy('erp:candidatos_list')
-        context['create_url'] = reverse_lazy('erp:candidatos_create')
+        context['title'] = 'Elimina una Vacante'
+        context['entity'] = 'Vacantes'
+        context['list_url'] = reverse_lazy('erp:vacante_list')
+        context['create_url'] = reverse_lazy('erp:vacante_create')
         return context
