@@ -1,5 +1,9 @@
-# # from config.wsgi import *
-# # from core.erp.models import Departments,EmployeePositions
+# from config.wsgi import *
+# from core.erp.models import Departments,EmployeePositions
+import random
+
+from core.erp.models import Candidatos, Departments, EmployeePositions
+
 # # # import random
 # # #
 # # # data = ['Leche y derivados', 'Carnes, pescados y huevos', 'Patatas, legumbres, frutos secos',
@@ -86,32 +90,32 @@
 # #
 # #
 # # # Creamos una lista con algunos datos de ejemplo
-# # data = [
-# #     {'name': 'Finanzas', 'description': 'Departamento de finanzas'},
-# #     {'name': 'Ventas', 'description': 'Departamento de ventas'},
-# #     {'name': 'Marketing', 'description': 'Departamento de marketing'},
-# #     {'name': 'Recursos Humanos', 'description': 'Departamento de recursos humanos'},
-# #     {'name': 'Tecnología', 'description': 'Departamento de tecnología'},
-# #     {'name': 'Operaciones', 'description': 'Departamento de operaciones'},
-# #     {'name': 'Logística', 'description': 'Departamento de logística'},
-# #     {'name': 'Compras', 'description': 'Departamento de compras'},
-# #     {'name': 'Legal', 'description': 'Departamento legal'},
-# #     {'name': 'Investigación y Desarrollo', 'description': 'Departamento de investigación y desarrollo'}
-# # ]
-# #
-# # # Recorremos la lista y creamos los objetos de Departments
-# # # for item in data:
-# # #     department = Departments.objects.create(
-# # #         name=item['name'],
-# # #         description=item['description']
-# # #     )
-# # #     department.save()
-# # #     print('Registro guardado')
+# data = [
+#     {'name': 'Finanzas', 'description': 'Departamento de finanzas'},
+#     {'name': 'Ventas', 'description': 'Departamento de ventas'},
+#     {'name': 'Marketing', 'description': 'Departamento de marketing'},
+#     {'name': 'Recursos Humanos', 'description': 'Departamento de recursos humanos'},
+#     {'name': 'Tecnología', 'description': 'Departamento de tecnología'},
+#     {'name': 'Operaciones', 'description': 'Departamento de operaciones'},
+#     {'name': 'Logística', 'description': 'Departamento de logística'},
+#     {'name': 'Compras', 'description': 'Departamento de compras'},
+#     {'name': 'Legal', 'description': 'Departamento legal'},
+#     {'name': 'Investigación y Desarrollo', 'description': 'Departamento de investigación y desarrollo'}
+# ]
+#
+# # Recorremos la lista y creamos los objetos de Departments
+# for item in data:
+#     department = Departments.objects.create(
+#         name=item['name'],
+#         description=item['description']
+#     )
+#     department.save()
+#     print('Registro guardado')
 # #
 #
 # import random
 #
-# # Lista con nombres de posiciones acordes al departamento
+# Lista con nombres de posiciones acordes al departamento
 # posiciones = {
 #     'Finanzas': ['Contador', 'Analista financiero', 'Tesorero', 'Especialista en impuestos'],
 #     'Ventas': ['Ejecutivo de ventas', 'Gerente de ventas', 'Coordinador de eventos', 'Especialista en mercadeo'],
@@ -143,3 +147,73 @@
 #         )
 #         posicion.save()
 #     print(f'Guardado')
+# from datetime import date
+
+
+
+# data = [
+#     {
+#         "cedula": "001-0000001-1",
+#         "firstname": "Juan",
+#         "lastname": "Perez",
+#         "birthdate": date(1990, 2, 15),
+#         "gender": "Male",
+#         "phone": "12345678",
+#         "email": "juan.perez@example.com",
+#         "address": "Calle 123, Ciudad"
+#     },
+#     {
+#         "cedula": "001-0000002-2",
+#         "firstname": "Maria",
+#         "lastname": "Gonzalez",
+#         "birthdate": date(1995, 8, 23),
+#         "gender": "Female",
+#         "phone": "87654321",
+#         "email": "maria.gonzalez@example.com",
+#         "address": "Avenida 456, Pueblo"
+#     },
+#     {
+#         "cedula": "001-0000003-3",
+#         "firstname": "Carlos",
+#         "lastname": "Lopez",
+#         "birthdate": date(1987, 12, 1),
+#         "gender": "Male",
+#         "phone": "55555555",
+#         "email": "carlos.lopez@example.com",
+#         "address": "Plaza Principal, Villa"
+#     },
+#     {
+#         "cedula": "001-0000004-4",
+#         "firstname": "Ana",
+#         "lastname": "Martinez",
+#         "birthdate": date(1998, 6, 7),
+#         "gender": "Female",
+#         "phone": "22222222",
+#         "email": "ana.martinez@example.com",
+#         "address": "Calle 789, Ciudad"
+#     },
+#     {
+#         "cedula": "001-0000005-5",
+#         "firstname": "Pedro",
+#         "lastname": "Garcia",
+#         "birthdate": date(1991, 4, 30),
+#         "gender": "Male",
+#         "phone": "99999999",
+#         "email": "pedro.garcia@example.com",
+#         "address": "Avenida 987, Pueblo"
+#     }
+# ]
+#
+# for item in data:
+#     candidato = Candidatos.objects.create(
+#         cedula=item['cedula'],
+#         firstname=item['firstname'],
+#         lastname=item['lastname'],
+#         birthdate=item['birthdate'],
+#         gender=item['gender'],
+#         phone=item['phone'],
+#         email=item['email'],
+#         address=item['address']
+#     )
+#     candidato.save()
+# print('Registros guardados')

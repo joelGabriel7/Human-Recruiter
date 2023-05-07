@@ -3,7 +3,7 @@ from django.urls import path
 from core.erp.views.candidate.views import *
 from core.erp.views.departaments.view import *
 from core.erp.views.puesto_trabajo.views import *
-from core.erp.views.seleccionados.views import SelectListView
+from core.erp.views.seleccionados.views import*
 from core.erp.views.turnos_trabajo.views import *
 from core.erp.views.vacante.views import *
 
@@ -43,7 +43,10 @@ urlpatterns = [
 
     # Seleccionados
 
-    path('select/list/', SelectListView.as_view(), name='select_list')
+    path('select/list/', SelectListView.as_view(), name='select_list'),
+    path('select/add/', SelectCreateView.as_view(), name='select_create'),
+    path('select/edit/<int:pk>/', SelectUpdateView.as_view(), name='select_update'),
+    path('select/delete/<int:pk>/', SelectDeleteView.as_view(), name='select_delete'),
 
 ]
 

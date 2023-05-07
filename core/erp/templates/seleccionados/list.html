@@ -1,17 +1,20 @@
 {% extends 'list.html' %}
 {% load static %}
 {% block head_list %}
-<script src="{% static 'seleccionados/list.js' %}"></script>
+    <script src="{% static 'seleccionados/list.js' %}"></script>
 
 {% endblock %}
 
 {% block columns %}
 
     <tr>
-        <th scope="col" style="width: 25%;">Nro</th>
-        <th scope="col" style="width: 25%;">Candidato</th>
-        <th scope="col" style="width: 25%;">Vacante</th>
-        <th scope="col" style="width: 25%;">Opciones</th>
+        <th scope="col" style="width: 14.2%;">Nro</th>
+        <th scope="col" style="width: 14.2%;">Candidato</th>
+        <th scope="col" style="width: 14.2%;">Telefono</th>
+        <th scope="col" style="width:14.2%;">Vacante</th>
+        <th scope="col" style="width:14.2%;">Salario Minimo</th>
+        <th scope="col" style="width:14.2%;">Salario Maximo</th>
+        <th scope="col" style="width: 14.2%;">Opciones</th>
     </tr>
 
 {% endblock %}

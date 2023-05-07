@@ -252,19 +252,12 @@ class VacantsForm(ModelForm):
         for form in self.visible_fields():
             form.field.widget.attrs["class"] = 'form-control '
             form.field.widget.attrs["autocomplete"] = 'off'
-        self.fields['name'].widget.attrs['autofocus'] = True
 
     class Meta:
         model = Vacants
         fields = '__all__'
         widgets = {
-            'name': TextInput(
-                attrs={
-                    'placeholder': 'Ingrese un Nombre',
-                    'autofocus': True
 
-                }
-            ),
             'description': Textarea(
                 attrs={
                     'placeholder': 'Informe de la vacante',
@@ -282,7 +275,53 @@ class VacantsForm(ModelForm):
                     'default': 0.00
                 }
             ),
+            'posicion': Select(
+                attrs={
+                    'class': 'select2',
+                    'style': 'width: 100%'
+                }
+            ),
 
+        }
+
+    def save(self, commit=True):
+        data = {}
+        form = super()
+        try:
+            if form.is_valid():
+                form.save()
+            else:
+                data['error'] = form.errors
+        except Exception as e:
+            data['data'] = str(e)
+        return data
+
+
+class SelectionForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control'
+            form.field.widget.attrs['autocomplete'] = 'off'
+        self.fields['person'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = Selection
+        fields = '__all__'
+        widgets = {
+            'person': Select(
+                attrs={
+                    'class': 'select2',
+                    'style': 'width: 100%'
+                }
+            ),
+            'vacants': Select(
+                attrs={
+                    'class': 'select2',
+                    'style': 'width: 100%'
+                }
+            )
         }
 
     def save(self, commit=True):

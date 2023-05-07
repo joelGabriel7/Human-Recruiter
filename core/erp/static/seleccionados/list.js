@@ -15,7 +15,10 @@ $(function () {
         columns: [
             {"data": "id"},
             {"data": "person.firstname"},
-            {"data": "vacants.name"},
+            {"data": "person.phone"},
+            {"data": "vacants.posicion.name"},
+            {"data": "vacants.min_salary"},
+            {"data": "vacants.max_salary"},
             {"data": "desc"},
         ],
         columnDefs: [
@@ -24,8 +27,8 @@ $(function () {
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {
-                    var buttons = '<a href="/erp/vacante/edit/' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
-                    buttons += '<a href="/erp/vacante/delete/' + row.id + '/" type="button" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
+                    var buttons = '<a href="/erp/select/edit/' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
+                    buttons += '<a href="/erp/select/delete/' + row.id + '/" type="button" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
                     return buttons;
                 }
             },

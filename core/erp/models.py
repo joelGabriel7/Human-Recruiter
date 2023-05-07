@@ -1,9 +1,9 @@
+import datetime
 import random
 
 from django.db import models
-import datetime
-from django.utils import timezone
 from django.forms import model_to_dict
+from django.utils import timezone
 
 
 # from core.test import generar_numero_cuenta
@@ -67,6 +67,7 @@ class AccountsBank(models.Model):
 
     def __str__(self):
         return f'Numero de cuenta: {self.number} Cuenta: {self.bank.name}'
+
     def toJSON(self):
         item = model_to_dict(self)
         return item
@@ -114,18 +115,17 @@ class EmployeePositions(models.Model):
 
 
 class Vacants(models.Model):
-    name = models.CharField(max_length=64, verbose_name='Nombre')
+    posicion = models.ForeignKey(EmployeePositions, on_delete=models.CASCADE, verbose_name='Posiciones')
     description = models.CharField(max_length=512, null=True, blank=True)
-    min_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,
-                                     verbose_name='Mínimo salario')
-    max_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,
-                                     verbose_name='Máximo salario')
+    min_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,verbose_name='Mínimo salario')
+    max_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,verbose_name='Máximo salario')
 
     def __str__(self):
-        return self.name
+        return self.posicion.name
 
     def toJSON(self):
         item = model_to_dict(self)
+        item['posicion'] = self.posicion.toJSON()
         item['min_salary'] = format(self.min_salary, '.2f')
         item['max_salary'] = format(self.max_salary, '.2f')
         return item

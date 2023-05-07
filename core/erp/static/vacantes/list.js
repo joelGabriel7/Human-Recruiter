@@ -14,10 +14,10 @@ $(function () {
         },
         columns: [
             {"data": "id"},
-            {"data": "name"},
             {"data": "description"},
             {"data": "min_salary"},
             {"data": "max_salary"},
+            {"data": "posicion.name"},
             {"data": "desc"},
         ],
         columnDefs: [
