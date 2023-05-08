@@ -27,8 +27,8 @@ $(function () {
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {
-                    var buttons = '<a href="/erp/select/edit/' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
-                    buttons += '<a href="/erp/select/delete/' + row.id + '/" type="button" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
+                    var buttons = '<a href="#' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
+                    buttons += '<a href="#' + row.id + '/" type="button" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
                     return buttons;
                 }
             },
@@ -37,4 +37,26 @@ $(function () {
 
         }
     });
+
+    $('.btnAdd').on('click', () => {
+        $('input[action]').val('add')
+        $('#MyModalTurn').modal('show');
+    });
+    $('form').on('submit', function (e) {
+        e.preventDefault();
+        let parameters = new FormData(this);
+        submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de realizar la siguiente acción?', parameters, () => {
+            Swal.fire({
+                title: 'Alerta!',
+                text: 'Registro agregado correctamente!',
+                icon: 'success',
+                timer: 2000,
+                onClose: () => {
+                    location.reload();
+                }
+            });
+        });
+    });
+
+
 });
