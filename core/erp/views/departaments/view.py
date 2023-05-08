@@ -31,6 +31,14 @@ class DepartamentListView(TemplateView):
                 depart.name = request.POST['name']
                 depart.description = request.POST['description']
                 depart.save()
+            elif action == 'edit':
+                depart = Departments.objects.get(pk=request.POST['id'])
+                depart.name = request.POST['name']
+                depart.description = request.POST['description']
+                depart.save()
+            elif action == 'delete':
+                depart = Departments.objects.get(pk=request.POST['id'])
+                depart.delete()
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:

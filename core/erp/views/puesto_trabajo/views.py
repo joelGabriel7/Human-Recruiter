@@ -33,6 +33,7 @@ class PositionsJobListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Listado de Posiciones'
+        context['entity'] = 'Posiciones'
         context['create_url'] = reverse_lazy('erp:position_create')
         context['list_url'] = reverse_lazy('erp:position_list')
         return context
