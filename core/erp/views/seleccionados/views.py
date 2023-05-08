@@ -29,6 +29,14 @@ class SelectListView(TemplateView):
                 apply.person = Candidatos.objects.get(pk=request.POST['person'])
                 apply.vacants = Vacants.objects.get(pk=request.POST['vacants'])
                 apply.save()
+            elif action == 'edit':
+                apply = Selection.objects.get(pk=request.POST['id'])
+                apply.person = Candidatos.objects.get(pk=request.POST['person'])
+                apply.vacants = Vacants.objects.get(pk=request.POST['vacants'])
+                apply.save()
+            elif action == 'delete':
+                apply = Selection.objects.get(pk=request.POST['id'])
+                apply.delete()
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:

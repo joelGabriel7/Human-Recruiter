@@ -3,14 +3,14 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from core.erp.forms import DepartmentsForm
 from core.erp.models import *
 
 
 # Create your views here.
 
-class DepartamentListView(ListView):
+class DepartamentListView(TemplateView):
     model = Departments
     template_name = 'departaments/list.html'
 
@@ -26,6 +26,11 @@ class DepartamentListView(ListView):
                 data = []
                 for i in Departments.objects.all():
                     data.append(i.toJSON())
+            elif action == 'add':
+                depart = Departments()
+                depart.name = request.POST['name']
+                depart.description = request.POST['description']
+                depart.save()
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
@@ -35,7 +40,7 @@ class DepartamentListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Listados de Departamentos'
-        context['create_url'] = reverse_lazy('erp:departaments_create')
+        context['form'] = DepartmentsForm()
         context['list_url'] = reverse_lazy('erp:departaments_list')
         context['entity'] = 'Departamentos'
         return context

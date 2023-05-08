@@ -163,7 +163,7 @@ class CandidateForm(ModelForm):
         for form in self.visible_fields():
             form.field.widget.attrs["class"] = 'form-control '
             form.field.widget.attrs["autocomplete"] = 'off'
-        self.fields['cedula'].widget.attrs['autofocus'] = True
+        self.fields['firstname'].widget.attrs['autofocus'] = True
 
     class Meta:
         model = Candidatos
