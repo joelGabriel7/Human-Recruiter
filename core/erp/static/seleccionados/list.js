@@ -85,7 +85,6 @@ $(function () {
         });
 
     });
-
     $('form').on('submit', function (e) {
         e.preventDefault();
         let parameters = new FormData(this);

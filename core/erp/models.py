@@ -1,5 +1,6 @@
 import datetime
 import random
+import string
 
 from django.db import models
 from django.forms import model_to_dict
@@ -13,6 +14,19 @@ def generar_numero_cuenta():
     digito_verificador = str(random.randint(0, 8))
     numero_cuenta = prefijo + sufijo + digito_verificador
     return numero_cuenta
+
+
+def generate_employee_code():
+    letters = string.ascii_uppercase
+    numbers = string.digits
+    code = ''.join(random.choice(letters)
+                   for i in range(6)) + ''.join(random.choice(numbers) for i in range(3))
+    return code
+
+
+# #
+# #
+employe_code = generate_employee_code()
 
 
 # Create your models here.
@@ -47,29 +61,44 @@ class Candidatos(models.Model):
         # ordering = [id]
 
 
-class Banks(models.Model):
-    name = models.CharField(max_length=64, verbose_name='Nombre')
-    description = models.CharField(max_length=512, null=True, blank=True, verbose_name='descripción')
+class Descuentos(models.Model):
+    name = models.CharField(max_length=30, verbose_name='Nombre')
+    description = models.CharField(max_length=86, verbose_name='Descripcion')
+    monto = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, verbose_name='Monto')
 
     def __str__(self):
         return self.name
 
-    class Meta:
-        verbose_name = 'Banco'
-        verbose_name_plural = 'Bancos'
-        # ordering = [id]
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['monto'] = format(self.monto, '.2f')
+        return item
 
+    class Meta:
+        verbose_name = 'Descuento'
+        verbose_name_plural = 'Descuentos'
+
+
+# self.min_salary, '.2f'
 
 class AccountsBank(models.Model):
-    number = models.CharField(max_length=64, default=generar_numero_cuenta)
-    type = models.CharField(max_length=32)
-    bank = models.ForeignKey(Banks, on_delete=models.CASCADE)
+    choices = (
+        ('Banreservas', 'Banreservas'),
+        ('Banco Popular', 'Banco Popular'),
+        ('BHD León', 'BHD León'),
+        ('Scotiabank', 'Scotiabank'),
+    )
+
+    number = models.CharField(max_length=64, default=generar_numero_cuenta, verbose_name='Numeros de cuenta')
+    type = models.CharField(max_length=32, verbose_name='Tipo de cuenta')
+    bank = models.CharField(max_length=32, choices=choices, null=False, default='Banreservas', verbose_name='Banco')
 
     def __str__(self):
-        return f'Numero de cuenta: {self.number} Cuenta: {self.bank.name}'
+        return f'Tipo de cuenta: {self.type}'
 
     def toJSON(self):
         item = model_to_dict(self)
+        item['bank'] = {'id': self.bank, 'name': self.bank}
         return item
 
     class Meta:
@@ -117,8 +146,10 @@ class EmployeePositions(models.Model):
 class Vacants(models.Model):
     posicion = models.ForeignKey(EmployeePositions, on_delete=models.CASCADE, verbose_name='Posiciones')
     description = models.CharField(max_length=512, null=True, blank=True)
-    min_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,verbose_name='Mínimo salario')
-    max_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,verbose_name='Máximo salario')
+    min_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,
+                                     verbose_name='Mínimo salario')
+    max_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,
+                                     verbose_name='Máximo salario')
 
     def __str__(self):
         return self.posicion.name
@@ -188,6 +219,12 @@ class EmployeeTurn(models.Model):
 
 
 class Employee(models.Model):
+    estado_choiches = (
+        ('hired', 'Contratado'),
+        ('dismissed', 'despedido')
+    )
+
+    codigo = models.CharField(max_length=64, default=employe_code, verbose_name='Codigo Empleado')
     person = models.OneToOneField(Candidatos, on_delete=models.CASCADE, verbose_name='Empleado')
     department = models.ForeignKey(Departments, on_delete=models.CASCADE, verbose_name='Departamento')
     position = models.ForeignKey(EmployeePositions, on_delete=models.CASCADE, verbose_name='Posición')
@@ -195,6 +232,7 @@ class Employee(models.Model):
     salary = models.DecimalField(max_digits=8, decimal_places=2, null=False, verbose_name='Salario')
     accounts = models.ForeignKey(AccountsBank, on_delete=models.CASCADE, verbose_name='Cuenta de banco')
     address = models.CharField(max_length=64, null=True, blank=True, verbose_name='Direcciones')
+    estado = models.CharField(max_length=64, null=True, blank=True, choices=estado_choiches, verbose_name='Estado')
 
     def __str__(self):
         return f'{self.person.firstname} {self.person.lastname}'
@@ -202,12 +240,15 @@ class Employee(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         item['person'] = self.person.toJSON()
+        item['estado'] = {'id':self.estado, 'name':self.estado}
+        item['fullname'] = self.person.firstname + '' + self.person.lastname
         item['department'] = self.department.toJSON()
         item['position'] = self.position.toJSON()
         item['turn'] = self.turn.toJSON()
         item['accounts'] = self.accounts.toJSON()
         return item
 
+    # self.firstname + ' ' + self.lastname
     class Meta:
         verbose_name = 'Empleado'
         verbose_name_plural = 'Empleados'

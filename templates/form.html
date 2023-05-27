@@ -1,7 +1,13 @@
 {% extends 'body.html' %}
 {% load static %}
- {% block head %}
- {% endblock %}
+{% block head %}
+
+    <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+    <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
+
+{% endblock %}
 {% block content %}
     <form method="post" action=".">
         <div class="card card-default">
@@ -15,18 +21,18 @@
                     {{ title }}
                 </h3>
             </div>
-             {% block formulario-body%}
-            <div class="card-body">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="{{ action }}">
-                {% for field in form.visible_fields %}
-                    <div class="form-group">
-                        <label for="email">{{ field.label }}:</label>
-                        {{ field}}
-                    </div>
-                {% endfor %}
-            </div>
-            {%endblock%}
+            {% block formulario-body %}
+                <div class="card-body">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="{{ action }}">
+                    {% for field in form.visible_fields %}
+                        <div class="form-group">
+                            <label for="email">{{ field.label }}:</label>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endblock %}
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary btn-flat">
                     <i class="fas fa-save"></i> Guardar registro
@@ -38,40 +44,45 @@
         </div>
     </form>
 
-   <script type="text/javascript">
-       $(function () {
-           $('#start_turn').datetimepicker({
-               format: 'HH:mm ',
-               locale: 'es',
-               icons: {
-                   time: 'far fa-clock'
-               }
-           });
-       });
+    <script type="text/javascript">
+        $(function () {
+            $('#start_turn').datetimepicker({
+                format: 'HH:mm ',
+                locale: 'es',
+                icons: {
+                    time: 'far fa-clock'
+                }
+            });
+        });
 
-       $(function () {
-           $('#end_turn').datetimepicker({
-               format: 'HH:mm ',
-               locale: 'es',
-               icons: {
-                   time: 'far fa-clock'
-               }
-           });
-       });
+        $(function () {
+            $('#end_turn').datetimepicker({
+                format: 'HH:mm ',
+                locale: 'es',
+                icons: {
+                    time: 'far fa-clock'
+                }
+            });
+        });
 
-       $(function () {
-           $('#birthdate').datetimepicker({
-               format: 'YYYY-MM-DD',
-               date: moment().format('YYYY-MM-DD'),
-               locale: 'es',
-           });
-       });
-
-
-
-</script>
+        $(function () {
+            $('#birthdate').datetimepicker({
+                format: 'YYYY-MM-DD',
+                date: moment().format('YYYY-MM-DD'),
+                locale: 'es',
+            });
+        });
 
 
+    </script>
+
+    <script>
+
+    $('.select2').select2({
+        theme: "bootstrap4",
+        language: 'es'
+    });
+    </script>
 
     <script>
         {% if form.errors %}

@@ -1,0 +1,31 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+<script src="{% static 'empleado/list.js' %}"></script>
+
+{% endblock %}
+
+{% block columns %}
+
+    <tr>
+        <th scope="col" style="width: 3%;">Nro</th>
+        <th scope="col" style="width: 10%;">Codigo Empleado</th>
+        <th scope="col" style="width: 10%;">Nombre</th>
+        <th scope="col" style="width: 10%;">Departamento</th>
+        <th scope="col" style="width: 10%;">Puesto</th>
+        <th scope="col" style="width: 10%;">Horario</th>
+        <th scope="col" style="width: 10%;">Salario</th>
+        <th scope="col" style="width: 10%;">Cuenta de Banco</th>
+        <th scope="col" style="width: 10%;">Direcciones</th>
+        <th scope="col" style="width: 10%;">Opciones</th>
+    </tr>
+
+{% endblock %}
+
+{% block rows %}
+
+{% endblock %}
+
+{% block javascript %}
+
+{% endblock %}
