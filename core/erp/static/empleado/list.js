@@ -43,9 +43,9 @@ $(function () {
                 orderable: false,
                 render: function (data, type, row) {
                     let html = '';
-                    if (data.name === 'hired') {
+                    if (data.name === 'Contratado') {
                         html += '<span class="badge badge-success">' + data.name + '</span>';
-                    } else if (data.name === 'dismissed') {
+                    } else if (data.name === 'Despedido') {
                         html += '<span class="badge badge-danger">' + data.name + '</span>';
                     } else {
                         html += data.name;
@@ -60,7 +60,7 @@ $(function () {
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {
-                    var buttons = '<a href="#' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
+                    var buttons = '<a href="/erp/empleados/edit/' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
                     buttons += '<a href="#' + row.id + '/" type="button" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
                     return buttons;
                 }

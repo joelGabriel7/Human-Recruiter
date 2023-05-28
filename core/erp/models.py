@@ -219,8 +219,8 @@ class EmployeeTurn(models.Model):
 
 class Employee(models.Model):
     estado_choiches = (
-        ('hired', 'Contratado'),
-        ('dismissed', 'despedido')
+        ('Contratado', 'Contratado'),
+        ('Despedido', 'Despedido')
     )
 
     codigo = models.CharField(max_length=64, default=generate_employee_code, verbose_name='Codigo Empleado')

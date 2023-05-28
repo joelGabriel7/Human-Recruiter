@@ -3,12 +3,12 @@ from django.urls import path
 from core.erp.views.candidate.views import *
 from core.erp.views.cuentas.views import AccountsListView
 from core.erp.views.departaments.view import *
-from core.erp.views.empleados.views.view import EmpleadoListView, EmpleadoCreateView
+from core.erp.views.empleados.views.view import *
 from core.erp.views.puesto_trabajo.views import *
 from core.erp.views.seleccionados.views import *
 from core.erp.views.turnos_trabajo.views import *
 from core.erp.views.vacante.views import *
-from core.erp.views.empleados.views import *
+
 
 app_name = 'erp'
 
@@ -57,6 +57,7 @@ urlpatterns = [
     # Empleados
     path('empleados/list/', EmpleadoListView.as_view(), name='empleados_list'),
     path('empleados/add/', EmpleadoCreateView.as_view(), name='empleados_create'),
+    path('empleados/edit/<int:pk>/', EmpleadoUpdateView.as_view(), name='empleados_update'),
 
 
 ]
