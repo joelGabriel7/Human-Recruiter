@@ -38,13 +38,18 @@ $(function () {
             },
 
             {
-
                 targets: [-2],
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {
                     let html = '';
-                    html += '<span class="badge badge-success">' + data.name + '</span>  '
+                    if (data.name === 'hired') {
+                        html += '<span class="badge badge-success">' + data.name + '</span>';
+                    } else if (data.name === 'dismissed') {
+                        html += '<span class="badge badge-danger">' + data.name + '</span>';
+                    } else {
+                        html += data.name;
+                    }
                     return html;
                 }
             },
@@ -61,6 +66,7 @@ $(function () {
                 }
             },
         ],
+
         initComplete: function (settings, json) {
 
         }

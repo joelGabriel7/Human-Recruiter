@@ -33,6 +33,8 @@ class EmpleadoListView(ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Listado de empleados'
         context['entity'] = 'Empleados'
+        context['list_url'] = reverse_lazy('erp:empleados_list')
+        context['create_url'] = reverse_lazy('erp:empleados_create')
         return context
 
 
@@ -41,11 +43,27 @@ class EmpleadoCreateView(CreateView):
     template_name = 'empleado/create.html'
     form_class = EmployeForm
 
-    
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'add':
+                form = self.get_form()
+                data = form.save()
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Crea un empleado'
         context['entity'] = 'Empleados'
+        context['action'] = 'add'
+        context['list_url'] = reverse_lazy('erp:empleados_list')
+        context['create_url'] = reverse_lazy('erp:empleados_create')
         return context
-
