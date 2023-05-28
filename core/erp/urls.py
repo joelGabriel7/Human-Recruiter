@@ -3,7 +3,7 @@ from django.urls import path
 from core.erp.views.candidate.views import *
 from core.erp.views.cuentas.views import AccountsListView
 from core.erp.views.departaments.view import *
-from core.erp.views.empleados.views.view import EmpleadoListView
+from core.erp.views.empleados.views.view import EmpleadoListView, EmpleadoCreateView
 from core.erp.views.puesto_trabajo.views import *
 from core.erp.views.seleccionados.views import *
 from core.erp.views.turnos_trabajo.views import *
@@ -56,6 +56,7 @@ urlpatterns = [
 
     # Empleados
     path('empleados/list/', EmpleadoListView.as_view(), name='empleados_list'),
+    path('empleados/add/', EmpleadoCreateView.as_view(), name='empleados_create'),
 
 
 ]

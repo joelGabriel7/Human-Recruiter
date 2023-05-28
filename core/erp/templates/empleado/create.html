@@ -1,0 +1,90 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block head %}
+
+    <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+    <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
+{% endblock %}
+
+{% block formulario-body %}
+    <div class="card-body">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="{{ action }}">
+        <div class="form-row">
+            <div class="col form-group">
+                <label>Codigo Empleado</label>
+                {{ form.codigo }}
+
+            </div>
+            <div class="col form-group">
+                <label>Empleado</label>
+                {{ form.person  }}
+
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col form-group">
+                <label>Puesto de Trabajo</label>
+                {{ form.position }}
+
+            </div>
+
+            <div class="col form-group">
+                <label>Departamento</label>
+                {{ form.department }}
+
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col form-group">
+                <label>Cuenta bancaria</label>
+                {{ form.accounts }}
+            </div>
+
+            <div class="col form-group">
+                <label>Estado Empleado</label>
+                {{ form.estado }}
+            </div>
+
+
+        </div>
+        <div class="form-row">
+            <div class="col form-group">
+                <label>Horario de Trabajo</label>
+                {{ form.turn }}
+
+            </div>
+
+
+            <div class="col form-group">
+                <label>Salario</label>
+                {{ form.salary }}
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(function () {
+            $('.select2').select2({
+                theme: "bootstrap4",
+                language: 'es',
+
+            });
+        });
+    </script>
+
+
+
+
+{% endblock %}

@@ -34,3 +34,18 @@ class EmpleadoListView(ListView):
         context['title'] = 'Listado de empleados'
         context['entity'] = 'Empleados'
         return context
+
+
+class EmpleadoCreateView(CreateView):
+    model = Employee
+    template_name = 'empleado/create.html'
+    form_class = EmployeForm
+
+    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Crea un empleado'
+        context['entity'] = 'Empleados'
+        return context
+

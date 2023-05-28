@@ -19,8 +19,7 @@ def generar_numero_cuenta():
 def generate_employee_code():
     letters = string.ascii_uppercase
     numbers = string.digits
-    code = ''.join(random.choice(letters)
-                   for i in range(6)) + ''.join(random.choice(numbers) for i in range(3))
+    code = ''.join(random.choice(letters) for i in range(6)) + ''.join(random.choice(numbers) for i in range(3))
     return code
 
 
@@ -224,14 +223,13 @@ class Employee(models.Model):
         ('dismissed', 'despedido')
     )
 
-    codigo = models.CharField(max_length=64, default=employe_code, verbose_name='Codigo Empleado')
+    codigo = models.CharField(max_length=64, default=generate_employee_code, verbose_name='Codigo Empleado')
     person = models.OneToOneField(Candidatos, on_delete=models.CASCADE, verbose_name='Empleado')
     department = models.ForeignKey(Departments, on_delete=models.CASCADE, verbose_name='Departamento')
     position = models.ForeignKey(EmployeePositions, on_delete=models.CASCADE, verbose_name='Posición')
     turn = models.ForeignKey(EmployeeTurn, on_delete=models.CASCADE, verbose_name='Turno')
-    salary = models.DecimalField(max_digits=8, decimal_places=2, null=False, verbose_name='Salario')
+    salary = models.DecimalField(max_digits=8, default=0.00,decimal_places=2, null=False, verbose_name='Salario')
     accounts = models.ForeignKey(AccountsBank, on_delete=models.CASCADE, verbose_name='Cuenta de banco')
-    address = models.CharField(max_length=64, null=True, blank=True, verbose_name='Direcciones')
     estado = models.CharField(max_length=64, null=True, blank=True, choices=estado_choiches, verbose_name='Estado')
 
     def __str__(self):

@@ -21,7 +21,7 @@ $(function () {
             {"data": "turn.name"},
             {"data": "salary"},
             {"data": "accounts.type"},
-            {"data": "address"},
+            {"data": "estado"},
             {"data": "desc"},
         ],
         columnDefs: [
@@ -36,6 +36,20 @@ $(function () {
                     return html;
                 }
             },
+
+            {
+
+                targets: [-2],
+                class: 'text-center',
+                orderable: false,
+                render: function (data, type, row) {
+                    let html = '';
+                    html += '<span class="badge badge-success">' + data.name + '</span>  '
+                    return html;
+                }
+            },
+
+
             {
                 targets: [-1],
                 class: 'text-center',

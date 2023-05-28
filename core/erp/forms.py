@@ -384,3 +384,68 @@ class AccountsForm(ModelForm):
         except Exception as e:
             data['error'] = str(e)
         return data
+
+
+class EmployeForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['person'].widget.attrs['class'] = ' form-control select2 '
+        self.fields['person'].widget.attrs['style'] = 'width: 100%'
+        # self.fields['person'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = Employee
+        fields = '__all__'
+        widgets = {
+            'codigo': TextInput(
+                attrs={
+                    'class': 'form-control ',
+                    'placeholder': 'Ingrese el codigo empleado'
+                }
+            ),
+            'person': Select(
+                attrs={
+                    'class': 'form-control  select2',
+                    'style': 'width: 100%'
+                }
+            ),
+
+            'position': Select(
+                attrs={
+                    'class': 'form-control select2',
+                    'style': 'width: 100%'
+                }
+            ),
+            'department': Select(
+                attrs={
+                    'class': 'form-control select2',
+                    'style': 'width: 100%'
+                }
+            ),
+            'turn': Select(
+                attrs={
+                    'class': 'form-control select2',
+                    'style': 'width: 100%'
+                }
+            ),
+
+            'accounts': Select(
+                attrs={
+                    'class': 'form-control select2',
+                    'style': 'width: 100%'
+                }
+            ),
+            'estado': Select(
+                attrs={
+                    'class': 'form-control select2',
+                    'style': 'width: 100%'
+                }
+            ),
+            'salary': NumberInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+
+        }
