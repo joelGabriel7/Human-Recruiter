@@ -2,7 +2,10 @@
 {% load static %}
 {% block head_list %}
     <script src="{% static 'seleccionados/list.js' %}"></script>
-
+    <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+    <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
 {% endblock %}
 {% block buttons_list %}
 
@@ -64,6 +67,15 @@
                 </div>
             </div>
         </form>
-
     </div>
+
+
+    <script type="application/javascript">
+        $(function () {
+            $('.select2').select2({
+                theme: "bootstrap4",
+                language: 'es'
+            });
+        });
+    </script>
 {% endblock %}

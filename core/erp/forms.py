@@ -57,6 +57,7 @@ class PositionsForm(ModelForm):
             form.field.widget.attrs["class"] = 'form-control'
             form.field.widget.attrs["autocomplete"] = 'off'
         self.fields['name'].widget.attrs['autofocus'] = True
+        self.fields['departament'].widget.attrs['class'] = 'form-control select2'
 
     class Meta:
         model = EmployeePositions
@@ -76,7 +77,7 @@ class PositionsForm(ModelForm):
             ),
             'departament': Select(
                 attrs={
-                    'class': 'select2',
+                    'class': 'form-control select2',
                     'style': 'width: 100%'
                 }
             )
@@ -252,6 +253,7 @@ class VacantsForm(ModelForm):
         for form in self.visible_fields():
             form.field.widget.attrs["class"] = 'form-control '
             form.field.widget.attrs["autocomplete"] = 'off'
+        self.fields['posicion'].widget.attrs['class'] = 'form-control select2'
 
     class Meta:
         model = Vacants
@@ -277,7 +279,7 @@ class VacantsForm(ModelForm):
             ),
             'posicion': Select(
                 attrs={
-                    'class': 'select2',
+                    'class': 'form-control select2',
                     'style': 'width: 100%'
                 }
             ),
@@ -304,8 +306,8 @@ class SelectionForm(ModelForm):
         for form in self.visible_fields():
             form.field.widget.attrs['class'] = 'form-control'
             form.field.widget.attrs['autocomplete'] = 'off'
-        self.fields['person'].widget.attrs['autofocus'] = True
         self.fields['person'].widget.attrs['class'] = 'form-control select2'
+        self.fields['vacants'].widget.attrs['class'] = 'form-control select2'
 
     class Meta:
         model = Selection
@@ -313,13 +315,13 @@ class SelectionForm(ModelForm):
         widgets = {
             'person': Select(
                 attrs={
-                    'class': 'select2',
+                    'class': 'form-control select2',
                     'style': 'width: 100%'
                 }
             ),
             'vacants': Select(
                 attrs={
-                    'class': 'select2',
+                    'class': 'form-control select2',
                     'style': 'width: 100%'
                 }
             )
