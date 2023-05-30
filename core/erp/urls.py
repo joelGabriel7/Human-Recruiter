@@ -18,7 +18,7 @@ urlpatterns = [
     # path('departaments/create/', DepartamentCreateView.as_view(), name='departaments_create'),
     # path('departaments/edit/<int:pk>/', DepartamentUpdateView.as_view(), name='departaments_edit'),
     # path('departaments/delete/<int:pk>/', DepartamentDeleteView.as_view(), name='departaments_delete'),
-    # path('category/delete/<int:pk>/', CategoryDeleteView.as_view(), name='category_delete')
+
 
     # Puesto_trabajo
     path('puesto/list/', PositionsJobListView.as_view(), name='position_list'),
@@ -58,6 +58,7 @@ urlpatterns = [
     path('empleados/list/', EmpleadoListView.as_view(), name='empleados_list'),
     path('empleados/add/', EmpleadoCreateView.as_view(), name='empleados_create'),
     path('empleados/edit/<int:pk>/', EmpleadoUpdateView.as_view(), name='empleados_update'),
+    path('empleados/delete/<int:pk>/', EmpleadoDeleteView.as_view(), name='empleados_delete'),
 
 
 ]
