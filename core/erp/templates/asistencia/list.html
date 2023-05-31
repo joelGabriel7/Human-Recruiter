@@ -1,0 +1,29 @@
+{% extends 'list.html' %}
+{% load static %}
+
+{% block head_list %}
+    <script src="{% static 'asistencia/list.js' %}"></script>
+
+{% endblock %}
+{% block columns %}
+
+    <tr>
+        <th scope="col" style="width: 12.5%;">Fecha de Asistencia</th>
+        <th scope="col" style="width: 12.5%;">Empleado</th>
+        <th scope="col" style="width:12.5%;">Cedula</th>
+        <th scope="col" style="width:12.5%;">Departamento</th>
+        <th scope="col" style="width: 12.5%;">Posicion</th>
+        <th scope="col" style="width: 12.5%;">Observacion</th>
+        <th scope="col" style="width: 12.5%;">Asistencia</th>
+        <th scope="col" style="width: 12.5%;">Opciones</th>
+    </tr>
+
+{% endblock %}
+
+{% block rows %}
+
+{% endblock %}
+
+{% block javascript %}
+
+{% endblock %}

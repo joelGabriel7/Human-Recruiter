@@ -223,23 +223,24 @@ class Employee(models.Model):
         ('Despedido', 'Despedido')
     )
 
+
     codigo = models.CharField(max_length=64, default=generate_employee_code, verbose_name='Codigo Empleado')
     person = models.OneToOneField(Candidatos, on_delete=models.CASCADE, verbose_name='Empleado')
     department = models.ForeignKey(Departments, on_delete=models.CASCADE, verbose_name='Departamento')
     position = models.ForeignKey(EmployeePositions, on_delete=models.CASCADE, verbose_name='Posición')
     turn = models.ForeignKey(EmployeeTurn, on_delete=models.CASCADE, verbose_name='Turno')
-    salary = models.DecimalField(max_digits=8, default=0.00,decimal_places=2, null=False, verbose_name='Salario')
+    salary = models.DecimalField(max_digits=8, default=0.00, decimal_places=2, null=False, verbose_name='Salario')
     accounts = models.ForeignKey(AccountsBank, on_delete=models.CASCADE, verbose_name='Cuenta de banco')
     estado = models.CharField(max_length=64, null=True, blank=True, choices=estado_choiches, verbose_name='Estado')
 
     def __str__(self):
-        return f'{self.person.firstname} {self.person.lastname}'
+        return f'{self.person.firstname}    {self.person.lastname}'
 
     def toJSON(self):
         item = model_to_dict(self)
         item['person'] = self.person.toJSON()
-        item['estado'] = {'id':self.estado, 'name':self.estado}
-        item['fullname'] = self.person.firstname + '' + self.person.lastname
+        item['estado'] = {'id': self.estado, 'name': self.estado}
+        item['fullname'] = self.person.firstname + '   ' + self.person.lastname
         item['department'] = self.department.toJSON()
         item['position'] = self.position.toJSON()
         item['turn'] = self.turn.toJSON()
@@ -261,6 +262,11 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f'{self.employee.person.firstname}, {self.date}'
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['employee'] = self.employee.toJSON()
+        return item
 
     class Meta:
         verbose_name = 'Asistencia'

@@ -8,6 +8,7 @@ from core.erp.views.puesto_trabajo.views import *
 from core.erp.views.seleccionados.views import *
 from core.erp.views.turnos_trabajo.views import *
 from core.erp.views.vacante.views import *
+from core.erp.views.asistencia.views import *
 
 
 app_name = 'erp'
@@ -59,6 +60,11 @@ urlpatterns = [
     path('empleados/add/', EmpleadoCreateView.as_view(), name='empleados_create'),
     path('empleados/edit/<int:pk>/', EmpleadoUpdateView.as_view(), name='empleados_update'),
     path('empleados/delete/<int:pk>/', EmpleadoDeleteView.as_view(), name='empleados_delete'),
+
+    # Asistencias
+
+    path('asistencias/list/', AttendanceListView.as_view(), name='asistencias_list'),
+
 
 
 ]

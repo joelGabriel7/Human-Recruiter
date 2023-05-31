@@ -315,7 +315,7 @@ class SelectionForm(ModelForm):
         widgets = {
             'person': Select(
                 attrs={
-                    'class': 'form-control select2',
+                    # 'class': 'form-control select2',
                     'style': 'width: 100%'
                 }
             ),
