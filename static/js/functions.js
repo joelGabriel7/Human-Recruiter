@@ -94,3 +94,82 @@ function alert_action(title, content, callback, cancel) {
     })
 }
 
+
+function submit_with_formdata(args) {
+    if (!args.hasOwnProperty('type')) {
+        args.type = 'type';
+    }
+    if (!args.hasOwnProperty('theme')) {
+        args.theme = 'material';
+    }
+    if (!args.hasOwnProperty('title')) {
+        args.title = 'Confirmación';
+    }
+    if (!args.hasOwnProperty('icon')) {
+        args.icon = 'fas fa-info-circle';
+    }
+    if (!args.hasOwnProperty('content')) {
+        args.content = '¿Esta seguro de realizar la siguiente acción?';
+    }
+    if (!args.hasOwnProperty('pathname')) {
+        args.pathname = window.location.pathname;
+    }
+    $.confirm({
+        type: args.type,
+        theme: args.theme,
+        title: args.title,
+        icon: args.icon,
+        content: args.content,
+        columnClass: 'small',
+        typeAnimated: true,
+        cancelButtonClass: 'btn-primary',
+        draggable: true,
+        dragWindowBorder: false,
+        buttons: {
+            info: {
+                text: "Si",
+                btnClass: 'btn-primary',
+                action: function () {
+                    $.ajax({
+                        url: args.pathname,
+                        data: args.params,
+                        type: 'POST',
+                        dataType: 'json',
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        },
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            loading({'text': '...'});
+                        },
+                        success: function (request) {
+                            if (!request.hasOwnProperty('error')) {
+                                if (args.hasOwnProperty('success')) {
+                                    args.success(request);
+                                } else {
+                                    location.href = $(args.form).attr('data-url');
+                                }
+                                return false;
+                            }
+                            message_error(request.error);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            message_error(errorThrown + ' ' + textStatus);
+                        },
+                        complete: function () {
+                            $.LoadingOverlay("hide");
+                        }
+                    });
+                }
+            },
+            danger: {
+                text: "No",
+                btnClass: 'btn-red',
+                action: function () {
+
+                }
+            },
+        }
+    });
+}

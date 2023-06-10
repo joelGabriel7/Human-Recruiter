@@ -61,10 +61,9 @@ urlpatterns = [
     path('empleados/edit/<int:pk>/', EmpleadoUpdateView.as_view(), name='empleados_update'),
     path('empleados/delete/<int:pk>/', EmpleadoDeleteView.as_view(), name='empleados_delete'),
 
-    # Asistencias
-
-    path('asistencias/list/', AttendanceListView.as_view(), name='asistencias_list'),
-
-
+     # Asistencia
+    #AttendanceListView
+    path('asistencia/list/', AttendanceListView.as_view(), name='asistencia_list'),
+    path('asistencia/add/', AttendanceCreateView.as_view(), name='asistencia_create'),
 
 ]

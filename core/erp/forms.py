@@ -315,7 +315,7 @@ class SelectionForm(ModelForm):
         widgets = {
             'person': Select(
                 attrs={
-                    # 'class': 'form-control select2',
+                    'class': 'form-control select2',
                     'style': 'width: 100%'
                 }
             ),
@@ -464,3 +464,28 @@ class EmployeForm(ModelForm):
         except Exception as e:
             data['error'] = str(e)
         return data
+
+
+class AttendanceForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = Attendance
+        fields = '__all__'
+        widgets = {
+            'employee': Select(attrs={'class': 'form-control select2', 'style': 'width: 100%;'}),
+            'date': DateInput(format='%Y-%m-%d', attrs={
+                'class': 'form-control datetimepicker-input',
+                'id': 'date',
+                'value': datetime.datetime.now().strftime('%Y-%m-%d'),
+                'data-toggle': 'datetimepicker',
+                'data-target': '#date',
+
+            }),
+        }
+
+    date_range = CharField(widget=TextInput(attrs={
+        'class': 'form-control',
+        'autocomplete': 'off'
+    }), label='Buscar por rango de fechas')
