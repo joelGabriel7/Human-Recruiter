@@ -17,7 +17,8 @@
 
 {% endblock %}
 {% block content %}
-    <form method="post" action="." id="frmForm">
+    <form method="post" action="." id="frmForm" data-url="{{ list_url }}">
+    <input type="hidden" name="action" value="{{ action }}" >
         <div class="card card-default">
             <div class="card-header">
                 <h3 class="card-title">
@@ -32,7 +33,7 @@
             {% block formulario-body %}
                 <div class="card-body">
                     {% csrf_token %}
-                    <input type="hidden" name="action" value="{{ action }}">
+
                     {% for field in form.visible_fields %}
                         <div class="form-group">
                             <label for="email">{{ field.label }}:</label>

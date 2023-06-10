@@ -17,6 +17,7 @@ function message_error(obj) {
 }
 
 function submit_with_ajax(url, title, content, parameters, callback) {
+
     $.confirm({
         theme: 'material',
         title: title,
@@ -94,6 +95,28 @@ function alert_action(title, content, callback, cancel) {
     })
 }
 
+function loading(args) {
+    if (!args.hasOwnProperty('fontawesome')) {
+        args.fontawesome = 'fas fa-circle-notch fa-spin';
+    }
+    $.LoadingOverlay("show", {
+        image: "",
+        fontawesome: args.fontawesome,
+        custom: $("<div>", {
+            css: {
+                'font-family': "'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif'",
+                'font-size': '16px',
+                'font-weight': 'normal',
+                'text-align': 'center',
+                'position': 'absolute',
+                'top': '36%',
+                'width': '100%',
+            },
+            text: args.text
+        })
+    });
+}
+
 
 function submit_with_formdata(args) {
     if (!args.hasOwnProperty('type')) {
@@ -112,7 +135,7 @@ function submit_with_formdata(args) {
         args.content = '¿Esta seguro de realizar la siguiente acción?';
     }
     if (!args.hasOwnProperty('pathname')) {
-        args.pathname = window.location.pathname;
+        args.pathname= window.location.pathname ;
     }
     $.confirm({
         type: args.type,
