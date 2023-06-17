@@ -12,5 +12,6 @@ admin.site.register(Employee)
 admin.site.register(EmployeePositions)
 admin.site.register(EmployeeTurn)
 admin.site.register(Selection)
-admin.site.register(Attendance)
+admin.site.register(Assistance)
+admin.site.register(AssistanceDetail)
 

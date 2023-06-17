@@ -466,22 +466,21 @@ class EmployeForm(ModelForm):
         return data
 
 
-class AttendanceForm(ModelForm):
+class AssistanceForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
     class Meta:
-        model = Attendance
+        model = Assistance
         fields = '__all__'
         widgets = {
             'employee': Select(attrs={'class': 'form-control select2', 'style': 'width: 100%;'}),
-            'date': DateInput(format='%Y-%m-%d', attrs={
+            'date_joined': DateInput(format='%Y-%m-%d', attrs={
                 'class': 'form-control datetimepicker-input',
-                'id': 'date',
+                'id': 'date_joined',
                 'value': datetime.datetime.now().strftime('%Y-%m-%d'),
                 'data-toggle': 'datetimepicker',
-                'data-target': '#date',
-
+                'data-target': '#date_joined'
             }),
         }
 

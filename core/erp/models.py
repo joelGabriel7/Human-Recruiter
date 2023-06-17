@@ -1,7 +1,7 @@
 import datetime
 import random
 import string
-
+from core.erp.choice import *
 from django.db import models
 from django.forms import model_to_dict
 from django.utils import timezone
@@ -235,6 +235,9 @@ class Employee(models.Model):
     def __str__(self):
         return f'{self.person.firstname} {self.person.lastname}'
 
+    def get_full_name(self):
+        return f'{self.person.firstname} {self.person.lastname}'
+
     def toJSON(self):
         item = model_to_dict(self)
         item['person'] = self.person.toJSON()
@@ -253,21 +256,61 @@ class Employee(models.Model):
         # ordering = [id]
 
 
-class Attendance(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name='Empleado')
-    observation = models.CharField(max_length=512, null=True, blank=True, verbose_name='Observacion')
-    date = models.DateField(default=timezone.now, verbose_name='Fecha')
-    attendance = models.BooleanField(default=True, verbose_name='Asistencia')
+class Assistance(models.Model):
+    date_joined = models.DateField(default=datetime.datetime.now, verbose_name='Fecha de asistencia')
+    year = models.IntegerField()
+    month = models.IntegerField(choices=MONTHS, default=0)
+    day = models.IntegerField()
 
     def __str__(self):
-        return f'{self.employee.person.firstname}, {self.date}'
+        return self.get_month_display()
+
+    def date_joined_format(self):
+        return self.date_joined.strftime('%Y-%m-%d')
 
     def toJSON(self):
-        item = model_to_dict(self)
-        item['employee'] = self.employee.toJSON()
+        item = model_to_dict(self, exclude=['history'])
+        item['date_joined'] = self.date_joined_format()
+        item['month'] = {'id': self.month, 'name': self.get_month_display()}
         return item
 
     class Meta:
         verbose_name = 'Asistencia'
         verbose_name_plural = 'Asistencias'
-        # ordering = [id]
+        default_permissions = ()
+        # permissions = (
+        #     ('view_assistance', 'Can view Asistencia | Admin'),
+        #     ('add_assistance', 'Can add Asistencia | Admin'),
+        #     ('change_assistance', 'Can change Asistencia | Admin'),
+        #     ('delete_assistance', 'Can delete Asistencia | Admin'),
+        #     ('view_employee_assistance', 'Can view Asistencia | Empleado'),
+        # )
+
+
+class AssistanceDetail(models.Model):
+    assistance = models.ForeignKey(Assistance, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, on_delete=models.PROTECT, verbose_name='Empleado')
+    description = models.CharField(max_length=500, null=True, blank=True)
+    state = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.employee.get_full_name()
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['assistance'] = self.assistance.toJSON()
+        item['employee'] = self.employee.toJSON()
+        return item
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if self.description is None:
+            self.description = 's/n'
+        elif len(self.description) == 0:
+            self.description = 's/n'
+        super(AssistanceDetail, self).save()
+
+    class Meta:
+        verbose_name = 'Detalle de Asistencia'
+        verbose_name_plural = 'Detalles de Asistencia'
+        default_permissions = ()

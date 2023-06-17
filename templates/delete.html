@@ -1,63 +1,51 @@
 {% extends 'layouts.html' %}
 {% load widget_tweaks %}
 {% block content %}
-    <form method="post" action=".">
-        <div class="card card-primary">
+
+   <form class="form" method="post" action="." autocomplete="off">
+        <div class="card ">
             <div class="card-header">
                 <h3 class="card-title">
-                    <i class="fas fa-trash"></i>
+                    <i class="fas fa-info-circle"></i>
                     {{ title }}
                 </h3>
             </div>
-            <div class="card-body">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="{{ action }}">
-                {% if form.errors %}
-                    <div class="alert alert-danger alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <h5><i class="icon fas fa-ban"></i> Ha ocurrido un error al querer guardar el registro</h5>
-                        <ul>
-                            {% for field in form %}
-                                {% for error in field.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-                <div class="alert alert-danger alert-dismissible">
-                    <h5><i class="icon fas fa-ban"></i> Notificación!</h5>
-                    ¿Estas seguro de eliminar el registro N°{{ object.id }}?
+            <div class="card-body" style="display: block;">
+                <div class="container-fluid">
+                    {% csrf_token %}
+                    {% block delete_content %}
+                        <p class="text-center font-weight-bold mt-3">
+                            <i class="fas fa-trash fa-3x"></i><br><br>
+                            ¿Estas seguro de eliminar el registro N° {{ object.id }}?
+                        </p>
+                    {% endblock %}
                 </div>
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary btn-flat">
-                    <i class="fas fa-save"></i> Si, aceptar
-                </button>
-                <a href="{{ list_url }}" class="btn btn-danger btn-flat">
-                    <i class="fas fa-times"></i> Cancelar
-                </a>
+                {% block buttons %}
+                    <button type="submit" class="btn btn-primary btn-flat">
+                        <i class="fas fa-check-circle"></i> Si, Aceptar
+                    </button>
+                    <a href="{{ list_url }}" class="btn btn-danger btn-flat">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                {% endblock %}
             </div>
         </div>
     </form>
-    <script>
-
-
-        $('form').on('submit', function (e) {
-            e.preventDefault();
-            let parameters = new FormData(this);
-            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de eliminar el siguiente registro?', parameters, function () {
-                Swal.fire({
-                    title: 'Alerta!',
-                    text: 'Registro eliminado correctamente!',
-                    icon: 'success',
-                    timer: 1500,
-                    onClose: () =>{
+    <script type="application/javascript">
+        $(function () {
+            $('form').on('submit', function (event) {
+                event.preventDefault();
+                var params = new FormData(this);
+                var args = {
+                    'params': params,
+                    'content': '¿Estas seguro de eliminar el registro?',
+                    'success': function () {
                         location.href = '{{ list_url }}';
                     }
-                });
-
-
+                };
+                submit_with_formdata(args);
             });
         });
     </script>

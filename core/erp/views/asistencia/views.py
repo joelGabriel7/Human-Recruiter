@@ -1,6 +1,10 @@
 import json
 from decimal import Decimal
 from datetime import date
+from io import BytesIO
+
+import xlsxwriter as xlsxwriter
+from django.contrib import messages
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import render
@@ -20,9 +24,10 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class AttendanceListView(FormView):
-    form_class = AttendanceForm
+class AssistanceListView(FormView):
+    form_class = AssistanceForm
     template_name = 'attendance/list.html'
+    permission_required = 'view_assistance'
 
     def post(self, request, *args, **kwargs):
         action = request.POST['action']
@@ -32,87 +37,189 @@ class AttendanceListView(FormView):
                 data = []
                 start_date = request.POST['start_date']
                 end_date = request.POST['end_date']
-                queryset = Attendance.objects.select_related('employee').all()
+                queryset = AssistanceDetail.objects.all()
                 if len(start_date) and len(end_date):
-                    queryset = queryset.filter(
-                        Q(date__gte=start_date) & Q(date__lte=end_date)
-                    ).distinct()
-                for i in queryset:
+                    queryset = queryset.filter(assistance__date_joined__range=[start_date, end_date])
+                for i in queryset.order_by('assistance__date_joined'):
                     data.append(i.toJSON())
+            elif action == 'export_assistences_excel':
+                start_date = request.POST['start_date']
+                end_date = request.POST['end_date']
+                queryset = AssistanceDetail.objects.all()
+                if len(start_date) and len(end_date):
+                    queryset = queryset.filter(assistance__date_joined__range=[start_date, end_date])
+                headers = {
+                    'Fecha de asistencia': 35,
+                    'Empleado': 35,
+                    'Número de documento': 35,
+                    'Cargo': 35,
+                    'Area': 35,
+                    'Observación': 55,
+                    'Asistencia': 35,
+                }
+                output = BytesIO()
+                workbook = xlsxwriter.Workbook(output)
+                worksheet = workbook.add_worksheet('asistencias')
+                cell_format = workbook.add_format({'bold': True, 'align': 'center', 'border': 1})
+                row_format = workbook.add_format({'align': 'center', 'border': 1})
+                index = 0
+                for name, width in headers.items():
+                    worksheet.set_column(first_col=0, last_col=index, width=width)
+                    worksheet.write(0, index, name, cell_format)
+                    index += 1
+                row = 1
+                for i in queryset.order_by('assistance__date_joined'):
+                    worksheet.write(row, 0, i.assistance.date_joined_format(), row_format)
+                    worksheet.write(row, 1, i.employee.user.names, row_format)
+                    worksheet.write(row, 2, i.employee.dni, row_format)
+                    worksheet.write(row, 3, i.employee.position.name, row_format)
+                    worksheet.write(row, 4, i.employee.area.name, row_format)
+                    worksheet.write(row, 5, i.description, row_format)
+                    worksheet.write(row, 6, 'Si' if i.state else 'No', row_format)
+                    row += 1
+                workbook.close()
+                output.seek(0)
+                response = HttpResponse(output,
+                                        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response[
+                    'Content-Disposition'] = f"attachment; filename='ASISTENCIAS_{datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
+                return response
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
         except Exception as e:
             data['error'] = str(e)
-            print(f'ERROR: {data}')
         serialized_data = json.dumps(data, cls=CustomJSONEncoder)
         return HttpResponse(serialized_data, content_type='application/json')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Listado de Asistencias'
-        context['entity'] = 'Asistencias'
         context['create_url'] = reverse_lazy('erp:asistencia_create')
         return context
 
 
-class AttendanceCreateView(CreateView):
-    model = Attendance
+class AssistanceCreateView(CreateView):
+    model = Assistance
     template_name = 'attendance/create.html'
-    form_class = AttendanceForm
+    form_class = AssistanceForm
     success_url = reverse_lazy('erp:asistencia_list')
+
+    # permission_required = 'add_assistance'
 
     def post(self, request, *args, **kwargs):
         data = {}
-        action = request.POST.get('action')
-
+        action = request.POST['action']
         try:
             if action == 'add':
                 with transaction.atomic():
-                    for i in json.loads(request.POST['attendance']):
-                        date_time = datetime.datetime.strptime(request.POST['date'], '%Y-%m-%d')
-                        employee_id = i['id']
-                        observation = i['observation']
-                        attendance = Attendance.objects.filter(employee_id=employee_id, date=date_time)
-                        if attendance.exists():
-                            # Registro de asistencia existente, actualizar valores
-                            attendance = attendance.first()
-                            attendance.observation = observation
-                            attendance.attendance = i['attendance']
-                            attendance.save()
-                        else:
-                            # No existe registro de asistencia, crear uno nuevo
-                            attendance = Attendance()
-                            attendance.date = date_time
-                            attendance.employee_id = employee_id
-                            attendance.observation = observation
-                            attendance.attendance = i['attendance']
-                            attendance.save()
-
+                    date_joined = datetime.datetime.strptime(request.POST['date_joined'], '%Y-%m-%d')
+                    assistance = Assistance()
+                    assistance.date_joined = date_joined
+                    assistance.year = date_joined.year
+                    assistance.month = date_joined.month
+                    assistance.day = date_joined.day
+                    assistance.save()
+                    for i in json.loads(request.POST['assistances']):
+                        detail = AssistanceDetail()
+                        detail.assistance_id = assistance.id
+                        detail.employee_id = int(i['id'])
+                        detail.description = i['description']
+                        detail.state = i['state']
+                        detail.save()
             elif action == 'generate_assistance':
                 data = []
                 for i in Employee.objects.filter(person__isnull=False):
                     item = i.toJSON()
-                    item['attendance'] = 0
-                    item['observation'] = ''
+                    item['state'] = 0
+                    item['description'] = ''
                     data.append(item)
-
             elif action == 'validate_data':
                 data = {
-                    'valid': not Attendance.objects.filter(date=request.POST['date'].strip()).exists()
-                }
-
+                    'valid': not Assistance.objects.filter(date_joined=request.POST['date_joined'].strip()).exists()}
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
         except Exception as e:
             data['error'] = str(e)
-
         serialized_data = json.dumps(data, cls=CustomJSONEncoder)
         return HttpResponse(serialized_data, content_type='application/json')
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Nuevo Registro de asistencia'
+        context = super().get_context_data()
+        context['title'] = 'Nuevo registro de una Asistencia'
         context['list_url'] = self.success_url
-        context['entity'] = 'Asistencias'
         context['action'] = 'add'
         return context
+
+
+class AssistanceUpdateView(FormView):
+    template_name = 'attendance/create.html'
+    form_class = AssistanceForm
+    success_url = reverse_lazy('erp:asistencia_list')
+
+
+    def get_form(self, form_class=None):
+        form = AssistanceForm(initial={'date_joined': self.kwargs['date_joined']})
+        form.fields['date_joined'].widget.attrs.update({'disabled': True})
+        return form
+
+    def get_object(self):
+        # date_joined = datetime.datetime.now()
+        queryset = Assistance.objects.filter(date_joined=self.kwargs['date_joined'])
+        if queryset.exists():
+            return queryset[0]
+        return None
+
+    def get(self, request, *args, **kwargs):
+        if self.get_object() is not None:
+            return super().get(request, *args, **kwargs)
+        messages.error(request, f"No se puede editar las asistencia del dia {self.kwargs['date_joined']} porque no existen")
+        return HttpResponseRedirect(self.success_url)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        action = request.POST['action']
+        try:
+            if action == 'edit':
+                with transaction.atomic():
+                    for i in json.loads(request.POST['assistances']):
+                        if 'pk' in i:
+                            detail = AssistanceDetail.objects.get(pk=i['pk'])
+                        else:
+                            date_joined = datetime.datetime.strptime(self.kwargs['date_joined'], '%Y-%m-%d')
+                            assistance = Assistance.objects.get_or_create(date_joined=date_joined, year=date_joined.year, month=date_joined.month, day=date_joined.day)[0]
+                            detail = AssistanceDetail()
+                            detail.assistance_id = assistance.id
+                        detail.employee_id = i['id']
+                        detail.description = i['description']
+                        detail.state = i['state']
+                        detail.save()
+            elif action == 'generate_assistance':
+                data = []
+                date_joined = self.kwargs['date_joined']
+                for i in Employee.objects.filter(person__isnull=False):
+                    item = i.toJSON()
+                    item['state'] = 0
+                    item['description'] = ''
+                    queryset = AssistanceDetail.objects.filter(assistance__date_joined=date_joined, employee_id=i.id)
+                    if queryset.exists():
+                        assistance_detail = queryset[0]
+                        item['pk'] = assistance_detail.id
+                        item['state'] = 1 if assistance_detail.state else 0
+                        item['description'] = assistance_detail.description
+                    data.append(item)
+            elif action == 'validate_data':
+                data = {'valid': not Assistance.objects.filter(date_joined=request.POST['date_joined']).exclude(date_joined=self.kwargs['date_joined']).exists()}
+            else:
+                data['error'] = 'No ha seleccionado ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        serialized_data = json.dumps(data, cls=CustomJSONEncoder)
+        return HttpResponse(serialized_data, content_type='application/json')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['title'] = 'Edición de una Asistencia'
+        context['list_url'] = self.success_url
+        context['action'] = 'edit'
+        return context
+

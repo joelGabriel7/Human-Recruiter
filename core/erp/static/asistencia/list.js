@@ -21,13 +21,13 @@ let assistance = {
                 }
             },
             columns: [
-                {"data": "date"},
+                {"data": "assistance.date_joined"},
                 {"data": "employee.fullname"},
                 {"data": "employee.person.cedula"},
                 {"data": "employee.department.name"},
                 {"data": "employee.position.name"},
-                {"data": "observation"},
-                {"data": "attendance"},
+                {"data": "description"},
+                {"data": "state"},
             ],
             columnDefs: [
                 {
@@ -41,8 +41,8 @@ let assistance = {
                     targets: [-2],
                     class: 'text-center',
                     render: function (data, type, row) {
-                        if (!$.isEmptyObject(row.observation)) {
-                            return row.observation;
+                        if (!$.isEmptyObject(row.description)) {
+                            return row.description;
                         }
                         return 'Sin detalles';
                     }
@@ -51,7 +51,7 @@ let assistance = {
                     targets: [-1],
                     class: 'text-center',
                     render: function (data, type, row) {
-                        if (row.attendance) {
+                        if (row.state) {
                             return '<span class="badge badge-success badge-pill">Si</span>';
                         }
                         return '<span class="badge badge-danger badge-pill">No</span>';
@@ -82,5 +82,17 @@ $(function () {
 
     $('.btnSearchAssistances').on('click', function () {
         assistance.list();
+    });
+
+     $('.btnUpdateAssistance').on('click', function () {
+        var start_date = input_date_range.data('daterangepicker').startDate.format('YYYY-MM-DD');
+        var end_date = input_date_range.data('daterangepicker').endDate.format('YYYY-MM-DD');
+        if (start_date !== end_date) {
+            message_error('Para editar una asistencia se debe hacer de un dia en especifico no en rango');
+            return false;
+        }
+        var currentUrl = location.pathname;
+        var updatedUrl = currentUrl.replace('/list/', '/update/');
+       location.href = updatedUrl + start_date + '/';
     });
 })

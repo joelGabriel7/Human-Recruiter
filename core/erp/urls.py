@@ -62,7 +62,8 @@ urlpatterns = [
     path('empleados/delete/<int:pk>/', EmpleadoDeleteView.as_view(), name='empleados_delete'),
 
      # Asistencia
-    path('asistencia/list/', AttendanceListView.as_view(), name='asistencia_list'),
-    path('asistencia/add/', AttendanceCreateView.as_view(), name='asistencia_create'),
+    path('asistencia/list/', AssistanceListView.as_view(), name='asistencia_list'),
+    path('asistencia/add/', AssistanceCreateView.as_view(), name='asistencia_create'),
+    path('asistencia/update/<str:date_joined>/', AssistanceUpdateView.as_view(), name='asistencia_update'),
 
 ]
