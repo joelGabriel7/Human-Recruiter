@@ -51,9 +51,9 @@ class AssistanceListView(FormView):
                 headers = {
                     'Fecha de asistencia': 35,
                     'Empleado': 35,
-                    'Número de documento': 35,
+                    'Cedula': 35,
                     'Cargo': 35,
-                    'Area': 35,
+                    'Departamento': 35,
                     'Observación': 55,
                     'Asistencia': 35,
                 }
@@ -70,19 +70,17 @@ class AssistanceListView(FormView):
                 row = 1
                 for i in queryset.order_by('assistance__date_joined'):
                     worksheet.write(row, 0, i.assistance.date_joined_format(), row_format)
-                    worksheet.write(row, 1, i.employee.user.names, row_format)
-                    worksheet.write(row, 2, i.employee.dni, row_format)
+                    worksheet.write(row, 1, i.employee.person.firstname, row_format)
+                    worksheet.write(row, 2, i.employee.person.cedula, row_format)
                     worksheet.write(row, 3, i.employee.position.name, row_format)
-                    worksheet.write(row, 4, i.employee.area.name, row_format)
+                    worksheet.write(row, 4, i.employee.department.name, row_format)
                     worksheet.write(row, 5, i.description, row_format)
                     worksheet.write(row, 6, 'Si' if i.state else 'No', row_format)
                     row += 1
                 workbook.close()
                 output.seek(0)
-                response = HttpResponse(output,
-                                        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                response[
-                    'Content-Disposition'] = f"attachment; filename='ASISTENCIAS_{datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
+                response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response['Content-Disposition'] = f"attachment; filename='ASISTENCIAS_{datetime.datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
                 return response
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
@@ -95,6 +93,7 @@ class AssistanceListView(FormView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Listado de Asistencias'
         context['create_url'] = reverse_lazy('erp:asistencia_create')
+        context['entity'] = 'Asistencias'
         return context
 
 
@@ -148,6 +147,7 @@ class AssistanceCreateView(CreateView):
         context['title'] = 'Nuevo registro de una Asistencia'
         context['list_url'] = self.success_url
         context['action'] = 'add'
+        context['entity'] = 'Asistencias'
         return context
 
 
@@ -155,7 +155,6 @@ class AssistanceUpdateView(FormView):
     template_name = 'attendance/create.html'
     form_class = AssistanceForm
     success_url = reverse_lazy('erp:asistencia_list')
-
 
     def get_form(self, form_class=None):
         form = AssistanceForm(initial={'date_joined': self.kwargs['date_joined']})
@@ -172,7 +171,8 @@ class AssistanceUpdateView(FormView):
     def get(self, request, *args, **kwargs):
         if self.get_object() is not None:
             return super().get(request, *args, **kwargs)
-        messages.error(request, f"No se puede editar las asistencia del dia {self.kwargs['date_joined']} porque no existen")
+        messages.error(request,
+                       f"No se puede editar las asistencia del dia {self.kwargs['date_joined']} porque no existen")
         return HttpResponseRedirect(self.success_url)
 
     def post(self, request, *args, **kwargs):
@@ -186,7 +186,9 @@ class AssistanceUpdateView(FormView):
                             detail = AssistanceDetail.objects.get(pk=i['pk'])
                         else:
                             date_joined = datetime.datetime.strptime(self.kwargs['date_joined'], '%Y-%m-%d')
-                            assistance = Assistance.objects.get_or_create(date_joined=date_joined, year=date_joined.year, month=date_joined.month, day=date_joined.day)[0]
+                            assistance = \
+                            Assistance.objects.get_or_create(date_joined=date_joined, year=date_joined.year,
+                                                             month=date_joined.month, day=date_joined.day)[0]
                             detail = AssistanceDetail()
                             detail.assistance_id = assistance.id
                         detail.employee_id = i['id']
@@ -208,7 +210,8 @@ class AssistanceUpdateView(FormView):
                         item['description'] = assistance_detail.description
                     data.append(item)
             elif action == 'validate_data':
-                data = {'valid': not Assistance.objects.filter(date_joined=request.POST['date_joined']).exclude(date_joined=self.kwargs['date_joined']).exists()}
+                data = {'valid': not Assistance.objects.filter(date_joined=request.POST['date_joined']).exclude(
+                    date_joined=self.kwargs['date_joined']).exists()}
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
         except Exception as e:
@@ -220,6 +223,42 @@ class AssistanceUpdateView(FormView):
         context = super().get_context_data()
         context['title'] = 'Edición de una Asistencia'
         context['list_url'] = self.success_url
+
         context['action'] = 'edit'
         return context
 
+
+class AssistanceDeleteView(TemplateView):
+    template_name = 'attendance/delete.html'
+    success_url = reverse_lazy('erp:asistencia_list')
+
+    def get(self, request, *args, **kwargs):
+        if self.get_object() is not None:
+            return super(AssistanceDeleteView, self).get(request, *args, **kwargs)
+        messages.error(request, 'No existen asistencias en el rango de fechas ingresadas')
+        return HttpResponseRedirect(self.success_url)
+
+    def get_object(self, queryset=None):
+        start_date = self.kwargs['start_date']
+        end_date = self.kwargs['end_date']
+        queryset = Assistance.objects.filter(date_joined__range=[start_date, end_date])
+        if queryset.exists():
+            return queryset[0]
+        return None
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            self.get_object().delete()
+        except Exception as e:
+            data['error'] = str(e)
+        serialized_data = json.dumps(data, cls=CustomJSONEncoder)
+        return HttpResponse(serialized_data, content_type='application/json')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Notificación de eliminación'
+        context['list_url'] = self.success_url
+        context['start_date'] = self.kwargs['start_date']
+        context['end_date'] = self.kwargs['end_date']
+        return context

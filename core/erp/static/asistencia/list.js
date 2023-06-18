@@ -12,7 +12,7 @@ let assistance = {
             autoWidth: false,
             destroy: true,
             ajax: {
-                url:  window.location.pathname,
+                url: window.location.pathname,
                 type: 'POST',
                 data: parameters,
                 dataSrc: "",
@@ -84,7 +84,15 @@ $(function () {
         assistance.list();
     });
 
-     $('.btnUpdateAssistance').on('click', function () {
+    $('.btnRemoveAssistances').on('click', function () {
+        var start_date = input_date_range.data('daterangepicker').startDate.format('YYYY-MM-DD');
+        var end_date = input_date_range.data('daterangepicker').endDate.format('YYYY-MM-DD');
+        // location.href = window.location.pathname + 'delete/' + start_date + '/' + end_date + '/';
+        var currentUrl = location.pathname;
+        var updatedUrl = currentUrl.replace('/list/', '/delete/');
+         location.href = updatedUrl + start_date + '/' + end_date + '/';
+    });
+    $('.btnUpdateAssistance').on('click', function () {
         var start_date = input_date_range.data('daterangepicker').startDate.format('YYYY-MM-DD');
         var end_date = input_date_range.data('daterangepicker').endDate.format('YYYY-MM-DD');
         if (start_date !== end_date) {
@@ -93,6 +101,47 @@ $(function () {
         }
         var currentUrl = location.pathname;
         var updatedUrl = currentUrl.replace('/list/', '/update/');
-       location.href = updatedUrl + start_date + '/';
+        location.href = updatedUrl + start_date + '/';
+    });
+     $('.btnExportAssistancesExcel').on('click', function () {
+        $.ajax({
+            url: location.pathname,
+            data: {
+                'start_date': input_date_range.data('daterangepicker').startDate.format('YYYY-MM-DD'),
+                'end_date': input_date_range.data('daterangepicker').endDate.format('YYYY-MM-DD'),
+                'action': 'export_assistences_excel'
+            },
+            type: 'POST',
+            xhrFields: {
+                responseType: 'blob'
+            },
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            beforeSend: function () {
+                loading({'text': '...'});
+            },
+            success: function (request) {
+                if (!request.hasOwnProperty('error')) {
+                    var a = document.createElement("a");
+                    document.body.appendChild(a);
+                    a.style = "display: none";
+                    const blob = new Blob([request], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+                    const url = URL.createObjectURL(blob);
+                    a.href = url;
+                    a.download = "download_excel_" + current_date + ".xlsx";
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    return false;
+                }
+                message_error(request.error);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                message_error(errorThrown + ' ' + textStatus);
+            },
+            complete: function () {
+                $.LoadingOverlay("hide");
+            }
+        });
     });
 })

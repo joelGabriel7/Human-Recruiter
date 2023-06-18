@@ -65,5 +65,6 @@ urlpatterns = [
     path('asistencia/list/', AssistanceListView.as_view(), name='asistencia_list'),
     path('asistencia/add/', AssistanceCreateView.as_view(), name='asistencia_create'),
     path('asistencia/update/<str:date_joined>/', AssistanceUpdateView.as_view(), name='asistencia_update'),
+    path('asistencia/delete/<str:start_date>/<str:end_date>/', AssistanceDeleteView.as_view(),name='asistencia_delete'),
 
 ]
