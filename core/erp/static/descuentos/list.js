@@ -43,7 +43,7 @@ var headings = {
                         if (data) {
                             return '<span class="badge badge-success badge-pill">Si</span>';
                         }
-                        return '<span class="badge badge-success badge-pill">No</span>';
+                        return '<span class="badge badge-danger badge-pill">No</span>';
                     }
                 },
                 {
@@ -53,7 +53,7 @@ var headings = {
                         if (data) {
                             return '<span class="badge badge-success badge-pill">Activo</span>';
                         }
-                        return '<span class="badge badge-success badge-pill">Inactivo</span>';
+                        return '<span class="badge badge-danger badge-pill">Inactivo</span>';
                     }
                 },
                 {
