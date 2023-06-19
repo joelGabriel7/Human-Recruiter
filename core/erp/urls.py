@@ -9,6 +9,7 @@ from core.erp.views.seleccionados.views import *
 from core.erp.views.turnos_trabajo.views import *
 from core.erp.views.vacante.views import *
 from core.erp.views.asistencia.views import *
+from core.erp.views.descuentos.view import *
 
 
 app_name = 'erp'
@@ -66,5 +67,8 @@ urlpatterns = [
     path('asistencia/add/', AssistanceCreateView.as_view(), name='asistencia_create'),
     path('asistencia/update/<str:date_joined>/', AssistanceUpdateView.as_view(), name='asistencia_update'),
     path('asistencia/delete/<str:start_date>/<str:end_date>/', AssistanceDeleteView.as_view(),name='asistencia_delete'),
+
+    #Conceptos de Descuentos
+    path('descuento/list/', DescuentosListView.as_view(), name='descuento_list'),
 
 ]
