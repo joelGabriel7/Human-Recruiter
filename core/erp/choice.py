@@ -15,6 +15,6 @@ MONTHS = (
 )
 
 TYPE_HEADINGS = (
-    ('haberes', 'HABERES'),
+    ('remuneracion', 'REMUNERACION'),
     ('descuentos', 'DESCUENTOS'),
 )

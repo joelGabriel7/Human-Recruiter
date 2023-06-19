@@ -60,24 +60,6 @@ class Candidatos(models.Model):
         # ordering = [id]
 
 
-class Descuentos(models.Model):
-    name = models.CharField(max_length=30, verbose_name='Nombre')
-    description = models.CharField(max_length=86, verbose_name='Descripcion')
-    monto = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, verbose_name='Monto')
-
-    def __str__(self):
-        return self.name
-
-    def toJSON(self):
-        item = model_to_dict(self)
-        item['monto'] = format(self.monto, '.2f')
-        return item
-
-    class Meta:
-        verbose_name = 'Descuento'
-        verbose_name_plural = 'Descuentos'
-
-
 # self.min_salary, '.2f'
 
 class AccountsBank(models.Model):
@@ -228,7 +210,7 @@ class Employee(models.Model):
     department = models.ForeignKey(Departments, on_delete=models.CASCADE, verbose_name='Departamento')
     position = models.ForeignKey(EmployeePositions, on_delete=models.CASCADE, verbose_name='Posición')
     turn = models.ForeignKey(EmployeeTurn, on_delete=models.CASCADE, verbose_name='Turno')
-    salary = models.DecimalField(max_digits=8, default=0.00,decimal_places=2, null=False, verbose_name='Salario')
+    salary = models.DecimalField(max_digits=8, default=0.00, decimal_places=2, null=False, verbose_name='Salario')
     accounts = models.ForeignKey(AccountsBank, on_delete=models.CASCADE, verbose_name='Cuenta de banco')
     estado = models.CharField(max_length=64, null=True, blank=True, choices=estado_choiches, verbose_name='Estado')
 
@@ -241,7 +223,7 @@ class Employee(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         item['person'] = self.person.toJSON()
-        item['estado'] = {'id':self.estado, 'name':self.estado}
+        item['estado'] = {'id': self.estado, 'name': self.estado}
         item['fullname'] = self.person.firstname + ' ' + self.person.lastname
         item['department'] = self.department.toJSON()
         item['position'] = self.position.toJSON()
@@ -254,6 +236,152 @@ class Employee(models.Model):
         verbose_name = 'Empleado'
         verbose_name_plural = 'Empleados'
         # ordering = [id]
+
+
+class Headings(models.Model):
+    name = models.CharField(max_length=200, unique=True, verbose_name='Nombre')
+    code = models.CharField(max_length=30, unique=True, verbose_name='Referencia')
+    type = models.CharField(max_length=15, choices=TYPE_HEADINGS, default='Remuneraciones', verbose_name='Tipo')
+    state = models.BooleanField(default=True, verbose_name='Estado')
+    order = models.IntegerField(default=0, verbose_name='Posición')
+    has_quantity = models.BooleanField(default=False, verbose_name='¿Posee cantidad?')
+
+    def __str__(self):
+        return self.name
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['type'] = {'id': self.type, 'name': self.get_type_display()}
+        return item
+
+    def get_number(self):
+        return f'{self.id:04d}'
+
+    def get_amount_detail_salary(self, employee, year, month):
+        queryset = self.salaryheadings_set.filter(salary_detail__employee_id=employee, salary_detail__salary__year=year, salary_detail__salary__month=month)
+        if queryset.exists():
+            return queryset[0]
+        return None
+
+    def convert_name_to_code(self):
+        excludes = [' ', '.', '%']
+        code = self.name.lower()
+        for i in excludes:
+            code = code.replace(i, '_')
+        if code[-1] == '_':
+            code = code[0:-1]
+        return code
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.code = self.convert_name_to_code()
+        super(Headings, self).save()
+
+    class Meta:
+        verbose_name = 'Descuento'
+        verbose_name_plural = 'Descuentos'
+
+
+class Salary(models.Model):
+    payment_date = models.DateField(default=timezone.now, verbose_name='Fecha de pago')
+    year = models.IntegerField(verbose_name='Año')
+    month = models.IntegerField(choices=MONTHS, default=0, verbose_name='Mes')
+
+    def __str__(self):
+        return self.payment_date.strftime('%Y-%m-%d')
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['payment_date'] = self.payment_date.strftime('%Y-%m-%d')
+        item['month'] = {'id': self.month, 'name': self.get_month_display()}
+        return item
+
+    class Meta:
+        verbose_name = 'Salario'
+        verbose_name_plural = 'Salarios'
+        default_permissions = ()
+        # permissions = (
+        #     ('view_salary', 'Can view Salario | Admin'),
+        #     ('add_salary', 'Can add Salario | Admin'),
+        #     ('change_salary', 'Can change Salario | Admin'),
+        #     ('delete_salary', 'Can delete Salario | Admin'),
+        #     ('view_employee_salary', 'Can view Salario | Empleado'),
+        # )
+
+
+class SalaryDetail(models.Model):
+    salary = models.ForeignKey(Salary, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, on_delete=models.PROTECT, verbose_name='Empleado')
+    income = models.FloatField(default=0.00)
+    expenses = models.FloatField(default=0.00)
+    total_amount = models.FloatField(default=0.00)
+
+    def __str__(self):
+        return self.employee.get_full_name()
+
+    def get_income(self):
+        return self.salaryheadings_set.filter(headings__type='remuneracion', valor__gt=0).order_by('headings__order')
+
+    def get_expenses(self):
+        return self.salaryheadings_set.filter(headings__type='descuentos', valor__gt=0).order_by('headings__order')
+
+    def format_decimal(self, valor):
+        return '{:,}'.format(round(valor)).replace(',', '.')
+
+    def get_income_format(self):
+        return self.format_decimal(self.income)
+
+    def get_expenses_format(self):
+        return self.format_decimal(self.expenses)
+
+    def get_total_amount_format(self):
+        return self.format_decimal(self.total_amount)
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['salary'] = self.salary.toJSON()
+        item['employee'] = self.employee.toJSON()
+        item['income'] = self.get_income_format()
+        item['expenses'] = self.get_expenses_format()
+        item['total_amount'] = self.get_total_amount_format()
+        return item
+
+    class Meta:
+        verbose_name = 'Salario Detalle'
+        verbose_name_plural = 'Salario Detalles'
+        default_permissions = ()
+
+
+class SalaryHeadings(models.Model):
+    salary_detail = models.ForeignKey(SalaryDetail, on_delete=models.CASCADE)
+    headings = models.ForeignKey(Headings, on_delete=models.PROTECT)
+    cant = models.IntegerField(default=0)
+    valor = models.FloatField(default=0.00)
+
+    def __str__(self):
+        return self.salary_detail.employee.get_full_name()
+
+    def get_cant(self):
+        if self.headings.has_quantity:
+            return self.cant
+        return ' '
+
+    def format_decimal(self, valor):
+        return '{:,}'.format(round(valor)).replace(',', '.')
+
+    def get_valor_format(self):
+        return self.format_decimal(self.valor)
+
+    def toJSON(self):
+        item = model_to_dict(self, exclude=['salary'])
+        item['valor'] = self.get_valor_format()
+        return item
+
+    class Meta:
+        verbose_name = 'Detalle de Salario'
+        verbose_name_plural = 'Detalle de Salarios'
+        default_permissions = ()
+
 
 
 class Assistance(models.Model):
