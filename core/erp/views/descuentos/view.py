@@ -119,3 +119,24 @@ class DescuentosUpdateView(UpdateView):
         context['list_url'] = self.success_url
         context['action'] = 'edit'
         return context
+
+
+class DescuentoDeleteView(DeleteView):
+    model = Headings
+    template_name = 'delete.html'
+    success_url = reverse_lazy('erp:descuento_list')
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            self.get_object().delete()
+        except Exception as e:
+            data['error'] = str(e)
+        serialized_data = json.dumps(data, cls=CustomJSONEncoder)
+        return HttpResponse(serialized_data, content_type='application/json')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Notificación de eliminación'
+        context['list_url'] = self.success_url
+        return context
