@@ -5,7 +5,7 @@ from core.erp.models import *
 # Register your models here.
 admin.site.register(AccountsBank)
 admin.site.register(Departments)
-admin.site.register(Descuentos)
+admin.site.register(Headings)
 admin.site.register(Candidatos)
 admin.site.register(Vacants)
 admin.site.register(Employee)
