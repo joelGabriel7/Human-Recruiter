@@ -11,7 +11,6 @@ from core.erp.views.vacante.views import *
 from core.erp.views.asistencia.views import *
 from core.erp.views.descuentos.view import *
 
-
 app_name = 'erp'
 
 urlpatterns = [
@@ -20,7 +19,6 @@ urlpatterns = [
     # path('departaments/create/', DepartamentCreateView.as_view(), name='departaments_create'),
     # path('departaments/edit/<int:pk>/', DepartamentUpdateView.as_view(), name='departaments_edit'),
     # path('departaments/delete/<int:pk>/', DepartamentDeleteView.as_view(), name='departaments_delete'),
-
 
     # Puesto_trabajo
     path('puesto/list/', PositionsJobListView.as_view(), name='position_list'),
@@ -62,13 +60,15 @@ urlpatterns = [
     path('empleados/edit/<int:pk>/', EmpleadoUpdateView.as_view(), name='empleados_update'),
     path('empleados/delete/<int:pk>/', EmpleadoDeleteView.as_view(), name='empleados_delete'),
 
-     # Asistencia
+    # Asistencia
     path('asistencia/list/', AssistanceListView.as_view(), name='asistencia_list'),
     path('asistencia/add/', AssistanceCreateView.as_view(), name='asistencia_create'),
     path('asistencia/update/<str:date_joined>/', AssistanceUpdateView.as_view(), name='asistencia_update'),
-    path('asistencia/delete/<str:start_date>/<str:end_date>/', AssistanceDeleteView.as_view(),name='asistencia_delete'),
+    path('asistencia/delete/<str:start_date>/<str:end_date>/', AssistanceDeleteView.as_view(), name='asistencia_delete'),
 
-    #Conceptos de Descuentos
+    # Conceptos de Descuentos
     path('descuento/list/', DescuentosListView.as_view(), name='descuento_list'),
-
+    path('descuento/add/', DescuentosCreateView.as_view(), name='descuento_create'),
+    path('descuento/update/<int:pk>/', DescuentosUpdateView.as_view(), name='descuento_update'),
+    # path('descuento/delete/<int:pk>/', DescuentosUpdateView.as_view(), name='descuento_delete'),
 ]

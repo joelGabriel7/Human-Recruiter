@@ -488,3 +488,31 @@ class AssistanceForm(ModelForm):
         'class': 'form-control',
         'autocomplete': 'off'
     }), label='Buscar por rango de fechas')
+
+
+class DescuentoForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = Headings
+        fields = '__all__'
+        widgets = {
+            'name': TextInput(attrs={'class': 'form-control','placeholder': 'Ingrese un nombre'}),
+            'code': TextInput(attrs={'class': 'form-control','placeholder': 'Ingrese un código de referencia'}),
+            'order': TextInput(attrs={'class': 'form-control' ,'placeholder': 'Ingrese una posición'}),
+            'type': Select(attrs={'class': 'form-control select2', 'style': 'width: 100%;'}),
+        }
+        exclude = ['code']
+
+    def save(self, commit=True):
+        data = {}
+        try:
+            if self.is_valid():
+                super().save()
+            else:
+                data['error'] = self.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return data
