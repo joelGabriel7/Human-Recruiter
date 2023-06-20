@@ -15,6 +15,7 @@
 
 {% endblock %}
 
+
 {% block content %}
     <div class="card card-default">
         <div class="card-header">
@@ -24,8 +25,10 @@
             </h3>
         </div>
         <div class="card-body">
+         {% block content_list_before %}{% endblock %}
             <table class="table table-striped  table-hover table-bordered" id="data">
-                <thead class="table-secondary">
+                <thead class="table-bordered">
+
                 {% block columns %}
 
                 {% endblock %}
@@ -35,6 +38,8 @@
 
                 {% endblock %}
                 </tbody>
+
+
             </table>
         </div>
         <div class="card-footer">

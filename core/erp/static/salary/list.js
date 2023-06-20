@@ -72,7 +72,7 @@ var salary = {
                     targets: [-1],
                     class: 'text-center',
                     render: function (data, type, row) {
-                        var buttons = '<a class="btn btn-success btn-xs btn-flat" rel="detail" data-toggle="tooltip" title="Detalle"><i class="fas fa-folder-open"></i></a> ';
+                        var buttons = '<a class="btn btn-success btn-xs btn-flat" rel="detail" data-toggle="tooltip" title="Detalle"><i style="color: #FFFFFF" class="fas fa-folder-open"></i></a> ';
                         buttons += '<a href="' + pathname + 'print/receipt/' + row.id + '/" target="_blank" data-toggle="tooltip" title="Imprimir" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-file-alt"></i></a>';
                         return buttons;
                     }
@@ -173,33 +173,6 @@ $(function () {
         window.open(url, '_blank').focus();
     });
 
-    $('.btnRemoveSalaries').on('click', function () {
-        $.ajax({
-            url: pathname,
-            data: {
-                'year': input_year.datetimepicker('date').format("YYYY"),
-                'month': select_month.val(),
-                'pks': JSON.stringify(salary.getEmployeesIds()),
-                'action': 'remove_salaries'
-            },
-            type: 'POST',
-            dataType: 'json',
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
-            success: function (request) {
-                if (!request.hasOwnProperty('error')) {
-                    location.href = request.url;
-                    return false;
-                }
-                message_error(request.error);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                message_error(errorThrown + ' ' + textStatus);
-            }
-        });
-    });
-
     $('.btnExportSalariesPdf').on('click', function () {
         $.ajax({
             url: pathname,
@@ -243,95 +216,48 @@ $(function () {
         });
     });
 
-    // $('.btnGenerateTemplate').on('click', function () {
-    //     var parameters = {
-    //         'year': input_year.datetimepicker('date').format("YYYY"),
-    //         'month': select_month.val(),
-    //         'action': 'export_template'
-    //     };
-    //     if (parameters.month === '') {
-    //         message_error('Debe seleccionar un mes');
-    //         return false;
-    //     }
-    //     $.ajax({
-    //         url: pathname,
-    //         data: parameters,
-    //         type: 'POST',
-    //         xhrFields: {
-    //             responseType: 'blob'
-    //         },
-    //         headers: {
-    //             'X-CSRFToken': csrftoken
-    //         },
-    //         beforeSend: function () {
-    //             loading({'text': '...'});
-    //         },
-    //         success: function (request) {
-    //             if (!request.hasOwnProperty('error')) {
-    //                 var a = document.createElement("a");
-    //                 document.body.appendChild(a);
-    //                 a.style = "display: none";
-    //                 const blob = new Blob([request], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-    //                 const url = URL.createObjectURL(blob);
-    //                 a.href = url;
-    //                 a.download = "plantilla_excel_" + current_date + ".xlsx";
-    //                 a.click();
-    //                 window.URL.revokeObjectURL(url);
-    //                 return false;
-    //             }
-    //             message_error(request.error);
-    //         },
-    //         error: function (jqXHR, textStatus, errorThrown) {
-    //             message_error(errorThrown + ' ' + textStatus);
-    //         },
-    //         complete: function () {
-    //             $.LoadingOverlay("hide");
-    //         }
-    //     });
-    // });
-    //
-    // $('.btnExportSalariesExcel').on('click', function () {
-    //     $.ajax({
-    //         url: pathname,
-    //         data: {
-    //             'year': input_year.datetimepicker('date').format("YYYY"),
-    //             'month': select_month.val(),
-    //             'pks': JSON.stringify(salary.getEmployeesIds()),
-    //             'action': 'export_salaries_excel'
-    //         },
-    //         type: 'POST',
-    //         xhrFields: {
-    //             responseType: 'blob'
-    //         },
-    //         headers: {
-    //             'X-CSRFToken': csrftoken
-    //         },
-    //         beforeSend: function () {
-    //             loading({'text': '...'});
-    //         },
-    //         success: function (request) {
-    //             if (!request.hasOwnProperty('error')) {
-    //                 var a = document.createElement("a");
-    //                 document.body.appendChild(a);
-    //                 a.style = "display: none";
-    //                 const blob = new Blob([request], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-    //                 const url = URL.createObjectURL(blob);
-    //                 a.href = url;
-    //                 a.download = "salarios_excel_" + current_date + ".xlsx";
-    //                 a.click();
-    //                 window.URL.revokeObjectURL(url);
-    //                 return false;
-    //             }
-    //             message_error(request.error);
-    //         },
-    //         error: function (jqXHR, textStatus, errorThrown) {
-    //             message_error(errorThrown + ' ' + textStatus);
-    //         },
-    //         complete: function () {
-    //             $.LoadingOverlay("hide");
-    //         }
-    //     });
-    // });
+    $('.btnExportSalariesExcel').on('click', function () {
+        $.ajax({
+            url: pathname,
+            data: {
+                'year': input_year.datetimepicker('date').format("YYYY"),
+                'month': select_month.val(),
+                'pks': JSON.stringify(salary.getEmployeesIds()),
+                'action': 'export_salaries_excel'
+            },
+            type: 'POST',
+            xhrFields: {
+                responseType: 'blob'
+            },
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            beforeSend: function () {
+                loading({'text': '...'});
+            },
+            success: function (request) {
+                if (!request.hasOwnProperty('error')) {
+                    var a = document.createElement("a");
+                    document.body.appendChild(a);
+                    a.style = "display: none";
+                    const blob = new Blob([request], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+                    const url = URL.createObjectURL(blob);
+                    a.href = url;
+                    a.download = "salarios_excel_" + current_date + ".xlsx";
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    return false;
+                }
+                message_error(request.error);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                message_error(errorThrown + ' ' + textStatus);
+            },
+            complete: function () {
+                $.LoadingOverlay("hide");
+            }
+        });
+    });
 
     select_employee.select2({
         theme: 'bootstrap4',
