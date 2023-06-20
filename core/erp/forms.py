@@ -499,9 +499,9 @@ class DescuentoForm(ModelForm):
         model = Headings
         fields = '__all__'
         widgets = {
-            'name': TextInput(attrs={'class': 'form-control','placeholder': 'Ingrese un nombre'}),
-            'code': TextInput(attrs={'class': 'form-control','placeholder': 'Ingrese un código de referencia'}),
-            'order': TextInput(attrs={'class': 'form-control' ,'placeholder': 'Ingrese una posición'}),
+            'name': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese un nombre'}),
+            'code': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese un código de referencia'}),
+            'order': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese una posición'}),
             'type': Select(attrs={'class': 'form-control select2', 'style': 'width: 100%;'}),
         }
         exclude = ['code']
@@ -516,3 +516,41 @@ class DescuentoForm(ModelForm):
         except Exception as e:
             data['error'] = str(e)
         return data
+
+
+class SalaryForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = Salary
+        fields = '__all__'
+        widgets = {
+            'year': TextInput(attrs={
+                'class': 'form-control datetimepicker-input',
+                'data-toggle': 'datetimepicker',
+                'data-target': '#year',
+                'value': datetime.datetime.now().year
+            }),
+            'month': Select(attrs={
+                'class': 'form-control select2',
+                'style': 'width: 100%;'
+            }),
+        }
+
+    year_month = CharField(widget=TextInput(
+        attrs={
+            'autocomplete': 'off',
+            'placeholder': 'MM / AA',
+            'class': 'form-control datetimepicker-input',
+            'id': 'year_month',
+            'data-toggle': 'datetimepicker',
+            'data-target': '#year_month',
+        }
+    ), label='Año/Mes')
+
+    employee = ChoiceField(widget=SelectMultiple(attrs={
+        'class': 'form-control select2',
+        'multiple': 'multiple',
+        'style': 'width: 100%;'
+    }), label='Empleado')

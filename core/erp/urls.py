@@ -5,6 +5,7 @@ from core.erp.views.cuentas.views import AccountsListView
 from core.erp.views.departaments.view import *
 from core.erp.views.empleados.views.view import *
 from core.erp.views.puesto_trabajo.views import *
+from core.erp.views.salary.view import *
 from core.erp.views.seleccionados.views import *
 from core.erp.views.turnos_trabajo.views import *
 from core.erp.views.vacante.views import *
@@ -64,11 +65,15 @@ urlpatterns = [
     path('asistencia/list/', AssistanceListView.as_view(), name='asistencia_list'),
     path('asistencia/add/', AssistanceCreateView.as_view(), name='asistencia_create'),
     path('asistencia/update/<str:date_joined>/', AssistanceUpdateView.as_view(), name='asistencia_update'),
-    path('asistencia/delete/<str:start_date>/<str:end_date>/', AssistanceDeleteView.as_view(), name='asistencia_delete'),
+    path('asistencia/delete/<str:start_date>/<str:end_date>/', AssistanceDeleteView.as_view(),
+         name='asistencia_delete'),
 
     # Conceptos de Descuentos
     path('descuento/list/', DescuentosListView.as_view(), name='descuento_list'),
     path('descuento/add/', DescuentosCreateView.as_view(), name='descuento_create'),
     path('descuento/update/<int:pk>/', DescuentosUpdateView.as_view(), name='descuento_update'),
     path('descuento/delete/<int:pk>/', DescuentoDeleteView.as_view(), name='descuento_delete'),
+
+    path('salary/list', SalaryListView.as_view(), name='salary_list')
+
 ]
