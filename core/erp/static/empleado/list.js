@@ -13,7 +13,7 @@ $(function () {
             dataSrc: ""
         },
         columns: [
-            {"data": "id"},
+            {"data": "hiring_date"},
             {"data": "codigo"},
             {"data": "fullname"},
             {"data": "department.name"},

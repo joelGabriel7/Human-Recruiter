@@ -27,7 +27,7 @@ POSTGRESQL = {
 MYSQL = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'pos',
+        'NAME': 'human_recruiter',
         'USER': 'root',
         'PASSWORD': 'admin12345678',
         'HOST': 'localhost',

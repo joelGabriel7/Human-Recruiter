@@ -213,12 +213,16 @@ class Employee(models.Model):
     salary = models.DecimalField(max_digits=8, default=0.00, decimal_places=2, null=False, verbose_name='Salario')
     accounts = models.ForeignKey(AccountsBank, on_delete=models.CASCADE, verbose_name='Cuenta de banco')
     estado = models.CharField(max_length=64, null=True, blank=True, choices=estado_choiches, verbose_name='Estado')
+    hiring_date = models.DateField(auto_now_add=True, null=True, blank=True, verbose_name='Fecha de contratación')
 
     def __str__(self):
         return f'{self.person.firstname} {self.person.lastname}'
 
     def get_full_name(self):
         return f'{self.person.firstname} {self.person.lastname}'
+
+    def hiring_date_format(self):
+        return self.hiring_date.strftime('%Y-%m-%d')
 
     def toJSON(self):
         item = model_to_dict(self)
@@ -227,6 +231,7 @@ class Employee(models.Model):
         item['fullname'] = self.person.firstname + ' ' + self.person.lastname
         item['department'] = self.department.toJSON()
         item['position'] = self.position.toJSON()
+        item['hiring_date'] = self.hiring_date.strftime('%Y-%m-%d')
         item['turn'] = self.turn.toJSON()
         item['accounts'] = self.accounts.toJSON()
         return item
@@ -258,7 +263,8 @@ class Headings(models.Model):
         return f'{self.id:04d}'
 
     def get_amount_detail_salary(self, employee, year, month):
-        queryset = self.salaryheadings_set.filter(salary_detail__employee_id=employee, salary_detail__salary__year=year, salary_detail__salary__month=month)
+        queryset = self.salaryheadings_set.filter(salary_detail__employee_id=employee, salary_detail__salary__year=year,
+                                                  salary_detail__salary__month=month)
         if queryset.exists():
             return queryset[0]
         return None
@@ -381,7 +387,6 @@ class SalaryHeadings(models.Model):
         verbose_name = 'Detalle de Salario'
         verbose_name_plural = 'Detalle de Salarios'
         default_permissions = ()
-
 
 
 class Assistance(models.Model):
