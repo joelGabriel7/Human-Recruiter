@@ -30,18 +30,19 @@
                     {{ title }}
                 </h3>
             </div>
-            {% block formulario-body %}
+
                 <div class="card-body">
                     {% csrf_token %}
-
-                    {% for field in form.visible_fields %}
-                        <div class="form-group">
-                            <label for="email">{{ field.label }}:</label>
-                            {{ field }}
-                        </div>
-                    {% endfor %}
+                     {% block formulario-body %}
+                            {% for field in form.visible_fields %}
+                                <div class="form-group">
+                                    <label for="email">{{ field.label }}:</label>
+                                    {{ field }}
+                                </div>
+                            {% endfor %}
+                     {% endblock %}
                 </div>
-            {% endblock %}
+
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary btn-flat">
                     <i class="fas fa-save"></i> Guardar registro

@@ -74,6 +74,7 @@ urlpatterns = [
     path('descuento/update/<int:pk>/', DescuentosUpdateView.as_view(), name='descuento_update'),
     path('descuento/delete/<int:pk>/', DescuentoDeleteView.as_view(), name='descuento_delete'),
 
-    path('salary/list', SalaryListView.as_view(), name='salary_list')
+    path('salary/list/', SalaryListView.as_view(), name='salary_list'),
+    path('salary/add/', SalaryCreateView.as_view(), name='salary_create'),
 
 ]

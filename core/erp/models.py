@@ -224,6 +224,9 @@ class Employee(models.Model):
     def hiring_date_format(self):
         return self.hiring_date.strftime('%Y-%m-%d')
 
+    def get_amount_of_assists(self, year, month):
+        return self.assistancedetail_set.filter(assistance__date_joined__year=year, assistance__date_joined__month=month, state=True).count()
+
     def toJSON(self):
         item = model_to_dict(self)
         item['person'] = self.person.toJSON()
