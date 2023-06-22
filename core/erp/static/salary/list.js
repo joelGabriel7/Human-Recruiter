@@ -36,7 +36,7 @@ var salary = {
             },
             columns: [
                 {data: "employee.codigo"},
-                {data: "employee.person.firstname"},
+                {data: "employee.fullname"},
                 {data: "employee.person.cedula"},
                 {data: "employee.accounts.number"},
                 {data: "salary.year"},

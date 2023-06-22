@@ -1,8 +1,8 @@
-var tblHeadings = null;
-var select_employee;
-var input_year_month;
-var fv;
-var salary = {
+let tblHeadings = null;
+let select_employee;
+let input_year_month;
+let fv;
+let salary = {
     listEmployees: function () {
         var employees = select_employee.select2('data').map(value => parseInt(value.id));
         var parameters = {
@@ -107,7 +107,7 @@ var salary = {
         $.each(headings, function (index, value) {
             if (!['employee', 'total_assets', 'total_discounts', 'total_charge'].includes(index)) {
                 switch (value.type.id) {
-                    case "haberes":
+                    case "remuneracion":
                         total_assets += parseFloat(value.amount);
                         break;
                     case "descuentos":
@@ -177,11 +177,11 @@ document.addEventListener('DOMContentLoaded', function (e) {
             }
         })
         .on('core.form.valid', function () {
-            var params = new FormData(fv.form);
+            let params = new FormData(fv.form);
             params.append('year', input_year_month.datetimepicker('date').format("YYYY"));
             params.append('month', input_year_month.datetimepicker('date').format("MM"));
             params.append('headings', JSON.stringify(tblHeadings.rows().data().toArray()));
-            var args = {
+            let args = {
                 'params': params,
                 'form': fv.form,
             };
@@ -211,7 +211,7 @@ $(function () {
         placeholder: 'Buscar..',
         allowClear: true,
         ajax: {
-            delay: 250,
+            delay: 150,
             type: 'POST',
             headers: {
                 'X-CSRFToken': csrftoken
