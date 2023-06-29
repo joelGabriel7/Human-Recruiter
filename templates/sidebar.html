@@ -13,7 +13,7 @@
                 {#                <img src="#" class="img-circle" alt="User Image">#}
             </div>
             <div class="info">
-                <a href="#" class="d-block">Nombre Usuario</a>
+                <a href="#" class="d-block">{{ request.user.username }}</a>
             </div>
         </div>
         <nav class="mt-2">
@@ -95,7 +95,7 @@
                             <a href="{% url 'erp:candidatos_list' %}" class="nav-link">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>
-                                    Candidatos
+                                    Persona
                                 </p>
                             </a>
                         </li>
@@ -104,7 +104,7 @@
                             <a href="{% url 'erp:select_list' %}" class="nav-link">
                                 <i class="nav-icon fas fa-check-circle"></i>
                                 <p>
-                                    Aplicantes
+                                    Candidatos
                                 </p>
                             </a>
                         </li>
@@ -121,12 +121,6 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview" style="display: block;">
-                        <li class="nav-item">
-                            <a href="{% url 'erp:cuenta_list' %}" class="nav-link">
-                                <i class="nav-icon fa-solid fa-building-columns"></i>
-                                <p>Cuentas</p>
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a href="{% url 'erp:descuento_list' %}" class="nav-link">
                                 <i class=" nav-icon  fas fa-calculator"></i>

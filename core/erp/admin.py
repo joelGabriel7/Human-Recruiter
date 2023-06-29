@@ -3,7 +3,7 @@ from django.contrib import admin
 from core.erp.models import *
 
 # Register your models here.
-admin.site.register(AccountsBank)
+
 admin.site.register(Departments)
 admin.site.register(Headings)
 admin.site.register(SalaryHeadings)

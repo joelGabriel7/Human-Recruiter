@@ -22,9 +22,6 @@ def generate_employee_code():
     code = ''.join(random.choice(letters) for i in range(6)) + ''.join(random.choice(numbers) for i in range(3))
     return code
 
-
-# #
-# #
 employe_code = generate_employee_code()
 
 
@@ -62,30 +59,7 @@ class Candidatos(models.Model):
 
 # self.min_salary, '.2f'
 
-class AccountsBank(models.Model):
-    choices = (
-        ('Banreservas', 'Banreservas'),
-        ('Banco Popular', 'Banco Popular'),
-        ('BHD León', 'BHD León'),
-        ('Scotiabank', 'Scotiabank'),
-    )
 
-    number = models.CharField(max_length=64, default=generar_numero_cuenta, verbose_name='Numeros de cuenta')
-    type = models.CharField(max_length=32, verbose_name='Tipo de cuenta')
-    bank = models.CharField(max_length=32, choices=choices, null=False, default='Banreservas', verbose_name='Banco')
-
-    def __str__(self):
-        return f'Tipo de cuenta: {self.type}'
-
-    def toJSON(self):
-        item = model_to_dict(self)
-        item['bank'] = {'id': self.bank, 'name': self.bank}
-        return item
-
-    class Meta:
-        verbose_name = 'Cuenta'
-        verbose_name_plural = 'Cuentas'
-        # ordering = [id]
 
 
 class Departments(models.Model):
@@ -211,7 +185,6 @@ class Employee(models.Model):
     position = models.ForeignKey(EmployeePositions, on_delete=models.CASCADE, verbose_name='Posición')
     turn = models.ForeignKey(EmployeeTurn, on_delete=models.CASCADE, verbose_name='Turno')
     salary = models.DecimalField(max_digits=8, default=0.00, decimal_places=2, null=False, verbose_name='Salario')
-    accounts = models.ForeignKey(AccountsBank, on_delete=models.CASCADE, verbose_name='Cuenta de banco')
     estado = models.CharField(max_length=64, null=True, blank=True, choices=estado_choiches, verbose_name='Estado')
     hiring_date = models.DateField(auto_now_add=True, null=True, blank=True, verbose_name='Fecha de contratación')
 
@@ -236,7 +209,6 @@ class Employee(models.Model):
         item['position'] = self.position.toJSON()
         item['hiring_date'] = self.hiring_date.strftime('%Y-%m-%d')
         item['turn'] = self.turn.toJSON()
-        item['accounts'] = self.accounts.toJSON()
         return item
 
     # self.firstname + ' ' + self.lastname

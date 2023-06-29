@@ -20,7 +20,6 @@ $(function () {
             {"data": "position.name"},
             {"data": "turn.name"},
             {"data": "salary"},
-            {"data": "accounts.type"},
             {"data": "estado"},
             {"data": "desc"},
         ],

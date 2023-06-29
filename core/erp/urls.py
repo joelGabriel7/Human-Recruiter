@@ -1,7 +1,7 @@
 from django.urls import path
 
 from core.erp.views.candidate.views import *
-from core.erp.views.cuentas.views import AccountsListView
+
 from core.erp.views.departaments.view import *
 from core.erp.views.empleados.views.view import *
 from core.erp.views.puesto_trabajo.views import *
@@ -52,9 +52,6 @@ urlpatterns = [
     # path('select/edit/<int:pk>/', SelectUpdateView.as_view(), name='select_update'),
     # path('select/delete/<int:pk>/', SelectDeleteView.as_view(), name='select_delete'),
 
-    # Cuentas
-    path('cuentas/list/', AccountsListView.as_view(), name='cuenta_list'),
-
     # Empleados
     path('empleados/list/', EmpleadoListView.as_view(), name='empleados_list'),
     path('empleados/add/', EmpleadoCreateView.as_view(), name='empleados_create'),
@@ -65,8 +62,7 @@ urlpatterns = [
     path('asistencia/list/', AssistanceListView.as_view(), name='asistencia_list'),
     path('asistencia/add/', AssistanceCreateView.as_view(), name='asistencia_create'),
     path('asistencia/update/<str:date_joined>/', AssistanceUpdateView.as_view(), name='asistencia_update'),
-    path('asistencia/delete/<str:start_date>/<str:end_date>/', AssistanceDeleteView.as_view(),
-         name='asistencia_delete'),
+    path('asistencia/delete/<str:start_date>/<str:end_date>/', AssistanceDeleteView.as_view(), name='asistencia_delete'),
 
     # Conceptos de Descuentos
     path('descuento/list/', DescuentosListView.as_view(), name='descuento_list'),

@@ -38,7 +38,6 @@ var salary = {
                 {data: "employee.codigo"},
                 {data: "employee.fullname"},
                 {data: "employee.person.cedula"},
-                {data: "employee.accounts.number"},
                 {data: "salary.year"},
                 {data: "salary.month.name"},
                 {data: "income"},
@@ -51,7 +50,8 @@ var salary = {
                     targets: [0],
                     class: 'text-center',
                     render: function (data, type, row) {
-                        return data;
+                         // html += '<span class="badge badge-success">' + data.name + '</span>';
+                        return '<span class="badge badge-secondary">' + data + '</span>';
                     }
                 },
                 {
