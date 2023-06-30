@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
@@ -8,7 +9,7 @@ from core.erp.forms import *
 from core.erp.models import *
 
 
-class SelectListView(TemplateView):
+class SelectListView(LoginRequiredMixin,TemplateView):
     model = Selection
     template_name = 'seleccionados/list.html'
 

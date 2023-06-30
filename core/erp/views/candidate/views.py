@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
@@ -10,7 +11,7 @@ from core.erp.models import *
 
 # Create your views here.
 
-class CandidateListView(ListView):
+class CandidateListView(LoginRequiredMixin,ListView):
     model = Candidatos
     template_name = 'candidatos/list.html'
 
@@ -41,7 +42,7 @@ class CandidateListView(ListView):
         return context
 
 
-class CandidateCreateView(CreateView):
+class CandidateCreateView(LoginRequiredMixin,CreateView):
     model = Candidatos
     form_class = CandidateForm
     template_name = 'candidatos/create.html'
@@ -73,7 +74,7 @@ class CandidateCreateView(CreateView):
         return context
 
 
-class CandidateUpdateView(UpdateView):
+class CandidateUpdateView(LoginRequiredMixin,UpdateView):
     model = Candidatos
     form_class = CandidateForm
     template_name = 'candidatos/create.html'
@@ -106,7 +107,7 @@ class CandidateUpdateView(UpdateView):
         return context
 
 
-class CandidateDeleteView(DeleteView):
+class CandidateDeleteView(LoginRequiredMixin,DeleteView):
     model = Candidatos
     form_class = CandidateForm
     template_name = 'candidatos/delete.html'

@@ -5,6 +5,7 @@ from io import BytesIO
 
 import xlsxwriter as xlsxwriter
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import render
@@ -24,7 +25,7 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class AssistanceListView(FormView):
+class AssistanceListView(LoginRequiredMixin,FormView):
     form_class = AssistanceForm
     template_name = 'attendance/list.html'
     permission_required = 'view_assistance'
@@ -97,7 +98,7 @@ class AssistanceListView(FormView):
         return context
 
 
-class AssistanceCreateView(CreateView):
+class AssistanceCreateView(LoginRequiredMixin,CreateView):
     model = Assistance
     template_name = 'attendance/create.html'
     form_class = AssistanceForm
@@ -151,7 +152,7 @@ class AssistanceCreateView(CreateView):
         return context
 
 
-class AssistanceUpdateView(FormView):
+class AssistanceUpdateView(LoginRequiredMixin,FormView):
     template_name = 'attendance/create.html'
     form_class = AssistanceForm
     success_url = reverse_lazy('erp:asistencia_list')
@@ -228,7 +229,7 @@ class AssistanceUpdateView(FormView):
         return context
 
 
-class AssistanceDeleteView(TemplateView):
+class AssistanceDeleteView(LoginRequiredMixin,TemplateView):
     template_name = 'attendance/delete.html'
     success_url = reverse_lazy('erp:asistencia_list')
 

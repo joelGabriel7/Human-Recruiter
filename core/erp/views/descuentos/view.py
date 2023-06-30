@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 from core.erp.models import *
 from core.erp.forms import *
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -17,7 +17,7 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class DescuentosListView(TemplateView):
+class DescuentosListView(LoginRequiredMixin,TemplateView):
     template_name = 'descuentos/list.html'
 
     def post(self, request, *args, **kwargs):
@@ -43,7 +43,7 @@ class DescuentosListView(TemplateView):
         return context
 
 
-class DescuentosCreateView(CreateView):
+class DescuentosCreateView(LoginRequiredMixin,CreateView):
     model = Headings
     form_class = DescuentoForm
     template_name = 'descuentos/create.html'
@@ -80,7 +80,7 @@ class DescuentosCreateView(CreateView):
         return context
 
 
-class DescuentosUpdateView(UpdateView):
+class DescuentosUpdateView(LoginRequiredMixin,UpdateView):
     model = Headings
     form_class = DescuentoForm
     template_name = 'descuentos/create.html'
@@ -121,7 +121,7 @@ class DescuentosUpdateView(UpdateView):
         return context
 
 
-class DescuentoDeleteView(DeleteView):
+class DescuentoDeleteView(LoginRequiredMixin,DeleteView):
     model = Headings
     template_name = 'delete.html'
     success_url = reverse_lazy('erp:descuento_list')

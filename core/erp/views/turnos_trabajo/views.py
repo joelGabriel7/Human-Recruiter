@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
@@ -8,7 +9,7 @@ from core.erp.models import *
 from core.erp.forms import *
 
 
-class TurnJobListView(ListView):
+class TurnJobListView(LoginRequiredMixin,ListView):
     model = EmployeeTurn
     template_name = 'turnos_trabajo/list.html'
 
@@ -39,7 +40,7 @@ class TurnJobListView(ListView):
         return context
 
 
-class TurnJobCreateView(CreateView):
+class TurnJobCreateView(LoginRequiredMixin,CreateView):
     model = EmployeeTurn
     form_class = EmployeeTurnForm
     template_name = 'turnos_trabajo/create.html'
@@ -70,7 +71,7 @@ class TurnJobCreateView(CreateView):
         return context
 
 
-class TurnJobUpdateView(UpdateView):
+class TurnJobUpdateView(LoginRequiredMixin,UpdateView):
     model = EmployeeTurn
     form_class = EmployeeTurnForm
     template_name = 'turnos_trabajo/create.html'
@@ -102,7 +103,7 @@ class TurnJobUpdateView(UpdateView):
         return context
 
 
-class TurnJobDeleteView(DeleteView):
+class TurnJobDeleteView(LoginRequiredMixin,DeleteView):
     model = EmployeeTurn
     template_name = 'turnos_trabajo/delete.html'
     success_url = reverse_lazy("erp:turno_trabajo_list")

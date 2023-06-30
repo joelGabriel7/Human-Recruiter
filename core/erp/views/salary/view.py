@@ -33,7 +33,7 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class SalaryListView(FormView):
+class SalaryListView(LoginRequiredMixin,FormView):
     form_class = SalaryForm
     template_name = 'salary/list.html'
 
@@ -175,7 +175,7 @@ class SalaryListView(FormView):
         return context
 
 
-class SalaryCreateView(CreateView):
+class SalaryCreateView(LoginRequiredMixin,CreateView):
     model = Salary
     template_name = 'salary/create.html'
     form_class = SalaryForm

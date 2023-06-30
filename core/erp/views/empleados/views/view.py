@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
@@ -7,7 +8,7 @@ from core.erp.forms import *
 from core.erp.models import *
 
 
-class EmpleadoListView(ListView):
+class EmpleadoListView(LoginRequiredMixin,ListView):
     model = Employee
     template_name = 'empleado/list.html'
 

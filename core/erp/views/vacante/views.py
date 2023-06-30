@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
@@ -8,7 +9,7 @@ from core.erp.forms import *
 from core.erp.models import *
 
 
-class VacantsListView(ListView):
+class VacantsListView(LoginRequiredMixin,ListView):
     model = Vacants
     template_name = 'vacante/list.html'
 
@@ -39,7 +40,7 @@ class VacantsListView(ListView):
         return context
 
 
-class VacantsCreateView(CreateView):
+class VacantsCreateView(LoginRequiredMixin,CreateView):
     model = Vacants
     form_class = VacantsForm
     template_name = 'vacante/create.html'
@@ -69,7 +70,7 @@ class VacantsCreateView(CreateView):
         return context
 
 
-class VacantsUpdateView(UpdateView):
+class VacantsUpdateView(LoginRequiredMixin,UpdateView):
     model = Vacants
     form_class = VacantsForm
     template_name = 'vacante/create.html'
@@ -100,7 +101,7 @@ class VacantsUpdateView(UpdateView):
         return context
 
 
-class VacantsDeleteView(DeleteView):
+class VacantsDeleteView(LoginRequiredMixin,DeleteView):
     model = Vacants
     template_name = 'vacante/delete.html'
 

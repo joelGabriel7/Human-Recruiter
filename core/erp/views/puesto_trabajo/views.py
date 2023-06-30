@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
@@ -8,7 +9,7 @@ from core.erp.models import *
 from core.erp.forms import *
 
 
-class PositionsJobListView(ListView):
+class PositionsJobListView(LoginRequiredMixin,ListView):
     model = EmployeePositions
     template_name = 'positions/list.html'
 
@@ -39,7 +40,7 @@ class PositionsJobListView(ListView):
         return context
 
 
-class PositionsJobCreateView(CreateView):
+class PositionsJobCreateView(LoginRequiredMixin,CreateView):
     model = EmployeePositions
     form_class = PositionsForm
     template_name = 'positions/create.html'
@@ -70,7 +71,7 @@ class PositionsJobCreateView(CreateView):
         return context
 
 
-class PositionsJobUpdateView(UpdateView):
+class PositionsJobUpdateView(LoginRequiredMixin,UpdateView):
     model = EmployeePositions
     form_class = PositionsForm
     template_name = 'positions/create.html'
@@ -102,7 +103,7 @@ class PositionsJobUpdateView(UpdateView):
         return context
 
 
-class PositionsJobDeleteView(DeleteView):
+class PositionsJobDeleteView(LoginRequiredMixin,DeleteView):
     model = EmployeePositions
     template_name = 'positions/delete.html'
     success_url = reverse_lazy('erp:position_list')
