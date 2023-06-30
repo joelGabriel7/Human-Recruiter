@@ -13,8 +13,11 @@ Including another URLconf
     1. Import the include function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+
+from config import settings
 from core.dashboard.views import DashboardView
 # from core.erp.views import *
 
@@ -25,5 +28,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', include('core.login.url')),
     path('erp/', include('core.erp.urls')),
-
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

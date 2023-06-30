@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'core.login',
     'core.erp',
     'widget_tweaks',
+    'core.user',
 
 
 ]
@@ -122,6 +123,12 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 LOGIN_URL = '/login/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+AUTH_USER_MODEL = 'user.User'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
