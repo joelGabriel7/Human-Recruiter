@@ -23,6 +23,7 @@
       <list>
         <option value="$MODULE_DIR$/core/erp/templates" />
         <option value="$MODULE_DIR$/templates" />
+        <option value="$MODULE_DIR$/core/user/templates" />
       </list>
     </option>
   </component>
