@@ -340,9 +340,6 @@ class SelectionForm(ModelForm):
         return data
 
 
-
-
-
 class EmployeForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
