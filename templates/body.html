@@ -1,72 +1,72 @@
 {% extends 'basic.html' %}
 {% block body %}
-    <body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed">
 
-    <div class="wrapper">
-        <!-- Header -->
-        {% include 'includes/navbar.html' %}
-        <!-- Sidebar -->
-        {% include 'sidebar.html' %}
-        <!-- Content -->
-        <div class="content-wrapper">
-            <!--Block breadcrumb-->
-            <section class="content-header">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <!--Block breadcrumb-->
-                            {% block breadcrumb %}
-                                <div class="card">
-                                    <div class="card-header">
+        <div class="wrapper">
+            <!-- Header -->
+            {% include 'includes/navbar.html' %}
+            <!-- Sidebar -->
+            {% include 'sidebar.html' %}
+            <!-- Content -->
+            <div class="content-wrapper">
+                <!--Block breadcrumb-->
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!--Block breadcrumb-->
+                                {% block breadcrumb %}
+                                    <div class="card">
+                                        <div class="card-header">
 
-                                        <nav aria-label="breadcrumb">
-                                            <ol class="breadcrumb">
-                                                <li class="breadcrumb-item">
-                                                    <a href="{% url 'dashboard' %}"><i class="fas fa-home"></i>
-                                                        Panel</a>
-                                                </li>
-                                                <li class="breadcrumb-item"><a href="{{ list_url }}">{{ entity }}</a>
-                                                </li>
-                                            </ol>
-                                        </nav>
+                                            <nav aria-label="breadcrumb">
+                                                <ol class="breadcrumb">
+                                                    <li class="breadcrumb-item">
+                                                        <a href="{% url 'dashboard' %}"><i class="fas fa-home"></i>
+                                                            Panel</a>
+                                                    </li>
+                                                    <li class="breadcrumb-item"><a href="{{ list_url }}">{{ entity }}</a>
+                                                    </li>
+                                                </ol>
+                                            </nav>
+                                        </div>
                                     </div>
-                                </div>
 
-                            {% endblock %}
+                                {% endblock %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-            <div class="content">
-                <div class="container-fluid">
-                    {% block content %}
+                </section>
+                <div class="content">
+                    <div class="container-fluid">
+                        {% block content %}
 
-                    {% endblock %}
+                        {% endblock %}
+                    </div>
                 </div>
             </div>
+            <!-- Footer -->
+            {% include 'footer.html' %}
         </div>
-        <!-- Footer -->
-        {% include 'footer.html' %}
-    </div>
-    <!-- Block javascript -->
-    {% block javascript %}
+        <!-- Block javascript -->
+        {% block javascript %}
 
-    {% endblock %}
-    <script>
-        {% if messages %}
-            var html = '<p>';
-            {% for message in messages %}
-                html += '{{ message }}<br>';
-            {% endfor %}
-            html += '</p>';
-            Swal.fire({
-                title: 'Error!',
-                html: html,
-                icon: 'error'
-            });
-        {% endif %}
+        {% endblock %}
+        <script>
+            {% if messages %}
+                var html = '<p>';
+                {% for message in messages %}
+                    html += '{{ message }}<br>';
+                {% endfor %}
+                html += '</p>';
+                Swal.fire({
+                    title: 'Error!',
+                    html: html,
+                    icon: 'error'
+                });
+            {% endif %}
     </script>
-    </body>
+</body>
 {% endblock %}
 
 
