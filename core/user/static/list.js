@@ -29,13 +29,16 @@ $(function () {
             //     orderable: false,
             //     render: function (data, type, row) {
             //         var html = '';
-            //         $.each(row.gender, function (key,value) {
+            //         $.each(row.groups, function (key,value) {
             //             html+= '<span class="badge badge-success">'+value.name+'</span>  '
             //         })
             //         return html;
             //     }
             // },
+
+
             {
+
                 targets: [-1],
                 class: 'text-center',
                 orderable: false,
@@ -45,17 +48,6 @@ $(function () {
                     return buttons;
                 }
             },
-
-            {
-                targets: [-2],
-                class: 'text-center',
-                orderable: false,
-                render: function (data, type, row) {
-                    return '<img src="' + row.image + '" class="img-fluid mx-auto d-block" style="width: 20px; height: 20px;"  alt="">'
-                }
-            },
-
-
         ],
         initComplete: function (settings, json) {
 
