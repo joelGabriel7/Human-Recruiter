@@ -35,10 +35,10 @@ class CandidateListView(LoginRequiredMixin,ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Listados de Candidatos'
+        context['title'] = 'Listados de Personas'
         context['create_url'] = reverse_lazy('erp:candidatos_create')
         context['list_url'] = reverse_lazy('erp:candidatos_list')
-        context['entity'] = 'Candidatos'
+        context['entity'] = 'Personas'
         return context
 
 
@@ -66,7 +66,7 @@ class CandidateCreateView(LoginRequiredMixin,CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Creación de un candidato'
+        context['title'] = 'Creación de una Persona'
         context['entity'] = 'Candidatos'
         context['list_url'] = reverse_lazy('erp:candidatos_list')
         context['action'] = 'add'
@@ -99,7 +99,7 @@ class CandidateUpdateView(LoginRequiredMixin,UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Edicion de un candidato'
+        context['title'] = 'Edicion de una Persona'
         context['entity'] = 'Candidatos'
         context['list_url'] = reverse_lazy('erp:candidatos_list')
         context['action'] = 'edit'
@@ -127,7 +127,7 @@ class CandidateDeleteView(LoginRequiredMixin,DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Eliminacion de  un candidato'
+        context['title'] = 'Eliminacion de  una Personas'
         context['entity'] = 'Candidatos'
         context['list_url'] = reverse_lazy('erp:candidatos_list')
         context['create_url'] = reverse_lazy('erp:candidatos_create')

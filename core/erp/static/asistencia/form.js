@@ -44,7 +44,7 @@ let assistance = {
                     class: 'text-center',
                     render: function (data, type, row) {
                         var attr = row.state === 1 ? ' checked' : '';
-                        return '<input type="checkbox" name="state" class="form-check-inline" ' + attr + '>';
+                        return '<input type="checkbox" name="state" class="form-control-checkbox" ' + attr + '>';
                     }
                 },
             ],

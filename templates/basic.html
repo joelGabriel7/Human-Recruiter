@@ -1,38 +1,37 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/png" />
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/png"/>
     <title>{{ title }}</title>
     <!-- Font Awesome Icons -->
     <!-- Functions -->
 
-    
+
     <link rel="stylesheet" href="{% static 'lib/adminlte-3.0.4/plugins/font-awesome-5.11.1/css/all.min.css' %}"/>
     <!-- Theme style -->
-    <link rel="stylesheet"href="{% static 'lib/adminlte-3.0.4/css/adminlte.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'lib/adminlte-3.0.4/css/adminlte.min.css' %}"/>
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"/>
     <!-- jQuery -->
     <script src="{% static 'lib/adminlte-3.0.4/plugins/jquery/jquery.min.js' %}"></script>
     <!-- AdminLTE App -->
-    <script src="{% static 'lib/adminlte-3.0.4/js/adminlte.min.js' %}"></script>
+{#    <script src="{% static 'lib/adminlte-3.0.4/js/adminlte.min.js' %}"></script>#}
     <!-- Sweetalert2 -->
     <script src="{% static 'lib/sweetalert2-9.10.0/sweetalert2.all.min.js' %}"></script>
     <script src="{% static 'lib/jquery-loading-overlay-2.1.7/js/loadingoverlay.min.js' %}"></script>
     <script src="{% static 'lib/jquery-confirm-3.3.4/js/jquery-confirm.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'lib/jquery-confirm-3.3.4/css/jquery-confirm.min.css' %}"/>
     <!-- My css -->
-      
-      <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+
+    <link rel="stylesheet" href="{% static 'css/mycss.css' %}"/>
 
     <link rel="stylesheet" href="{% static 'lib/fontawesome-6.1.1/css/all.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'lib/jquery-ui-1.12.1/jquery-ui.css' %}"/>
     <!--Javascript-->
-    {#    <script src="{% static 'lib/bootstrap-4.6.0/js/jquery.min.js' %}"></script>#}
     <script src="{% static 'lib/jquery-ui-1.12.1/jquery-ui.min.js' %}"></script>
     <script src="{% static 'lib/bootstrap-4.6.0/js/popper.min.js' %}"></script>
     <script src="{% static 'lib/bootstrap-4.6.0/js/bootstrap.min.js' %}"></script>
@@ -41,8 +40,8 @@
 
     <!-- Block head -->
     {% block head %} {% endblock %}
-  </head>
+</head>
 </html>
 <script src="{% static 'js/main.js' %}"></script>
-{% block head_form %} {% endblock %} 
+{% block head_form %} {% endblock %}
 {% block body %} {% endblock %}
