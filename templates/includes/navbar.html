@@ -8,7 +8,15 @@
       ></a>
     </li>
     <li class="nav-item d-none d-sm-inline-block">
-      <a href="{% url 'dashboard' %}" class="nav-link">Home</a>
+      <a href="{% url 'dashboard' %}" class="nav-link">Home</a>  
+      
+    </li>
+
+    <li class="nav-item d-none d-sm-inline-block">
+      <a class="nav-link" data-toggle="dropdown" aria-expanded="false">
+        <i class="far fa-user"></i> Usuario: {{ request.user.username }}
+    </a>
+      
     </li>
   </ul>
 

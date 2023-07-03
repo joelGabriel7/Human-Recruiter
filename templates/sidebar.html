@@ -150,14 +150,16 @@
                         </p>
                     </a>
                     <ul class="nav-treeview" style="display: block;">
+                       <!--  Accesos  -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="fas fa-key mr-2"></i>
+                                <i class="nav-icon fas fa-user-secret"></i>
                                 <p>
-                                    Cambiar Password
+                                    Accesos
                                 </p>
                             </a>
                         </li>
+                            <!-- Usuarios -->
                         <li class="nav-item">
                             <a href="{% url 'user:user_list' %}" class="nav-link">
                                 <i class="nav-icon fas fa-user-friends"></i>
@@ -166,15 +168,43 @@
                                 </p>
                             </a>
                         </li>
+                        <!--Grupos-->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="fas fa-edit mr-2"></i>
+                                <i class="nav-icon fas fa-people-group"></i>
                                 <p>
-                                    Editar Perfil
+                                    Grupos
                                 </p>
                             </a>
                         </li>
                     </ul>
+                    {% comment %} Compañia {% endcomment %}
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-building mr-2"></i>
+                            <p>
+                                Compañia
+                            </p>
+                        </a>
+                    </li>
+                    {% comment %} Change Password {% endcomment %}
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-key mr-2"></i>
+                            <p>
+                                Cambiar Password
+                            </p>
+                        </a>
+                    </li>
+                    {% comment %} Update Profile {% endcomment %}
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-edit mr-2"></i>
+                            <p>
+                                Editar Perfil
+                            </p>
+                        </a>
+                    </li>
                 </li>
             </ul>
         </nav>
