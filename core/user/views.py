@@ -26,8 +26,12 @@ class UserListView(LoginRequiredMixin, ListView):
             action = request.POST['action']
             if action == 'searchdata':
                 data = []
+                position = 1
                 for i in User.objects.all():
-                    data.append(i.toJson())
+                    item= i.toJson() 
+                    item['position'] = position
+                    data.append(item)
+                    position+=1
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
@@ -106,3 +110,26 @@ class UserUpdateView(LoginRequiredMixin,UpdateView):
       
         return context
         
+class UserDeleteView(LoginRequiredMixin,DeleteView):
+    model = User
+    template_name = 'delete.html'
+    success_url = reverse_lazy('user:user_list')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            self.object.delete()
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Eliminación de un usuario'
+        context['entity'] = 'Usuarios'
+        context['list_url'] = self.success_url
+        return context

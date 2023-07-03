@@ -17,7 +17,6 @@ function message_error(obj) {
 }
 
 function submit_with_ajax(url, title, content, parameters, callback) {
-
     $.confirm({
         theme: 'material',
         title: title,
