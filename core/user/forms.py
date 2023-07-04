@@ -6,61 +6,60 @@ from core.user.models import *
 class UserForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for form in self.visible_fields():
-            form.field.widget.attrs['class'] = 'form-control'
-            # form.field.widget.attrs['autocomplete'] = 'off'
+
         self.fields['first_name'].widget.attrs['autofocus'] = True
+        self.fields['image'].widget.attrs['class'] = 'form-control'
 
     class Meta:
         model = User
         fields = 'first_name', 'last_name', 'email', 'username', 'password', 'image', 'groups'
+        labels = {
+            'groups': 'Perfil de usuario'
+        }
         widgets = {
             'first_name': TextInput(
                 attrs={
+                    'placeholder': 'Ingrese sus nombre',
                     'class': 'form-control',
-                    'placeholder': 'Ingrese un nombre',
-                    'autocomplete': 'off'
                 }
             ),
-             'last_name': TextInput(
+            'last_name': TextInput(
                 attrs={
+                    'placeholder': 'Ingrese sus apellido',
                     'class': 'form-control',
-                    'placeholder': 'Ingrese un apellido',
-                    'autocomplete': 'off'
+
                 }
             ),
-              'email': TextInput(
+            'email': TextInput(
                 attrs={
+                    'placeholder': 'Ingrese su Email',
                     'class': 'form-control',
-                    'placeholder': 'Ingrese un email',
-                    'autocomplete': 'off'
+
                 }
             ),
 
-             'username': TextInput(
+            'username': TextInput(
                 attrs={
+                    'placeholder': 'Crea un Nombre de Usuario',
                     'class': 'form-control',
-                    'placeholder': 'Ingrese un username',
-                    'autocomplete': 'off'
                 }
             ),
-            'password': PasswordInput( render_value=True,
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Ingrese un password',
-                    'autocomplete': 'off'
-                }
-            ),
-            # 'image': FileInput(
-            #     attrs={
-            #         'class': 'form-control',
-               
-            #     }
-            # ),
-           
-           
+
+            'password': PasswordInput(render_value=True,
+                                      attrs={
+                                          'placeholder': 'Crea una Contraseña',
+                                          'class': 'form-control',
+                                      }
+                                      ),
+            'groups': SelectMultiple(attrs={
+                'class': 'form-control select2',
+                'style': 'width: 100%',
+                "multiple": "multiple",
+
+            }),
         }
-        exclude = ['date_joined','is_active', 'is_staff','is_superuser' ,'user_permissions', 'groups', 'last_login']
+        exclude = ['user_permissions', 'last_login', 'date_joined', 'is_superuser', 'is_active', 'is_staff']
+
     def save(self, commit=True):
         data = {}
         form = super()
@@ -75,7 +74,9 @@ class UserForm(ModelForm):
                     if user.password != password_cleaned:
                         user_created.set_password(password_cleaned)
                 user_created.save()
-
+                user_created.groups.clear()
+                for group in self.cleaned_data['groups']:
+                    user_created.groups.add(group)
             else:
                 data['error'] = form.errors
         except Exception as e:

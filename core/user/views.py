@@ -56,7 +56,7 @@ class UserCreateView(LoginRequiredMixin,CreateView):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
-    def post(self, request):
+    def post(self, request, **kwargs):
         data = {}
         try:
             action = request.POST['action']

@@ -3,22 +3,24 @@
 {% block head %}
 
 
-   <link rel="stylesheet" href="{% static 'lib/formvalidation-1.9.0/css/formValidation.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/formvalidation-1.9.0/css/formValidation.min.css' %}">
     <script src="{% static 'lib/formvalidation-1.9.0/js/es6-shim.min.js' %}"></script>
     <script src="{% static 'lib/formvalidation-1.9.0/js/FormValidation.min.js' %}"></script>
     <script src="{% static 'lib/formvalidation-1.9.0/js/plugins/Bootstrap.min.js' %}"></script>
     <script src="{% static 'lib/formvalidation-1.9.0/js/locales/es_ES.min.js' %}"></script>
 
+    {% block head_form %}
+        <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+        <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+        <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
 
-    <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
-    <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
-    <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
-    <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
+    {% endblock %}
 
 {% endblock %}
 {% block content %}
     <form method="post" action="." id="frmForm" data-url="{{ list_url }}">
-    <input type="hidden" name="action" value="{{ action }}" >
+        <input type="hidden" name="action" value="{{ action }}">
         <div class="card card-default">
             <div class="card-header">
                 <h3 class="card-title">
@@ -31,17 +33,17 @@
                 </h3>
             </div>
 
-                <div class="card-body">
-                    {% csrf_token %}
-                     {% block formulario-body %}
-                            {% for field in form.visible_fields %}
-                                <div class="form-group">
-                                    <label for="email">{{ field.label }}:</label>
-                                    {{ field }}
-                                </div>
-                            {% endfor %}
-                     {% endblock %}
-                </div>
+            <div class="card-body">
+                {% csrf_token %}
+                {% block formulario-body %}
+                    {% for field in form.visible_fields %}
+                        <div class="form-group">
+                            <label for="email">{{ field.label }}:</label>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                {% endblock %}
+            </div>
 
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary btn-flat">
