@@ -66,7 +66,16 @@ class UserForm(ModelForm):
         form = super()
         try:
             if form.is_valid():
-                form.save()
+                password_cleaned = self.cleaned_data['password']
+                user_created=form.save(commit=False)
+                if user_created.pk is None:
+                    user_created.set_password(password_cleaned)
+                else:
+                    user = User.objects.get(pk=user_created.pk)
+                    if user.password != password_cleaned:
+                        user_created.set_password(password_cleaned)
+                user_created.save()
+
             else:
                 data['error'] = form.errors
         except Exception as e:

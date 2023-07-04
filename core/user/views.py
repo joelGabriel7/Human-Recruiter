@@ -28,10 +28,9 @@ class UserListView(LoginRequiredMixin, ListView):
                 data = []
                 position = 1
                 for i in User.objects.all():
-                    item= i.toJson() 
-                    item['position'] = position
+                    item= i.toJson()
                     data.append(item)
-                    position+=1
+
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:

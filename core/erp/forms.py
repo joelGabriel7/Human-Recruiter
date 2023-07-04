@@ -446,8 +446,8 @@ class DescuentoForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['name'].widget.attrs['autofocus'] = True
-        self.fields['state'].widget.attrs['class'] = 'form-control-checkbox'
-        self.fields['has_quantity'].widget.attrs['class'] = 'form-control-checkbox'
+        self.fields['state'].widget.attrs['class'] = 'form-control form-control-checkbox'
+        self.fields['has_quantity'].widget.attrs['class'] = 'form-control form-control-checkbox'
 
     class Meta:
         model = Headings
