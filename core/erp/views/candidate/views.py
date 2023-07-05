@@ -7,13 +7,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from core.erp.forms import CandidateForm
 from core.erp.models import *
+from core.erp.mixins import *
 
 
 # Create your views here.
 
-class CandidateListView(LoginRequiredMixin,ListView):
+class CandidateListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
     model = Candidatos
     template_name = 'candidatos/list.html'
+    permission_required = ('erp.change_candidatos','erp.delete_candidatos')
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):

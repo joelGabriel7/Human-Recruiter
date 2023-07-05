@@ -6,11 +6,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from core.erp.forms import *
 from core.erp.models import *
+from core.erp.mixins import *
 
 
-class EmpleadoListView(LoginRequiredMixin,ListView):
+class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
     model = Employee
     template_name = 'empleado/list.html'
+    permission_required = 'erp.view_employee'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -39,10 +41,11 @@ class EmpleadoListView(LoginRequiredMixin,ListView):
         return context
 
 
-class EmpleadoCreateView(CreateView):
+class EmpleadoCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):
     model = Employee
     template_name = 'empleado/create.html'
     form_class = EmployeForm
+    permission_required = 'erp.add_employee'
 
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -70,10 +73,11 @@ class EmpleadoCreateView(CreateView):
         return context
 
 
-class EmpleadoUpdateView(UpdateView):
+class EmpleadoUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,UpdateView):
     model = Employee
     template_name = 'empleado/create.html'
     form_class = EmployeForm
+    permission_required = 'erp.change_employee'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -102,10 +106,11 @@ class EmpleadoUpdateView(UpdateView):
         return context
 
 
-class EmpleadoDeleteView(DeleteView):
+class EmpleadoDeleteView(LoginRequiredMixin,ValidatePermissionRequiredMixin,DeleteView):
     model = Employee
     template_name = 'empleado/delete.html'
     success_url = reverse_lazy('erp:empleados_list')
+    permission_required = 'erp.delete_employee'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()

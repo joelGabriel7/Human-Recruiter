@@ -280,14 +280,7 @@ class Salary(models.Model):
     class Meta:
         verbose_name = 'Salario'
         verbose_name_plural = 'Salarios'
-        default_permissions = ()
-        # permissions = (
-        #     ('view_salary', 'Can view Salario | Admin'),
-        #     ('add_salary', 'Can add Salario | Admin'),
-        #     ('change_salary', 'Can change Salario | Admin'),
-        #     ('delete_salary', 'Can delete Salario | Admin'),
-        #     ('view_employee_salary', 'Can view Salario | Empleado'),
-        # )
+
 
 
 class SalaryDetail(models.Model):
@@ -330,7 +323,7 @@ class SalaryDetail(models.Model):
     class Meta:
         verbose_name = 'Salario Detalle'
         verbose_name_plural = 'Salario Detalles'
-        default_permissions = ()
+
 
 
 class SalaryHeadings(models.Model):
@@ -361,7 +354,7 @@ class SalaryHeadings(models.Model):
     class Meta:
         verbose_name = 'Detalle de Salario'
         verbose_name_plural = 'Detalle de Salarios'
-        default_permissions = ()
+
 
 
 class Assistance(models.Model):
@@ -385,14 +378,6 @@ class Assistance(models.Model):
     class Meta:
         verbose_name = 'Asistencia'
         verbose_name_plural = 'Asistencias'
-        default_permissions = ()
-        # permissions = (
-        #     ('view_assistance', 'Can view Asistencia | Admin'),
-        #     ('add_assistance', 'Can add Asistencia | Admin'),
-        #     ('change_assistance', 'Can change Asistencia | Admin'),
-        #     ('delete_assistance', 'Can delete Asistencia | Admin'),
-        #     ('view_employee_assistance', 'Can view Asistencia | Empleado'),
-        # )
 
 
 class AssistanceDetail(models.Model):
@@ -421,4 +406,4 @@ class AssistanceDetail(models.Model):
     class Meta:
         verbose_name = 'Detalle de Asistencia'
         verbose_name_plural = 'Detalles de Asistencia'
-        default_permissions = ()
+

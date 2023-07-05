@@ -21,10 +21,32 @@
     </ul>
 
     <ul class="navbar-nav ml-auto">
+
+        {% if request.user.groups.all %}
+            <li class="nav-item dropdown">
+                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                   class="nav-link {% if request.user.groups.all.count > 1 %}dropdown-toggle{% endif %}"> <i class="fas fa-user-group"></i> Perfil Usuario: {{ request.session.group }}</a>
+                {% if request.user.groups.all.count > 1 %}
+                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow"
+                        style="left: 0px; right: inherit;">
+                        {% for group in request.user.groups.all %}
+                            {% if group.id != request.session.group.id %}
+                                <li><a href="{% url 'user:user_change_group' group.id %}"
+                                       class="dropdown-item">{{ group.name }}</a></li>
+                                <li class="dropdown-divider"></li>
+                            {% endif %}
+
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endif %}
+
+
         <!-- Right navbar links -->
-        <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" aria-expanded="false">
-                <i class="far fa-user"></i> Usuario: {{ request.user.username }}
+         <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="fas fa-users-cog"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0;">
                 <span class="dropdown-header">Datos de tu conexión</span>
