@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView,View
 
 from config import settings
-from core.user.forms import UserForm
+from core.user.forms import UserForm, UserProfileForm
 
 from core.user.models import User
 
@@ -146,3 +146,37 @@ class UserChangeGroup(LoginRequiredMixin, View):
         except:
             pass
         return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+
+
+class UserProfileView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = UserProfileForm
+    template_name = 'user/profile.html'
+    success_url = reverse_lazy('dashboard')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return self.request.user
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'edit':
+                form = self.get_form()
+                data = form.save()
+
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edición de Perfil'
+        context['entity'] = 'Perfil'
+        context['action'] = 'edit'
+        context['list_url'] = self.success_url
+
+        return context
