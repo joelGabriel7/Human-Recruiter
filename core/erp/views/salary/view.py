@@ -1,28 +1,22 @@
 import json
+from datetime import date
 from datetime import datetime
-from io import BytesIO
-import xlsxwriter
-from django.contrib import messages
+from decimal import Decimal
+
+import openpyxl
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.db.models import Sum, Q, FloatField, DecimalField
-from django.db.models.functions import Coalesce, Cast
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.db.models import Sum, Q, DecimalField
+from django.db.models.functions import Coalesce
+from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import *
-from django.views.generic.base import View, TemplateView
-from openpyxl import load_workbook
-from decimal import Decimal
-from datetime import date
-import openpyxl
 from openpyxl.styles import Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 # from openpyxl.writer.excel import save_virtual_workbook
-from core.erp.choice import MONTHS
 from core.erp.forms import SalaryForm
 from core.erp.models import Salary, SalaryDetail, Employee, Headings, SalaryHeadings
-
+from core.erp.mixins import *
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -33,9 +27,10 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class SalaryListView(LoginRequiredMixin,FormView):
+class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView):
     form_class = SalaryForm
     template_name = 'salary/list.html'
+    permission_required = 'view_salary'
 
     def get_form(self, form_class=None):
         form = SalaryForm()
@@ -175,12 +170,12 @@ class SalaryListView(LoginRequiredMixin,FormView):
         return context
 
 
-class SalaryCreateView(LoginRequiredMixin,CreateView):
+class SalaryCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):
     model = Salary
     template_name = 'salary/create.html'
     form_class = SalaryForm
     success_url = reverse_lazy('erp:salary_list')
-
+    permission_required = 'add_salary'
     def post(self, request, *args, **kwargs):
         action = request.POST['action']
         data = {}

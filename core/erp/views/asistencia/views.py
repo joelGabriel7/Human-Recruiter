@@ -14,6 +14,7 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.views.generic import *
 from core.erp.forms import *
 from core.erp.models import *
+from core.erp.mixins import *
 
 
 class CustomJSONEncoder(json.JSONEncoder):
@@ -25,7 +26,7 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class AssistanceListView(LoginRequiredMixin,FormView):
+class AssistanceListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView):
     form_class = AssistanceForm
     template_name = 'attendance/list.html'
     permission_required = 'view_assistance'
@@ -98,13 +99,12 @@ class AssistanceListView(LoginRequiredMixin,FormView):
         return context
 
 
-class AssistanceCreateView(LoginRequiredMixin,CreateView):
+class AssistanceCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):
     model = Assistance
     template_name = 'attendance/create.html'
     form_class = AssistanceForm
     success_url = reverse_lazy('erp:asistencia_list')
-
-    # permission_required = 'add_assistance'
+    permission_required = 'add_assistance'
 
     def post(self, request, *args, **kwargs):
         data = {}
@@ -156,6 +156,7 @@ class AssistanceUpdateView(LoginRequiredMixin,FormView):
     template_name = 'attendance/create.html'
     form_class = AssistanceForm
     success_url = reverse_lazy('erp:asistencia_list')
+    permission_required = 'change_assistance'
 
     def get_form(self, form_class=None):
         form = AssistanceForm(initial={'date_joined': self.kwargs['date_joined']})
@@ -229,9 +230,10 @@ class AssistanceUpdateView(LoginRequiredMixin,FormView):
         return context
 
 
-class AssistanceDeleteView(LoginRequiredMixin,TemplateView):
+class AssistanceDeleteView(LoginRequiredMixin,ValidatePermissionRequiredMixin,TemplateView):
     template_name = 'attendance/delete.html'
     success_url = reverse_lazy('erp:asistencia_list')
+    permission_required = 'delete_assistance'
 
     def get(self, request, *args, **kwargs):
         if self.get_object() is not None:

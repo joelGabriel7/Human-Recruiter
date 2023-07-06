@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
@@ -12,7 +12,9 @@ from core.erp.mixins import *
 class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
     model = Employee
     template_name = 'empleado/list.html'
-    permission_required = 'erp.view_employee'
+    permission_required = 'view_employee'
+
+
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -45,7 +47,7 @@ class EmpleadoCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Crea
     model = Employee
     template_name = 'empleado/create.html'
     form_class = EmployeForm
-    permission_required = 'erp.add_employee'
+    permission_required = 'add_employee'
 
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -77,7 +79,7 @@ class EmpleadoUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Upda
     model = Employee
     template_name = 'empleado/create.html'
     form_class = EmployeForm
-    permission_required = 'erp.change_employee'
+    permission_required = 'change_employee'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -110,7 +112,7 @@ class EmpleadoDeleteView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Dele
     model = Employee
     template_name = 'empleado/delete.html'
     success_url = reverse_lazy('erp:empleados_list')
-    permission_required = 'erp.delete_employee'
+    permission_required = 'delete_employee'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()

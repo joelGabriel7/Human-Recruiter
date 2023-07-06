@@ -5,14 +5,14 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
-from core.erp.models import *
+from core.erp.mixins import *
 from core.erp.forms import *
 
 
-class PositionsJobListView(LoginRequiredMixin,ListView):
+class PositionsJobListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
     model = EmployeePositions
     template_name = 'positions/list.html'
-
+    permission_required = 'view_employeepositions'
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -40,11 +40,12 @@ class PositionsJobListView(LoginRequiredMixin,ListView):
         return context
 
 
-class PositionsJobCreateView(LoginRequiredMixin,CreateView):
+class PositionsJobCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):
     model = EmployeePositions
     form_class = PositionsForm
     template_name = 'positions/create.html'
     success_url = reverse_lazy('erp:position_list')
+    permission_required = 'add_employeepositions'
 
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -71,11 +72,12 @@ class PositionsJobCreateView(LoginRequiredMixin,CreateView):
         return context
 
 
-class PositionsJobUpdateView(LoginRequiredMixin,UpdateView):
+class PositionsJobUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,UpdateView):
     model = EmployeePositions
     form_class = PositionsForm
     template_name = 'positions/create.html'
     success_url = reverse_lazy('erp:position_list')
+    permission_required = 'change_employeepositions'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -103,10 +105,11 @@ class PositionsJobUpdateView(LoginRequiredMixin,UpdateView):
         return context
 
 
-class PositionsJobDeleteView(LoginRequiredMixin,DeleteView):
+class PositionsJobDeleteView(LoginRequiredMixin,ValidatePermissionRequiredMixin,DeleteView):
     model = EmployeePositions
     template_name = 'positions/delete.html'
     success_url = reverse_lazy('erp:position_list')
+    permission_required = 'delete_employeepositions'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()

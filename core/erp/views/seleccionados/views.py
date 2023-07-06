@@ -7,12 +7,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from core.erp.forms import *
 from core.erp.models import *
+from core.erp.mixins import *
 
 
-class SelectListView(LoginRequiredMixin,TemplateView):
+class SelectListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,TemplateView):
     model = Selection
     template_name = 'seleccionados/list.html'
-
+    permission_required = 'view_selection'
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
