@@ -82,7 +82,7 @@ class AssistanceListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Form
                 workbook.close()
                 output.seek(0)
                 response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                response['Content-Disposition'] = f"attachment; filename='ASISTENCIAS_{datetime.datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
+                response['Content-Disposition'] = f"attachment; filename='ASISTENCIAS_{datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
                 return response
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
@@ -112,7 +112,7 @@ class AssistanceCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Cr
         try:
             if action == 'add':
                 with transaction.atomic():
-                    date_joined = datetime.datetime.strptime(request.POST['date_joined'], '%Y-%m-%d')
+                    date_joined = datetime.strptime(request.POST['date_joined'], '%Y-%m-%d')
                     assistance = Assistance()
                     assistance.date_joined = date_joined
                     assistance.year = date_joined.year

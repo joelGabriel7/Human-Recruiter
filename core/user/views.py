@@ -1,10 +1,12 @@
 import json
+
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View, FormView
@@ -13,13 +15,15 @@ from config import settings
 from core.user.forms import UserForm, UserProfileForm
 
 from core.user.models import User
+from core.erp.mixins import *
 
 
 # Create your views here.
 
-class UserListView(LoginRequiredMixin, ListView):
+class UserListView(LoginRequiredMixin,ValidatePermissionRequiredMixin, ListView):
     model = User
     template_name = 'user/list.html'
+    permission_required = 'view_user'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -50,12 +54,12 @@ class UserListView(LoginRequiredMixin, ListView):
         context['entity'] = 'Usuarios'
         return context
 
-
-class UserCreateView(LoginRequiredMixin,CreateView):
+class UserCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):
     model = User
     form_class = UserForm
     template_name = 'user/create.html'
     success_url = reverse_lazy('user:user_list')
+    permission_required = 'add_user'
 
 
     def dispatch(self, request, *args, **kwargs):
@@ -82,12 +86,12 @@ class UserCreateView(LoginRequiredMixin,CreateView):
 
         return context
 
-class UserUpdateView(LoginRequiredMixin,UpdateView):
+class UserUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,UpdateView):
     model = User
     form_class = UserForm
     template_name = 'user/create.html'
     success_url = reverse_lazy('user:user_list')
-
+    permission_required = 'change_user'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -114,10 +118,11 @@ class UserUpdateView(LoginRequiredMixin,UpdateView):
 
         return context
 
-class UserDeleteView(LoginRequiredMixin,DeleteView):
+class UserDeleteView(LoginRequiredMixin,ValidatePermissionRequiredMixin,DeleteView):
     model = User
     template_name = 'delete.html'
     success_url = reverse_lazy('user:user_list')
+    permission_required = 'delete_user'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -150,9 +155,9 @@ class UserChangeGroup(LoginRequiredMixin, View):
 
 class UserProfileView(LoginRequiredMixin, UpdateView):
     model = User
-    form_class = UserProfileForm
     template_name = 'user/profile.html'
-    success_url = reverse_lazy('dashboard')
+    form_class = UserProfileForm
+    success_url = settings.LOGIN_REDIRECT_URL
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -160,70 +165,72 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
     def post(self, request, *args, **kwargs):
         data = {}
+        action = request.POST['action']
         try:
-            action = request.POST['action']
             if action == 'edit':
-                form = self.get_form()
-                data = form.save()
-
+                data = self.get_form().save()
+            elif action == 'validate_data':
+                data = {'valid': True}
+                queryset = User.objects.all().exclude(id=request.user.id)
+                pattern = request.POST['pattern']
+                parameter = request.POST['parameter'].strip()
+                if pattern == 'username':
+                    data['valid'] = not queryset.filter(username=parameter).exists()
+                elif pattern == 'email':
+                    data['valid'] = not queryset.filter(email=parameter).exists()
+            else:
+                data['error'] = 'No ha seleccionado ninguna opción'
         except Exception as e:
             data['error'] = str(e)
-        return JsonResponse(data)
+        return HttpResponse(json.dumps(data), content_type='application/json')
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Edición de Perfil'
-        context['entity'] = 'Perfil'
-        context['action'] = 'edit'
+        context = super().get_context_data()
+        context['title'] = 'Edición del perfil'
         context['list_url'] = self.success_url
-
+        context['action'] = 'edit'
         return context
 
-
 class UserChangePasswordView(LoginRequiredMixin, FormView):
-    model = User
+    template_name = 'user/update_password.html'
     form_class = PasswordChangeForm
-    template_name = 'user/change_password.html'
-    success_url = reverse_lazy('login')
-
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    success_url = settings.LOGIN_REDIRECT_URL
 
     def get_form(self, form_class=None):
         form = PasswordChangeForm(user=self.request.user)
-        # Class
-        form.fields['old_password'].widget.attrs['class']= 'form-control'
-        form.fields['new_password1'].widget.attrs['class']= 'form-control'
-        form.fields['new_password2'].widget.attrs['class']= 'form-control'
-        form.fields['new_password2'].widget.attrs['autocomplete']= 'off'
-        # placeholder
-        form.fields['old_password'].widget.attrs['placeholder']= 'Ingrese su nueva contraseña '
-        form.fields['new_password1'].widget.attrs['placeholder']= 'Ingrese su nueva contraseña '
-        form.fields['new_password2'].widget.attrs['placeholder']= 'Repita su contraseña'
+        for i in form.visible_fields():
+            i.field.widget.attrs.update({
+                'class': 'form-control',
+                'autocomplete': 'off',
+                'placeholder': f'Ingrese su {i.label.lower()}',
+                'autofocus':'off'
+            })
         return form
 
     def post(self, request, *args, **kwargs):
         data = {}
+        action = request.POST['action']
         try:
-            action = request.POST['action']
-            if action == 'edit':
+            if action == 'update_password':
                 form = PasswordChangeForm(user=request.user, data=request.POST)
                 if form.is_valid():
                     form.save()
+                    # update_session_auth_hash(request, form.user)
                 else:
                     data['error'] = form.errors
             else:
-                data['error'] = 'No ha ingresado a ninguna opción'
+                data['error'] = 'No ha seleccionado ninguna opción'
         except Exception as e:
             data['error'] = str(e)
-        return JsonResponse(data)
+        return HttpResponse(json.dumps(data), content_type='application/json')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Cambiar Contraseña'
-        context['entity'] = 'Password'
+        context['title'] = 'Edición de Contraseña'
         context['list_url'] = self.success_url
-        context['action'] = 'edit'
+        context['action'] = 'update_password'
+        context['entity'] = 'Usuario'
         return context

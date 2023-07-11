@@ -22,7 +22,7 @@ input, button, label, select, textarea{
 }
 .contenedor{
 	width: calc(100vw - 40px) ;
-	max-width: 300px ;
+	max-width: 400px ;
 	border-radius: 2.5px ;
 	background-color: #FFFFFF ;
 	border: 1px solid #D9D9D9 ;
@@ -46,7 +46,7 @@ input, button, label, select, textarea{
 }
 .box-input .icon{
 	display: flex ;
-	padding: 7.5px 5px 7.5px 5px ;
+	padding: 7.5px 5px ;
 	align-items: center ;
 	justify-content: center ;
 	border-right: 1px solid #A6A6A6 ;

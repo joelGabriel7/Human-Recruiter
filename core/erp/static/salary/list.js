@@ -237,7 +237,7 @@ $(function () {
             },
             success: function (request) {
                 if (!request.hasOwnProperty('error')) {
-                    var a = document.createElement("a");
+                    let a = document.createElement("a");
                     document.body.appendChild(a);
                     a.style = "display: none";
                     const blob = new Blob([request], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});

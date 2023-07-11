@@ -309,7 +309,7 @@ class SalaryDetail(models.Model):
         return self.format_decimal(self.expenses)
 
     def get_total_amount_format(self):
-        return self.format_decimal(self.total_amount)
+        return f'{self.format_decimal(self.total_amount)}'
 
     def toJSON(self):
         item = model_to_dict(self)

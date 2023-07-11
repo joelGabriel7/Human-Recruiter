@@ -2,8 +2,10 @@ import json
 from datetime import date
 from datetime import datetime
 from decimal import Decimal
+from io import BytesIO
 
 import openpyxl
+import xlsxwriter
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.db.models import Sum, Q, DecimalField
@@ -80,81 +82,45 @@ class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView
                 year = request.POST['year']
                 month = request.POST['month']
                 pks = json.loads(request.POST['pks'])
-                print(pks)
                 queryset = SalaryDetail.objects.filter(salary__year=year)
                 if len(month):
                     queryset = queryset.filter(salary__month=month)
                 if len(pks):
                     queryset = queryset.filter(employee_id__in=pks)
                 headers = {
-                    'Empleados': 29.09,
-                    'Cedula': 18,
-                    'Cuenta': 18,
-                    'Fecha de pago': 18,
-                    'Total a recibir': 18,
+                    'Fecha de ingreso': 35,
+                    'Código': 15,
+                    'Empleado': 35,
+                    'Sección': 35,
+                    'Cargo': 35,
+                    'Número de documento': 35,
+                    'Total a cobrar': 35
                 }
-
-                workbook = openpyxl.Workbook()
-                worksheet = workbook.active
-
-                table_border = Border(left=Side(border_style='thin'), right=Side(border_style='thin'),
-                                      top=Side(border_style='thin'), bottom=Side(border_style='thin'))
-
-                header_font = openpyxl.styles.Font(bold=True)
-                header_alignment = Alignment(horizontal='center')
-                table_alignment = Alignment(horizontal='center', vertical='center')
-                index = 1
-                for col_num, (header, width) in enumerate(headers.items(), start=1):
-                    column_letter = get_column_letter(col_num)
-                    column_width = width  # Ajuste de ancho para el tamaño de la fuente
-
-                    worksheet.column_dimensions[column_letter].width = column_width
-                    worksheet.cell(row=index, column=col_num, value=header).font = header_font
-                    worksheet.cell(row=index, column=col_num).alignment = header_alignment
-                for salary_detail in queryset.order_by('employee'):
+                output = BytesIO()
+                workbook = xlsxwriter.Workbook(output)
+                worksheet = workbook.add_worksheet('planilla')
+                cell_format = workbook.add_format({'bold': True, 'align': 'center', 'border': 1})
+                row_format = workbook.add_format({'align': 'center', 'border': 1})
+                index = 0
+                for name, width in headers.items():
+                    worksheet.set_column(first_col=0, last_col=index, width=width)
+                    worksheet.write(0, index, name, cell_format)
                     index += 1
-                    worksheet.cell(row=index, column=1, value=salary_detail.employee.get_full_name()).alignment = table_alignment
-                    worksheet.cell(row=index, column=2, value=salary_detail.employee.person.cedula).alignment = table_alignment
-                    worksheet.cell(row=index, column=3, value=salary_detail.employee.accounts.number).alignment = table_alignment
-                    worksheet.cell(row=index, column=4, value=f" {salary_detail.salary.payment_date}").alignment = table_alignment
-                    worksheet.cell(row=index, column=5,value=salary_detail.get_total_amount_format()).alignment = table_alignment
-                # Aplicar bordes a todas las celdas de la tabla
-                for row in worksheet.iter_rows(min_row=1, max_row=index, min_col=1, max_col=len(headers)):
-                    for cell in row:
-                        cell.border = table_border
-
-                table_height = 30  # Altura deseada en puntos
-                table_rows = index - 1  # Restar 1 para excluir la fila de encabezado
-                table_top_margin = (table_height - table_rows * 7) // 2  # Calcular el margen superior para centrar la tabla
-
-                for i in range(2, index + 1):
-                    worksheet.row_dimensions[i].height = 15  # Altura de fila predeterminada
-                    worksheet.row_dimensions[i].height += table_top_margin
-
-                response = HttpResponse(
-                    content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                row = 1
+                for salary_detail in queryset.order_by('employee'):
+                    worksheet.write(row, 0, salary_detail.employee.hiring_date_format(), row_format)
+                    worksheet.write(row, 1, salary_detail.employee.codigo, row_format)
+                    worksheet.write(row, 2, salary_detail.employee.person.firstname, row_format)
+                    worksheet.write(row, 3, salary_detail.employee.department.name, row_format)
+                    worksheet.write(row, 4, salary_detail.employee.position.name, row_format)
+                    worksheet.write(row, 5, salary_detail.employee.person.cedula, row_format)
+                    worksheet.write(row, 6, salary_detail.get_total_amount_format(), row_format)
+                workbook.close()
+                output.seek(0)
+                response = HttpResponse(output,       content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
                 response[
                     'Content-Disposition'] = f"attachment; filename='PLANILLA_{datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
-                workbook.save(response)
-
                 return response
-            # elif action == 'export_salaries_pdf':
-            #     year = request.POST['year']
-            #     month = request.POST['month']
-            #     pks = json.loads(request.POST['pks'])
-            #     queryset = SalaryDetail.objects.filter(salary__year=year)
-            #     if len(month):
-            #         queryset = queryset.filter(salary__month=month)
-            #     if len(pks):
-            #         queryset = queryset.filter(employee_id__in=pks)
-            #     context = {
-            #         'salaries': queryset,
-            #         'company': Company.objects.first(),
-            #         'prints': [1, 2],
-            #         'date_joined': datetime.now().date()
-            #     }
-            #     pdf_file = printer.create_pdf(context=context, template_name='salary/format/format2.html')
-            #     return HttpResponse(pdf_file, content_type='application/pdf')
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
         except Exception as e:
@@ -162,12 +128,13 @@ class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView
         serialized_data = json.dumps(data, cls=CustomJSONEncoder)
         return HttpResponse(serialized_data, content_type='application/json')
 
+
     def get_context_data(self, **kwargs):
-        context = super(SalaryListView, self).get_context_data()
-        context['title'] = 'Listado de Nomina'
-        context['entity'] = 'Nomina'
-        context['create_url'] = reverse_lazy('erp:salary_create')
-        return context
+            context = super(SalaryListView, self).get_context_data()
+            context['title'] = 'Listado de Nomina'
+            context['entity'] = 'Nomina'
+            context['create_url'] = reverse_lazy('erp:salary_create')
+            return context
 
 
 class SalaryCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):

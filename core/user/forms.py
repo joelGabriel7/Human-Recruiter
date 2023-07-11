@@ -103,13 +103,6 @@ class UserProfileForm(ModelForm):
                     'class': 'form-control',
                 }
             ),
-            'last_name': TextInput(
-                attrs={
-                    'placeholder': 'Ingrese sus apellido',
-                    'class': 'form-control',
-
-                }
-            ),
             'email': TextInput(
                 attrs={
                     'placeholder': 'Ingrese su Email',
@@ -125,32 +118,16 @@ class UserProfileForm(ModelForm):
                 }
             ),
 
-            'password': PasswordInput(render_value=True,
-                                      attrs={
-                                          'placeholder': 'Crea una Contraseña',
-                                          'class': 'form-control',
-                                      }
-                                      ),
-
         }
-        exclude = ['user_permissions', 'last_login', 'date_joined', 'is_superuser', 'is_active', 'is_staff','groups']
+        exclude = ['user_permissions', 'password', 'last_name','last_login', 'date_joined', 'is_superuser', 'is_active', 'is_staff','groups']
 
     def save(self, commit=True):
         data = {}
-        form = super()
         try:
-            if form.is_valid():
-                password_cleaned = self.cleaned_data['password']
-                user_created=form.save(commit=False)
-                if user_created.pk is None:
-                    user_created.set_password(password_cleaned)
-                else:
-                    user = User.objects.get(pk=user_created.pk)
-                    if user.password != password_cleaned:
-                        user_created.set_password(password_cleaned)
-                user_created.save()
+            if self.is_valid():
+                super().save()
             else:
-                data['error'] = form.errors
+                data['error'] = self.errors
         except Exception as e:
             data['error'] = str(e)
         return data
