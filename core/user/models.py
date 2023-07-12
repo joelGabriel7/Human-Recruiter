@@ -1,5 +1,6 @@
 import uuid
 
+from crum import get_current_request
 # from crum import get_current_request
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -26,4 +27,16 @@ class User(AbstractUser):
         item['groups'] = [{'id': g.id, 'name': g.name} for g in self.groups.all()]
         item['full_name'] = self.get_full_name()
         return item
+
+
+    def get_group_session(self):
+        try:
+            request = get_current_request()
+            group = self.groups.all()
+            if group.exists():
+                if 'group' not in request.session:
+                    request.session['group'] = group[0]
+        except:
+            pass
+
     

@@ -22,7 +22,7 @@ let assistance = {
             },
             columns: [
                 {"data": "assistance.date_joined"},
-                {"data": "employee.fullname"},
+                {"data": "employee.person.firstname"},
                 {"data": "employee.person.cedula"},
                 {"data": "employee.position.name"},
                 {"data": "employee.department.name"},
@@ -105,7 +105,7 @@ $(function () {
     });
      $('.btnExportAssistancesExcel').on('click', function () {
         $.ajax({
-            url: location.pathname,
+            url: pathname,
             data: {
                 'start_date': input_date_range.data('daterangepicker').startDate.format('YYYY-MM-DD'),
                 'end_date': input_date_range.data('daterangepicker').endDate.format('YYYY-MM-DD'),

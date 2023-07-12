@@ -24,19 +24,6 @@ $(function () {
             {"data": "desc"},
         ],
         columnDefs: [
-            // {
-            //
-            //     targets: [4],
-            //     class: 'text-center',
-            //     orderable: false,
-            //     render: function (data, type, row) {
-            //         var html = '';
-            //         $.each(row.gender, function (key,value) {
-            //             html+= '<span class="badge badge-success">'+value.name+'</span>  '
-            //         })
-            //         return html;
-            //     }
-            // },
             {
                 targets: [-1],
                 class: 'text-center',

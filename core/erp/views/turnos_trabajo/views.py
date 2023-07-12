@@ -5,13 +5,14 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
-from core.erp.models import *
+from core.erp.mixins import *
 from core.erp.forms import *
 
 
-class TurnJobListView(LoginRequiredMixin,ListView):
+class TurnJobListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
     model = EmployeeTurn
     template_name = 'turnos_trabajo/list.html'
+    permission_required = 'view_employeeturn'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -40,11 +41,11 @@ class TurnJobListView(LoginRequiredMixin,ListView):
         return context
 
 
-class TurnJobCreateView(LoginRequiredMixin,CreateView):
+class TurnJobCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):
     model = EmployeeTurn
     form_class = EmployeeTurnForm
     template_name = 'turnos_trabajo/create.html'
-
+    permission_required = 'view_employeeturn'
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -71,11 +72,11 @@ class TurnJobCreateView(LoginRequiredMixin,CreateView):
         return context
 
 
-class TurnJobUpdateView(LoginRequiredMixin,UpdateView):
+class TurnJobUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,UpdateView):
     model = EmployeeTurn
     form_class = EmployeeTurnForm
     template_name = 'turnos_trabajo/create.html'
-
+    permission_required = 'view_employeeturn'
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().dispatch(request, *args, **kwargs)
@@ -103,10 +104,11 @@ class TurnJobUpdateView(LoginRequiredMixin,UpdateView):
         return context
 
 
-class TurnJobDeleteView(LoginRequiredMixin,DeleteView):
+class TurnJobDeleteView(LoginRequiredMixin,ValidatePermissionRequiredMixin,DeleteView):
     model = EmployeeTurn
     template_name = 'turnos_trabajo/delete.html'
     success_url = reverse_lazy("erp:turno_trabajo_list")
+    permission_required = 'view_employeeturn'
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().dispatch(request, *args, **kwargs)

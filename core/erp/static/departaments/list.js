@@ -17,12 +17,11 @@ function getData() {
         columns: [
             {"data": "id"},
             {"data": "name"},
-            {"data": "description"},
             {"data": "desc"},
         ],
         columnDefs: [
             {
-                targets: [-1],
+                targets: [2],
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {

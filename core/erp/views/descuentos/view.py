@@ -4,7 +4,7 @@ from datetime import date
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
-from core.erp.models import *
+from core.erp.mixins import *
 from core.erp.forms import *
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -17,8 +17,9 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class DescuentosListView(LoginRequiredMixin,TemplateView):
+class DescuentosListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,TemplateView):
     template_name = 'descuentos/list.html'
+    permission_required = 'view_headings'
 
     def post(self, request, *args, **kwargs):
         data = {}
@@ -48,7 +49,7 @@ class DescuentosCreateView(LoginRequiredMixin,CreateView):
     form_class = DescuentoForm
     template_name = 'descuentos/create.html'
     success_url = reverse_lazy('erp:descuento_list')
-
+    permission_required = 'add_headings'
     def post(self, request, *args, **kwargs):
         data = {}
         action = request.POST['action']
@@ -85,7 +86,7 @@ class DescuentosUpdateView(LoginRequiredMixin,UpdateView):
     form_class = DescuentoForm
     template_name = 'descuentos/create.html'
     success_url = reverse_lazy('erp:descuento_list')
-
+    permission_required = 'change_headings'
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().dispatch(request, *args, **kwargs)
@@ -125,7 +126,7 @@ class DescuentoDeleteView(LoginRequiredMixin,DeleteView):
     model = Headings
     template_name = 'delete.html'
     success_url = reverse_lazy('erp:descuento_list')
-
+    permission_required = 'delete_headings'
     def post(self, request, *args, **kwargs):
         data = {}
         try:

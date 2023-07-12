@@ -7,13 +7,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from core.erp.forms import DepartmentsForm
 from core.erp.models import *
+from core.erp.mixins import *
 
 
 # Create your views here.
 
-class DepartamentListView(LoginRequiredMixin,TemplateView):
+class DepartamentListView(LoginRequiredMixin,ValidatePermissionRequiredMixin, TemplateView):
     model = Departments
     template_name = 'departaments/list.html'
+    permission_required = 'view_departments'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):

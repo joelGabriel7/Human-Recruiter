@@ -7,11 +7,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from core.erp.forms import *
 from core.erp.models import *
+from core.erp.mixins import *
 
-
-class VacantsListView(LoginRequiredMixin,ListView):
+class VacantsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
     model = Vacants
     template_name = 'vacante/list.html'
+    permission_required = 'view_vacants'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -40,10 +41,11 @@ class VacantsListView(LoginRequiredMixin,ListView):
         return context
 
 
-class VacantsCreateView(LoginRequiredMixin,CreateView):
+class VacantsCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):
     model = Vacants
     form_class = VacantsForm
     template_name = 'vacante/create.html'
+    permission_required = 'add_vacants'
 
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -70,10 +72,11 @@ class VacantsCreateView(LoginRequiredMixin,CreateView):
         return context
 
 
-class VacantsUpdateView(LoginRequiredMixin,UpdateView):
+class VacantsUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,UpdateView):
     model = Vacants
     form_class = VacantsForm
     template_name = 'vacante/create.html'
+    permission_required = 'change_vacants'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -101,10 +104,10 @@ class VacantsUpdateView(LoginRequiredMixin,UpdateView):
         return context
 
 
-class VacantsDeleteView(LoginRequiredMixin,DeleteView):
+class VacantsDeleteView(LoginRequiredMixin,ValidatePermissionRequiredMixin,DeleteView):
     model = Vacants
     template_name = 'vacante/delete.html'
-
+    permission_required = 'delete_vacants'
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().dispatch(request, *args, **kwargs)

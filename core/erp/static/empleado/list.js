@@ -15,10 +15,10 @@ $(function () {
         columns: [
             {"data": "hiring_date"},
             {"data": "codigo"},
-            {"data": "fullname"},
-            {"data": "department.name"},
-            {"data": "position.name"},
-            {"data": "turn.name"},
+            {"data": "person__firstname"},
+            {"data": "department__name"},
+            {"data": "position__name"},
+            {"data": "turn__name"},
             {"data": "salary"},
             {"data": "estado"},
             {"data": "desc"},
@@ -42,12 +42,12 @@ $(function () {
                 orderable: false,
                 render: function (data, type, row) {
                     let html = '';
-                    if (data.name === 'Contratado') {
-                        html += '<span class="badge badge-success">' + data.name + '</span>';
-                    } else if (data.name === 'Despedido') {
-                        html += '<span class="badge badge-danger">' + data.name + '</span>';
+                    if (data === 'Contratado') {
+                        html += '<span class="badge badge-success">' + data + '</span>';
+                    } else if (data === 'Despedido') {
+                        html += '<span class="badge badge-danger">' + data + '</span>';
                     } else {
-                        html += data.name;
+                        html += data;
                     }
                     return html;
                 }

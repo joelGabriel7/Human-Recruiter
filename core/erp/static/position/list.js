@@ -15,7 +15,6 @@ $( function () {
         columns: [
             {"data": "id"},
             {"data": "name"},
-            {"data": "description"},
             {"data": "departament.name"},
             {"data": "desc"},
         ],
@@ -24,7 +23,7 @@ $( function () {
 
 
             {
-                targets: [-1],
+                targets: [3],
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {

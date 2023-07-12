@@ -7,13 +7,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from core.erp.forms import CandidateForm
 from core.erp.models import *
+from core.erp.mixins import *
 
 
 # Create your views here.
 
-class CandidateListView(LoginRequiredMixin,ListView):
+class CandidateListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
     model = Candidatos
     template_name = 'candidatos/list.html'
+    permission_required = 'view_candidatos'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -42,12 +44,12 @@ class CandidateListView(LoginRequiredMixin,ListView):
         return context
 
 
-class CandidateCreateView(LoginRequiredMixin,CreateView):
+class CandidateCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):
     model = Candidatos
     form_class = CandidateForm
     template_name = 'candidatos/create.html'
     success_url = reverse_lazy('erp:candidatos_list')
-
+    permission_required = 'add_candidatos'
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -74,12 +76,12 @@ class CandidateCreateView(LoginRequiredMixin,CreateView):
         return context
 
 
-class CandidateUpdateView(LoginRequiredMixin,UpdateView):
+class CandidateUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,UpdateView):
     model = Candidatos
     form_class = CandidateForm
     template_name = 'candidatos/create.html'
     success_url = reverse_lazy('erp:candidatos_list')
-
+    permission_required = 'change_candidatos'
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().dispatch(request, *args, **kwargs)
@@ -107,11 +109,12 @@ class CandidateUpdateView(LoginRequiredMixin,UpdateView):
         return context
 
 
-class CandidateDeleteView(LoginRequiredMixin,DeleteView):
+class CandidateDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin,DeleteView):
     model = Candidatos
     form_class = CandidateForm
     template_name = 'candidatos/delete.html'
     success_url = reverse_lazy('erp:candidatos_list')
+    permission_required = 'delete_candidatos'
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()

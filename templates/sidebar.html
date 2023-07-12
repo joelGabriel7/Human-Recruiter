@@ -67,9 +67,23 @@
                                 </p>
                             </a>
                         </li>
-                        {#<i class="fa-regular fa-building-columns"></i>#}
-                        {#                        fas fa-money-check-alt#}
+                         <li class="nav-item">
+                            <a href="{% url 'erp:descuento_list' %}" class="nav-link">
+                                <i class=" nav-icon  fas fa-calculator"></i>
+                                <p>
+                                    Descuentos
+                                </p>
+                            </a>
+                        </li>
 
+                        <li class="nav-item">
+                            <a href="{% url 'erp:salary_list' %}" class="nav-link">
+                                <i class=" nav-icon  fas fa-money-check-alt"></i>
+                                <p>
+                                    Salarios
+                                </p>
+                            </a>
+                        </li>
 
                     </ul>
                 </li>
@@ -113,35 +127,7 @@
                     </ul>
 
                 </li>
-                <li class="nav-item  menu-open">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-building "></i>
-                        <p>
-                            Nomina
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview" style="display: block;">
-                        <li class="nav-item">
-                            <a href="{% url 'erp:descuento_list' %}" class="nav-link">
-                                <i class=" nav-icon  fas fa-calculator"></i>
-                                <p>
-                                    Descuentos
-                                </p>
-                            </a>
-                        </li>
 
-                        <li class="nav-item">
-                            <a href="{% url 'erp:salary_list' %}" class="nav-link">
-                                <i class=" nav-icon  fas fa-money-check-alt"></i>
-                                <p>
-                                    Salarios
-                                </p>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
                 <li class="nav-item menu-is-opening menu-open">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-lock"></i>
@@ -182,16 +168,16 @@
                     </li>
                     {% comment %} Change Password {% endcomment %}
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{% url 'user:user_change_password' %}" class="nav-link">
                             <i class="fas fa-key mr-2"></i>
                             <p>
-                                Cambiar Password
+                                Editar Contraseña
                             </p>
                         </a>
                     </li>
                     {% comment %} Update Profile {% endcomment %}
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{% url 'user:user_profile' %}" class="nav-link">
                             <i class="fas fa-edit mr-2"></i>
                             <p>
                                 Editar Perfil
