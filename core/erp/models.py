@@ -63,7 +63,7 @@ class Candidatos(models.Model):
 
 
 class Departments(models.Model):
-    name = models.CharField(max_length=32, unique=True, )
+    name = models.CharField(max_length=302)
     description = models.CharField(max_length=512, null=True, blank=True)
 
     def __str__(self):
@@ -80,7 +80,7 @@ class Departments(models.Model):
 
 
 class EmployeePositions(models.Model):
-    name = models.CharField(max_length=64, verbose_name='Nombre')
+    name = models.CharField(max_length=144, verbose_name='Nombre')
     description = models.CharField(max_length=512, null=True, blank=True, verbose_name='Descripcion')
     departament = models.ForeignKey(Departments, on_delete=models.CASCADE, verbose_name='Departamentos')
 

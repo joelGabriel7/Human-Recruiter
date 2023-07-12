@@ -48,9 +48,9 @@ urlpatterns = [
     # Seleccionados
 
     path('select/list/', SelectListView.as_view(), name='select_list'),
-    # path('select/add/', SelectCreateView.as_view(), name='select_create'),
-    # path('select/edit/<int:pk>/', SelectUpdateView.as_view(), name='select_update'),
-    # path('select/delete/<int:pk>/', SelectDeleteView.as_view(), name='select_delete'),
+    path('select/add/', SelectCreateView.as_view(), name='select_create'),
+    path('select/edit/<int:pk>/', SelectUpdateView.as_view(), name='select_update'),
+    path('select/delete/<int:pk>/', SelectDeleteView.as_view(), name='select_delete'),
 
     # Empleados
     path('empleados/list/', EmpleadoListView.as_view(), name='empleados_list'),

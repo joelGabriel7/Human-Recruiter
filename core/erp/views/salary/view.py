@@ -91,8 +91,6 @@ class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView
                     'Fecha de ingreso': 35,
                     'Código': 15,
                     'Empleado': 35,
-                    'Sección': 35,
-                    'Cargo': 35,
                     'Número de documento': 35,
                     'Total a cobrar': 35
                 }
@@ -111,15 +109,13 @@ class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView
                     worksheet.write(row, 0, salary_detail.employee.hiring_date_format(), row_format)
                     worksheet.write(row, 1, salary_detail.employee.codigo, row_format)
                     worksheet.write(row, 2, salary_detail.employee.person.firstname, row_format)
-                    worksheet.write(row, 3, salary_detail.employee.department.name, row_format)
-                    worksheet.write(row, 4, salary_detail.employee.position.name, row_format)
-                    worksheet.write(row, 5, salary_detail.employee.person.cedula, row_format)
-                    worksheet.write(row, 6, salary_detail.get_total_amount_format(), row_format)
+                    worksheet.write(row, 3, salary_detail.employee.person.cedula, row_format)
+                    worksheet.write(row, 4, salary_detail.get_total_amount_format(), row_format)
+                    row += 1
                 workbook.close()
                 output.seek(0)
-                response = HttpResponse(output,       content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                response[
-                    'Content-Disposition'] = f"attachment; filename='PLANILLA_{datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
+                response = HttpResponse(output,content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response['Content-Disposition'] = f"attachment; filename='PLANILLA_{datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
                 return response
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'

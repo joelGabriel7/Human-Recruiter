@@ -1,3 +1,6 @@
+import json
+from decimal import Decimal
+from datetime import date
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
@@ -8,14 +11,19 @@ from core.erp.forms import *
 from core.erp.models import *
 from core.erp.mixins import *
 
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        if isinstance(obj, date):
+            return obj.strftime('%Y-%m-%d')
+        return super().default(obj)
+
 
 class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
     model = Employee
     template_name = 'empleado/list.html'
     permission_required = 'view_employee'
-
-
-
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -25,14 +33,24 @@ class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListVi
         try:
             action = request.POST['action']
             if action == 'searchdata':
-                data = []
-                for i in Employee.objects.all():
-                    data.append(i.toJSON())
+                data = list(Employee.objects.values(
+                    'id',
+                    'hiring_date',
+                    'codigo',
+                    'person__firstname',
+                    'department__name',
+                    'position__name',
+                    'turn__name',
+                    'salary',
+                    'estado',
+
+                ))
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
             data['error'] = str(e)
-        return JsonResponse(data, safe=False)
+        serialized_data = json.dumps(data, cls=CustomJSONEncoder)
+        return HttpResponse(serialized_data, content_type='application/json')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
