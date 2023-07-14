@@ -1,7 +1,5 @@
 from django.forms import *
-from datetime import datetime
 from core.erp.models import *
-
 
 class DepartmentsForm(ModelForm):
     def __init__(self, *args, **kwargs):

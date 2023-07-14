@@ -2,6 +2,7 @@ import json
 from decimal import Decimal
 from datetime import date
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
@@ -10,6 +11,8 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, T
 from core.erp.forms import *
 from core.erp.models import *
 from core.erp.mixins import *
+from django.core.paginator import Paginator
+
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -20,10 +23,12 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
+class EmpleadoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView):
     model = Employee
     template_name = 'empleado/list.html'
     permission_required = 'view_employee'
+    paginate_by = 10
+
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -33,18 +38,45 @@ class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListVi
         try:
             action = request.POST['action']
             if action == 'searchdata':
-                data = list(Employee.objects.values(
-                    'id',
-                    'hiring_date',
-                    'codigo',
-                    'person__firstname',
-                    'department__name',
-                    'position__name',
-                    'turn__name',
-                    'salary',
-                    'estado',
+                search_value = request.POST.get('search[value]', '')
 
-                ))
+                employees = Employee.objects.filter(
+                    Q(id__icontains=search_value) |
+                    Q(hiring_date__icontains=search_value) |
+                    Q(codigo__icontains=search_value) |
+                    Q(person__firstname__icontains=search_value) |
+                    Q(department__name__icontains=search_value) |
+                    Q(position__name__icontains=search_value) |
+                    Q(turn__name__icontains=search_value) |
+                    Q(salary__icontains=search_value) |
+                    Q(estado__icontains=search_value)
+                ).order_by('id')
+
+                paginator = Paginator(employees, request.POST.get('length', 10))
+                start = int(request.POST.get('start', 0))
+                length = int(request.POST.get('length', 10))
+                page_number = start // length + 1
+                page = paginator.get_page(page_number)
+
+                data = {
+                    'data': [
+                        {
+                            'id': employee.id,
+                            'hiring_date': employee.hiring_date.strftime('%Y-%m-%d'),
+                            'codigo': employee.codigo,
+                            'person__firstname': employee.person.firstname,
+                            'department__name': employee.department.name,
+                            'position__name': employee.position.name,
+                            'turn__name': employee.turn.name,
+                            'salary': float(employee.salary),
+                            'estado': employee.estado,
+                        }
+                        for employee in page
+                    ],
+                    'recordsTotal': employees.count(),
+                    'recordsFiltered': paginator.count,
+                }
+
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
@@ -61,7 +93,7 @@ class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListVi
         return context
 
 
-class EmpleadoCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):
+class EmpleadoCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
     model = Employee
     template_name = 'empleado/create.html'
     form_class = EmployeForm
@@ -93,7 +125,7 @@ class EmpleadoCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Crea
         return context
 
 
-class EmpleadoUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,UpdateView):
+class EmpleadoUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, UpdateView):
     model = Employee
     template_name = 'empleado/create.html'
     form_class = EmployeForm
@@ -126,7 +158,7 @@ class EmpleadoUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Upda
         return context
 
 
-class EmpleadoDeleteView(LoginRequiredMixin,ValidatePermissionRequiredMixin,DeleteView):
+class EmpleadoDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):
     model = Employee
     template_name = 'empleado/delete.html'
     success_url = reverse_lazy('erp:empleados_list')

@@ -15,6 +15,7 @@ from django.views.generic import *
 from core.erp.forms import *
 from core.erp.models import *
 from core.erp.mixins import *
+from django.core.paginator import Paginator
 
 
 class CustomJSONEncoder(json.JSONEncoder):
@@ -26,7 +27,7 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class AssistanceListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView):
+class AssistanceListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, FormView):
     form_class = AssistanceForm
     template_name = 'attendance/list.html'
     permission_required = 'view_assistance'
@@ -81,8 +82,10 @@ class AssistanceListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Form
                     row += 1
                 workbook.close()
                 output.seek(0)
-                response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                response['Content-Disposition'] = f"attachment; filename='ASISTENCIAS_{datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
+                response = HttpResponse(output,
+                                        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response[
+                    'Content-Disposition'] = f"attachment; filename='ASISTENCIAS_{datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
                 return response
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
@@ -99,7 +102,7 @@ class AssistanceListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Form
         return context
 
 
-class AssistanceCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):
+class AssistanceCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
     model = Assistance
     template_name = 'attendance/create.html'
     form_class = AssistanceForm
@@ -128,14 +131,16 @@ class AssistanceCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Cr
                         detail.save()
             elif action == 'generate_assistance':
                 data = []
-                for i in Employee.objects.filter(person__isnull=False):
+                for i in Employee.objects.filter(person__isnull=False).order_by('id'):
                     item = i.toJSON()
                     item['state'] = 0
                     item['description'] = ''
                     data.append(item)
+                print(data)
             elif action == 'validate_data':
                 data = {
-                    'valid': not Assistance.objects.filter(date_joined=request.POST['date_joined'].strip()).exists()}
+                    'valid': not Assistance.objects.filter(date_joined=request.POST['date_joined'].strip()).exists()
+                }
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
         except Exception as e:
@@ -152,7 +157,7 @@ class AssistanceCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Cr
         return context
 
 
-class AssistanceUpdateView(LoginRequiredMixin,FormView):
+class AssistanceUpdateView(LoginRequiredMixin, FormView):
     template_name = 'attendance/create.html'
     form_class = AssistanceForm
     success_url = reverse_lazy('erp:asistencia_list')
@@ -189,8 +194,8 @@ class AssistanceUpdateView(LoginRequiredMixin,FormView):
                         else:
                             date_joined = datetime.datetime.strptime(self.kwargs['date_joined'], '%Y-%m-%d')
                             assistance = \
-                            Assistance.objects.get_or_create(date_joined=date_joined, year=date_joined.year,
-                                                             month=date_joined.month, day=date_joined.day)[0]
+                                Assistance.objects.get_or_create(date_joined=date_joined, year=date_joined.year,
+                                                                 month=date_joined.month, day=date_joined.day)[0]
                             detail = AssistanceDetail()
                             detail.assistance_id = assistance.id
                         detail.employee_id = i['id']
@@ -230,7 +235,7 @@ class AssistanceUpdateView(LoginRequiredMixin,FormView):
         return context
 
 
-class AssistanceDeleteView(LoginRequiredMixin,ValidatePermissionRequiredMixin,TemplateView):
+class AssistanceDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, TemplateView):
     template_name = 'attendance/delete.html'
     success_url = reverse_lazy('erp:asistencia_list')
     permission_required = 'delete_assistance'

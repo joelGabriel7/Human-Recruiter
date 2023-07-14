@@ -101,19 +101,20 @@ class EmployeePositions(models.Model):
 class Vacants(models.Model):
     posicion = models.ForeignKey(EmployeePositions, on_delete=models.CASCADE, verbose_name='Posiciones')
     description = models.CharField(max_length=512, null=True, blank=True)
-    min_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,
-                                     verbose_name='Mínimo salario')
-    max_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,
-                                     verbose_name='Máximo salario')
+    min_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,verbose_name='Mínimo salario')
+    max_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True, verbose_name='Máximo salario')
 
     def __str__(self):
         return self.posicion.name
 
     def toJSON(self):
-        item = model_to_dict(self)
-        item['posicion'] = self.posicion.toJSON()
-        item['min_salary'] = format(self.min_salary, '.2f')
-        item['max_salary'] = format(self.max_salary, '.2f')
+        item = {
+            'id': self.id,
+            'posicion': self.posicion.toJSON(),
+            'description': self.description,
+            'min_salary': format(self.min_salary, '.2f'),
+            'max_salary': format(self.max_salary, '.2f')
+        }
         return item
 
     class Meta:

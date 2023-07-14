@@ -3,14 +3,35 @@ $(function () {
         responsive: true,
         autoWidth: false,
         destroy: true,
+        paging: true,
+        serverSide: true,
         deferRender: true,
         ajax: {
             url: window.location.pathname,
             type: 'POST',
-            data: {
-                'action': 'searchdata'
+            data: function (d) {
+                d.action = 'searchdata';
+                $.extend(d, {
+                    start: d.start,
+                    length: d.length || 10,
+                    search: {
+                        value: d.search.value || ''
+                    }
+                });
+                return d;  // Agrega este retorno
             },
-            dataSrc: ""
+            dataSrc: function (json) {
+                console.log(json.data);
+                return json.data;
+            },
+            beforeSend: function () {
+                loading({'text': '...'});
+            },
+            complete: function () {
+                setTimeout(function () {
+                    $.LoadingOverlay("hide");
+                }, 500);
+            }
         },
         columns: [
             {"data": "hiring_date"},

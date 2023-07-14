@@ -16,7 +16,15 @@ let assistance = {
                 dataSrc: "",
                 headers: {
                     'X-CSRFToken': csrftoken
-                }
+                },
+                 beforeSend: function () {
+                loading({'text': '...'});
+                },
+                complete: function () {
+                    setTimeout(function () {
+                        $.LoadingOverlay("hide");
+                    }, 500);
+                },
             },
             ordering: false,
             lengthChange: false,

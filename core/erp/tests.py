@@ -22,7 +22,7 @@ user.save()
 print(f'Bienvenido {user.first_name}')
 
 # Agregar datos en el modelo Candidatos
-for _ in range(15000):
+for _ in range(500):
     cedula = get_random_string(length=10)
     firstname = get_random_string(length=6)
     lastname = get_random_string(length=8)
@@ -91,7 +91,7 @@ for department_name in unique_departments:
         department = departments.first()
     else:
         department = Departments.objects.create(name=department_name.capitalize())
-    print(f"Se creó el departamento: {department}")
+print(f"Se creó el departamento")
 
 
 
@@ -139,15 +139,15 @@ positions_data = [
 for position, department_name in zip(positions_data, departments_data):
     department = Departments.objects.get(name=department_name.capitalize())
     EmployeePositions.objects.create(name=position.capitalize(), departament=department)
-    print(f"Se creó la posición: {position}")
+print(f"Se creó la posición")
 
 
 
 
 
-# Agregar datos en el modelo Vacants
+# # Agregar datos en el modelo Vacants
 positions = EmployeePositions.objects.all()
-for _ in range(15000):
+for _ in range(500):
     position = random.choice(positions)
     description = get_random_string(length=20)
     min_salary = round(random.uniform(1000, 2000), 2)
@@ -158,22 +158,24 @@ for _ in range(15000):
         min_salary=min_salary,
         max_salary=max_salary
     )
+print('guardados')
 candidates = Candidatos.objects.all()
 vacants = Vacants.objects.all()
-for _ in range(1000):
+for _ in range(500):
     person = random.choice(candidates)
     vacant = random.choice(vacants)
     Selection.objects.create(
         person=person,
         vacants=vacant
     )
+print('guardados')
 
 candidates = Candidatos.objects.all()
 departments = Departments.objects.all()
 positions = EmployeePositions.objects.all()
 turns = EmployeeTurn.objects.all()
 
-for _ in range(15000):
+for _ in range(500):
     person = random.choice(candidates)
     department = random.choice(departments)
     position = random.choice(positions)
@@ -191,6 +193,7 @@ for _ in range(15000):
         estado=estado,
         hiring_date=hiring_date
     )
+print('Guardados')
 
 Headings.objects.create(name='SALARIO', type='remuneracion', order=1, has_quantity=True)
 Headings.objects.create(name='REEMBOLSO', type='remuneracion', order=2, has_quantity=False)
@@ -198,10 +201,7 @@ Headings.objects.create(name='MOVILIZACION', type='remuneracion', order=3, has_q
 Headings.objects.create(name='DECIMO TERCERO MENSUAL', type='remuneracion', order=4, has_quantity=False)
 Headings.objects.create(name='DECIMO CUARTO MENSUAL', type='remuneracion', order=5, has_quantity=False)
 Headings.objects.create(name='BONIFICACION', type='remuneracion', order=6, has_quantity=False)
-Headings.objects.create(name='HORAS NOCTURNAS', type='remuneracion', order=7, has_quantity=True)
-Headings.objects.create(name='HORAS SUPLEMENTARIAS', type='remuneracion', order=8, has_quantity=True)
-Headings.objects.create(name='HORAS EXTRAORDINARIAS', type='remuneracion', order=9, has_quantity=True)
-Headings.objects.create(name='OTROS INGRESOS', type='remuneracion', order=10, has_quantity=False)
+
 
 Headings.objects.create(name='PRESTAMO A LA EMPRESA', type='descuentos', order=1, has_quantity=False)
 Headings.objects.create(name='PRESTAMO HIPOTECARIO', type='descuentos', order=2, has_quantity=False)
@@ -212,3 +212,20 @@ Headings.objects.create(name='CREDITO DEVIES', type='descuentos', order=6, has_q
 Headings.objects.create(name='EXTENSION DE SALUD', type='descuentos', order=7, has_quantity=False)
 current_date = datetime.datetime.now().date()
 number_list = [0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1]
+
+for day in range(1, 30):
+    date_joined = datetime.datetime.strptime(f'{current_date.year}-{current_date.month}-{day}', '%Y-%m-%d')
+    assistance = Assistance()
+    assistance.year = current_date.year
+    assistance.month = current_date.month
+    assistance.day = day
+    assistance.date_joined = date_joined
+    assistance.save()
+    for employee in Employee.objects.filter(person__isnull=False):
+        detail = AssistanceDetail()
+        detail.assistance_id = assistance.id
+        detail.employee = employee
+        detail.state = random.choice(number_list)
+        detail.description = '' if detail.state else 'No asistio al trabajo'
+        detail.save()
+print('Guardado')

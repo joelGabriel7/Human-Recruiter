@@ -1,4 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
@@ -8,11 +10,21 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from core.erp.forms import *
 from core.erp.models import *
 from core.erp.mixins import *
-
+import json
+from decimal import Decimal
+from datetime import date
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        if isinstance(obj, date):
+            return obj.strftime('%Y-%m-%d')
+        return super().default(obj)
 class VacantsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
     model = Vacants
     template_name = 'vacante/list.html'
     permission_required = 'view_vacants'
+    paginate_by = 10
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -23,14 +35,33 @@ class VacantsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListVie
         try:
             action = request.POST['action']
             if action == 'searchdata':
-                data = []
-                for i in Vacants.objects.all():
-                    data.append(i.toJSON())
+                queryset = Vacants.objects.all().order_by('id')
+                search_value = request.POST.get('search[value]', '')
+
+                if search_value:
+                    queryset = queryset.filter(
+                        Q(posicion__name__contains=search_value) |
+                        Q(description__contains=search_value) |
+                        Q(min_salary__contains=search_value) |
+                        Q(max_salary__contains=search_value)
+                    ).order_by('id')
+
+                paginator = Paginator(queryset, request.POST.get('length', 10))
+                page_number = int(request.POST.get('start', 0)) // int(request.POST.get('length', 10)) + 1
+                page = paginator.get_page(page_number)
+
+                data = {
+                    'data': [item.toJSON() for item in page],
+                    'recordsTotal': queryset.count(),
+                    'recordsFiltered': paginator.count,
+                }
+
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
             data['error'] = str(e)
-        return JsonResponse(data, safe=False)
+        serialized_data = json.dumps(data, cls=CustomJSONEncoder)
+        return HttpResponse(serialized_data, content_type='application/json')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

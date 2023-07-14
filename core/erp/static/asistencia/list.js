@@ -11,6 +11,10 @@ let assistance = {
         tblAssistance = $('#tblAssistance').DataTable({
             autoWidth: false,
             destroy: true,
+            paging: true,
+            searching: true,
+            lengthMenu: [10, 25, 50, 100],  // Opciones de paginación por página
+            pageLength: 10,
             ajax: {
                 url: window.location.pathname,
                 type: 'POST',
@@ -18,8 +22,18 @@ let assistance = {
                 dataSrc: "",
                 headers: {
                     'X-CSRFToken': csrftoken
-                }
+                },
+                beforeSend: function () {
+                loading({'text': '...'});
+                },
+                complete: function () {
+                    setTimeout(function () {
+                        $.LoadingOverlay("hide");
+                    }, 500);
+                },
+
             },
+
             columns: [
                 {"data": "assistance.date_joined"},
                 {"data": "employee.person.firstname"},
@@ -90,7 +104,7 @@ $(function () {
         // location.href = window.location.pathname + 'delete/' + start_date + '/' + end_date + '/';
         var currentUrl = location.pathname;
         var updatedUrl = currentUrl.replace('/list/', '/delete/');
-         location.href = updatedUrl + start_date + '/' + end_date + '/';
+        location.href = updatedUrl + start_date + '/' + end_date + '/';
     });
     $('.btnUpdateAssistance').on('click', function () {
         var start_date = input_date_range.data('daterangepicker').startDate.format('YYYY-MM-DD');
@@ -103,7 +117,7 @@ $(function () {
         var updatedUrl = currentUrl.replace('/list/', '/update/');
         location.href = updatedUrl + start_date + '/';
     });
-     $('.btnExportAssistancesExcel').on('click', function () {
+    $('.btnExportAssistancesExcel').on('click', function () {
         $.ajax({
             url: pathname,
             data: {
