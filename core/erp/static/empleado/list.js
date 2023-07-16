@@ -67,6 +67,8 @@ $(function () {
                         html += '<span class="badge badge-success">' + data + '</span>';
                     } else if (data === 'Despedido') {
                         html += '<span class="badge badge-danger">' + data + '</span>';
+                    } else if (data === 'Licencia') {
+                        html += '<span class="badge badge-info">' + data + '</span>';
                     } else {
                         html += data;
                     }

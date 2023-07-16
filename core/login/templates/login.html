@@ -1,20 +1,9 @@
-{% load widget_tweaks %}
+{% extends 'base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 
-<!DOCTYPE html>
-<html lang="es">
-
-
-<head>
-    <title>{{ title }}</title>
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
-    <script src="{% static 'lib/sweetalert2-9.10.0/sweetalert2.all.min.js' %}"></script>
-    <script src="{% static 'js/functions.js' %}"></script>
-    <link rel="icon" href="{% static 'img/favicon.ico' %}">
-</head>
-<body>
+{% block content %}
 <div class="contenedor">
     <div class="logo">
         <img src="{% static 'img/logo.png' %}">
@@ -28,7 +17,7 @@
                 </svg>
             </p>
             {#					<input type="text" name="username" placeholder=Usuario>#}
-            {{ form.username |add_class:'box-input' |attr:'autocomplete:off'|attr:'placeholder:Usuario' }}
+            {{ form.username |attr:'placeholder:Usuario' }}
         </div>
         <div class="box-input">
             <p class="icon">
@@ -37,7 +26,7 @@
                 </svg>
             </p>
             <!--<input type="password" name="password" placeholder="Contrase&ntilde;a"  >-->
-            {{ form.password|add_class:'box-input'|attr:'autocomplete:off'|attr:'placeholder:Contraseña' }}
+            {{ form.password|attr:'autocomplete:off'|attr:'placeholder:Contraseña' }}
 
         </div>
         <div class="separate-grid">
@@ -47,7 +36,7 @@
             </div>
             <input type="submit" class="btn-login" value="Iniciar">
         </div>
-        <a href="" class="forget-password">&iquest;Olvidaste la contraseña?</a>
+        <a href="{% url 'reset_password' %}" class="forget-password">&iquest;Olvidaste la contraseña?</a>
     </form>
 </div>
 <p class="copyright">&copy;A&J Company INC</p>
@@ -71,6 +60,4 @@
     {% endif %}
 </script>
 
-</body>
-{#{% endblock %}#}
-</html>
+{% endblock %}
