@@ -27,7 +27,7 @@ def send_email():
         mensaje['To'] = email_to
         mensaje['Subject'] = "Tienes un correo probando"
 
-        content = render_to_string('send_email.html', {'user': User.objects.get(pk=1)})
+        content = render_to_string('login/send_email.html', {'user': User.objects.get(pk=1)})
         # content = render_to_string('send_email.html', {'user': User.objects.get(pk=1)})
         mensaje.attach(MIMEText(content, 'html'))
 

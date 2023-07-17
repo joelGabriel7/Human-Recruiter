@@ -24,8 +24,8 @@ input, button, label, select, textarea {
 }
 
 .contenedor {
-    width: calc(100vw - 30px);
-    max-width: 300px;
+    width: calc(100vw - 40px);
+    max-width: 400px;
     border-radius: 2.5px;
     background-color: #FFFFFF;
     border: 1px solid #D9D9D9;
@@ -77,11 +77,12 @@ input, button, label, select, textarea {
 
 .box-input input {
     width: 100%;
+
     background-color: #F2F2F2;
     color: #282828;
     border: 0px;
     outline: none;
-    padding: 0px 5px 0px 5px;
+    padding: 1px 5px 1px 5px;
     box-sizing: border-box;
 }
 
@@ -164,7 +165,7 @@ input, button, label, select, textarea {
     width: 100%;
 }
 
-.login-box-msg {
+.login-box-msgC {
     margin: 0;
     padding: 0 20px 20px;
     text-align: center;

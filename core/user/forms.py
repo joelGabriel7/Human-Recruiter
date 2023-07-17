@@ -8,6 +8,7 @@ class UserForm(ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['first_name'].widget.attrs['autofocus'] = True
+        self.fields['first_name'].widget.attrs['autocomplete'] = 'off'
         self.fields['image'].widget.attrs['class'] = 'form-control'
 
     class Meta:
@@ -21,6 +22,7 @@ class UserForm(ModelForm):
                 attrs={
                     'placeholder': 'Ingrese sus nombre',
                     'class': 'form-control',
+
                 }
             ),
             'last_name': TextInput(
@@ -45,12 +47,12 @@ class UserForm(ModelForm):
                 }
             ),
 
-            'password': PasswordInput(render_value=True,
-                                      attrs={
-                                          'placeholder': 'Crea una Contraseña',
-                                          'class': 'form-control',
-                                      }
-                                      ),
+            'password': PasswordInput(
+                render_value=True,
+                attrs={
+                    'placeholder': 'Crea una Contraseña',
+                    'class': 'form-control',
+                }),
             'groups': SelectMultiple(attrs={
                 'class': 'form-control select2',
                 'style': 'width: 100%',
@@ -66,7 +68,7 @@ class UserForm(ModelForm):
         try:
             if form.is_valid():
                 password_cleaned = self.cleaned_data['password']
-                user_created=form.save(commit=False)
+                user_created = form.save(commit=False)
                 if user_created.pk is None:
                     user_created.set_password(password_cleaned)
                 else:
@@ -82,6 +84,7 @@ class UserForm(ModelForm):
         except Exception as e:
             data['error'] = str(e)
         return data
+
 
 class UserProfileForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -119,7 +122,8 @@ class UserProfileForm(ModelForm):
             ),
 
         }
-        exclude = ['user_permissions', 'password', 'last_name','last_login', 'date_joined', 'is_superuser', 'is_active', 'is_staff','groups']
+        exclude = ['user_permissions', 'password', 'last_name', 'last_login', 'date_joined', 'is_superuser',
+                   'is_active', 'is_staff', 'groups']
 
     def save(self, commit=True):
         data = {}
