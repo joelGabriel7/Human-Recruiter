@@ -1,12 +1,11 @@
 import datetime
 import random
 import string
-
-from config import settings
-from core.erp.choice import *
 from django.db import models
 from django.forms import model_to_dict
 from django.utils import timezone
+from config import settings
+from core.erp.choice import *
 
 
 def generate_employee_code():
@@ -14,8 +13,6 @@ def generate_employee_code():
     numbers = string.digits
     code = ''.join(random.choice(letters) for i in range(6)) + ''.join(random.choice(numbers) for i in range(3))
     return code
-
-
 employe_code = generate_employee_code()
 
 
@@ -49,7 +46,7 @@ class Company(models.Model):
             ('view_company', 'Can view company'),
         )
 
-# Create your models here.
+
 class Candidatos(models.Model):
     gender_choiches = (
         ('Male', 'Masculino'),

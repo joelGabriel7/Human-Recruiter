@@ -1,6 +1,45 @@
 from django.forms import *
 from core.erp.models import *
 
+
+class CompanyForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs["class"] = 'form-control'
+            form.field.widget.attrs["autocomplete"] = 'off'
+        self.fields['name'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = Company
+        fields = '__all__'
+        labels = {
+            'name': 'Nombre',
+            'description': 'Descripción'
+        }
+        widgets = {
+            'name': TextInput(attrs={'placeholder': 'Ingrese un nombre', }),
+            'rnc': TextInput(attrs={'placeholder': 'Ingrese su RNC', }),
+            'address': TextInput(attrs={'placeholder': 'Ingrese su Dirección', }),
+            'mobile': TextInput(attrs={'placeholder': 'Ingrese su telefono movil', }),
+            'phone': TextInput(attrs={'placeholder': 'Ingrese su telefono convencional', }),
+            'email': EmailInput(attrs={'placeholder': 'Ingrese su correo empresarial', }),
+            'description': Textarea(attrs={'placeholder': 'Ingrese una descripcion', 'rows': 3, 'cols': 3}),
+        }
+
+    def save(self, commit=True):
+        data = {}
+        form = super()
+        try:
+            if form.is_valid():
+                form.save()
+            else:
+                data['error'] = form.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return data
+
+
 class DepartmentsForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -167,17 +206,6 @@ class CandidateForm(ModelForm):
     class Meta:
         model = Candidatos
         fields = '__all__'
-        # labels = {
-        #     'firstname': '',
-        #     'cedula': '',
-        #     'lastname': '',
-        #     'birthdate': '',
-        #     'gender': '',
-        #     'phone': '',
-        #     'email': '',
-        #     'address': '',
-        #
-        # }
         widgets = {
             'firstname': TextInput(
                 attrs={

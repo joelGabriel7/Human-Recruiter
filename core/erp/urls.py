@@ -1,6 +1,7 @@
 from django.urls import path
 
 from core.erp.views.candidate.views import *
+from core.erp.views.company.views import CompanyUpdateView
 
 from core.erp.views.departaments.view import *
 from core.erp.views.empleados.views.view import *
@@ -72,5 +73,9 @@ urlpatterns = [
 
     path('salary/list/', SalaryListView.as_view(), name='salary_list'),
     path('salary/add/', SalaryCreateView.as_view(), name='salary_create'),
+
+    #Company
+    path('company/update/', CompanyUpdateView.as_view(), name='company_update')
+
 
 ]
