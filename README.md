@@ -1,3 +1,4 @@
+
 # Human-Recruiter
 
 ## Este proyecto es un sistema para gestion de recursos humanos esta en desarrollo aun, este sistema cuenta con varios funcionamientos los cuales son :
@@ -52,4 +53,3 @@ La arquitectura usada para ese proyecto es la basica que utiliza django que es M
 
 * PostgreSQL
 * MySQ
-  
