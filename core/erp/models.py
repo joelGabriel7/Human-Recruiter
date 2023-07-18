@@ -1,19 +1,12 @@
 import datetime
 import random
 import string
+
+from config import settings
 from core.erp.choice import *
 from django.db import models
 from django.forms import model_to_dict
 from django.utils import timezone
-
-
-# from core.test import generar_numero_cuenta
-def generar_numero_cuenta():
-    prefijo = "960"
-    sufijo = "".join([str(random.randint(0, 8)) for i in range(6)])
-    digito_verificador = str(random.randint(0, 8))
-    numero_cuenta = prefijo + sufijo + digito_verificador
-    return numero_cuenta
 
 
 def generate_employee_code():
@@ -22,8 +15,39 @@ def generate_employee_code():
     code = ''.join(random.choice(letters) for i in range(6)) + ''.join(random.choice(numbers) for i in range(3))
     return code
 
+
 employe_code = generate_employee_code()
 
+
+class Company(models.Model):
+    name = models.CharField(max_length=25, verbose_name='Razón Social')
+    rnc = models.CharField(max_length=9, verbose_name='RNC')
+    address = models.CharField(max_length=200, verbose_name='Dirección')
+    mobile = models.CharField(max_length=15, verbose_name='Teléfono celular')
+    phone = models.CharField(max_length=15, verbose_name='Teléfono convencional')
+    email = models.CharField(max_length=50, verbose_name='Email')
+    description = models.CharField(max_length=500, null=True, blank=True, verbose_name='Descripción')
+    image = models.ImageField(null=True, blank=True, upload_to='company/%Y/%m/%d', verbose_name='Logo')
+
+    def __str__(self):
+        return self.name
+
+    def get_image(self):
+        if self.image:
+            return f'{settings.MEDIA_URL}{self.image}'
+        return f'{settings.STATIC_URL}img/logo.png'
+
+    def toJson(self):
+        item = model_to_dict(self)
+        return item
+
+    class Meta:
+        verbose_name = 'Empresa'
+        verbose_name_plural = 'Empresas'
+        default_permissions = ()
+        permissions = (
+            ('view_company', 'Can view company'),
+        )
 
 # Create your models here.
 class Candidatos(models.Model):
@@ -58,8 +82,6 @@ class Candidatos(models.Model):
 
 
 # self.min_salary, '.2f'
-
-
 
 
 class Departments(models.Model):
@@ -101,8 +123,10 @@ class EmployeePositions(models.Model):
 class Vacants(models.Model):
     posicion = models.ForeignKey(EmployeePositions, on_delete=models.CASCADE, verbose_name='Posiciones')
     description = models.CharField(max_length=512, null=True, blank=True)
-    min_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,verbose_name='Mínimo salario')
-    max_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True, verbose_name='Máximo salario')
+    min_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,
+                                     verbose_name='Mínimo salario')
+    max_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,
+                                     verbose_name='Máximo salario')
 
     def __str__(self):
         return self.posicion.name
@@ -200,7 +224,8 @@ class Employee(models.Model):
         return self.hiring_date.strftime('%Y-%m-%d')
 
     def get_amount_of_assists(self, year, month):
-        return self.assistancedetail_set.filter(assistance__date_joined__year=year, assistance__date_joined__month=month, state=True).count()
+        return self.assistancedetail_set.filter(assistance__date_joined__year=year,
+                                                assistance__date_joined__month=month, state=True).count()
 
     def toJSON(self):
         item = model_to_dict(self)
@@ -284,7 +309,6 @@ class Salary(models.Model):
         verbose_name_plural = 'Salarios'
 
 
-
 class SalaryDetail(models.Model):
     salary = models.ForeignKey(Salary, on_delete=models.CASCADE)
     employee = models.ForeignKey(Employee, on_delete=models.PROTECT, verbose_name='Empleado')
@@ -327,7 +351,6 @@ class SalaryDetail(models.Model):
         verbose_name_plural = 'Salario Detalles'
 
 
-
 class SalaryHeadings(models.Model):
     salary_detail = models.ForeignKey(SalaryDetail, on_delete=models.CASCADE)
     headings = models.ForeignKey(Headings, on_delete=models.PROTECT)
@@ -356,7 +379,6 @@ class SalaryHeadings(models.Model):
     class Meta:
         verbose_name = 'Detalle de Salario'
         verbose_name_plural = 'Detalle de Salarios'
-
 
 
 class Assistance(models.Model):
@@ -408,4 +430,3 @@ class AssistanceDetail(models.Model):
     class Meta:
         verbose_name = 'Detalle de Asistencia'
         verbose_name_plural = 'Detalles de Asistencia'
-
