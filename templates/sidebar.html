@@ -1,8 +1,8 @@
 {% load static %}
 <div class="main-sidebar sidebar-dark-gray-dark elevation-4">
-    <a href="#" class="brand-link">
+    <a href="{% url 'dashboard' %}" class="brand-link">
         <img src="{% static 'img/favicon.ico' %}"
-             alt="AdminLTE Logo"
+             alt="HR Logo"
              class="brand-image img-circle "
              style="opacity: .8">
         <span class="brand-text font-weight-light">Human Recruiter</span>
@@ -13,7 +13,7 @@
                   <img src="{{ request.user.get_image }}" class="img-circle" alt="User Image"> 
             </div>
             <div class="info">
-                <a href="#" class="d-block">{{ request.user.username }}</a>
+                <a href="{% url 'dashboard' %}" class="d-block">{{ request.user.username }}</a>
             </div>
         </div>
         <nav class="mt-2">

@@ -1,17 +1,35 @@
-{% extends 'form.html' %}
+{% load widget_tweaks %}
 {% load static %}
-{% block assets_body %}
-{#    <link rel="stylesheet" href="{% static 'login/css/style.css' %}">#}
-    <link rel="stylesheet" href="{% static 'lib/formvalidation-1.9.0/css/formValidation.min.css' %}">
-    <script src="{% static 'lib/formvalidation-1.9.0/js/es6-shim.min.js' %}"></script>
-    <script src="{% static 'lib/formvalidation-1.9.0/js/FormValidation.min.js' %}"></script>
-    <script src="{% static 'lib/formvalidation-1.9.0/js/plugins/Bootstrap.min.js' %}"></script>
-    <script src="{% static 'lib/formvalidation-1.9.0/js/locales/es_ES.min.js' %}"></script>
-    {% block assets_login %}{% endblock %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>{{ title }}</title>
+ <script src="{% static 'js/functions.js' %}"></script>
+
+
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+    <script src="{% static 'lib/sweetalert2-9.10.0/sweetalert2.all.min.js' %}"></script>
+
+    <link rel="icon" href="{% static 'img/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'lib/fontawesome-6.1.1/css/all.min.css' %}"/>
+    <!--JQuery Confirm-->
+
+    <script src="{% static 'lib/adminlte-3.0.4/plugins/jquery/jquery.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/jquery-confirm-3.3.4/css/jquery-confirm.min.css' %}">
+    <script type="text/javascript" src="{% static 'lib/jquery-confirm-3.3.4/js/jquery-confirm.min.js' %}"></script>
+
+
+    {% block head %}
+
+    {% endblock %}
+<body>
+
+{% block content %}
+
 {% endblock %}
 
-{% block body %}
-    <body class="hold-transition login-page">
-    {% block content %}{% endblock %}
-    </body>
-{% endblock %}
+</body>
+
+</html>

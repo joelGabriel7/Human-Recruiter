@@ -7,6 +7,7 @@ let assistance = {
             'action': 'search',
             'start_date': input_date_range.data('daterangepicker').startDate.format('YYYY-MM-DD'),
             'end_date': input_date_range.data('daterangepicker').endDate.format('YYYY-MM-DD'),
+            'start':0
         };
         tblAssistance = $('#tblAssistance').DataTable({
             autoWidth: false,

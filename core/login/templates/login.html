@@ -1,76 +1,58 @@
-{% load widget_tweaks %}
+{% extends 'base.html' %}
 {% load static %}
-
-
-<!DOCTYPE html>
-<html lang="es">
-
-
-<head>
-    <title>{{ title }}</title>
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
-    <script src="{% static 'lib/sweetalert2-9.10.0/sweetalert2.all.min.js' %}"></script>
-    <script src="{% static 'js/functions.js' %}"></script>
-    <link rel="icon" href="{% static 'img/favicon.ico' %}">
-</head>
-<body>
-<div class="contenedor">
-    <div class="logo">
-        <img src="{% static 'img/logo.png' %}">
-    </div>
-    <form action="." method="post">
-        {% csrf_token %}
-        <div class="box-input">
-            <p class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                    <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0S96 57.3 96 128s57.3 128 128 128zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"></path>
-                </svg>
-            </p>
-            {#					<input type="text" name="username" placeholder=Usuario>#}
-            {{ form.username |add_class:'box-input' |attr:'autocomplete:off'|attr:'placeholder:Usuario' }}
+{% load widget_tweaks %}
+{% block content %}
+    <div class="contenedor">
+        <div class="logo">
+            <img src="{% static 'img/logo.png' %}">
         </div>
-        <div class="box-input">
-            <p class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                    <path d="M336 352c97.2 0 176-78.8 176-176S433.2 0 336 0S160 78.8 160 176c0 18.7 2.9 36.8 8.3 53.7L7 391c-4.5 4.5-7 10.6-7 17v80c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24V448h40c13.3 0 24-10.7 24-24V384h40c6.4 0 12.5-2.5 17-7l33.3-33.3c16.9 5.4 35 8.3 53.7 8.3zm40-176c-22.1 0-40-17.9-40-40s17.9-40 40-40s40 17.9 40 40s-17.9 40-40 40z"></path>
-                </svg>
-            </p>
-            <!--<input type="password" name="password" placeholder="Contrase&ntilde;a"  >-->
-            {{ form.password|add_class:'box-input'|attr:'autocomplete:off'|attr:'placeholder:Contraseña' }}
-
-        </div>
-        <div class="separate-grid">
-            <div class="box-check">
-                <input type="checkbox">
-                <label for="">Recordar contrase&ntilde;a</label>
+        <form action="." method="post">
+            {% csrf_token %}
+            <div class="box-input">
+                <p class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0S96 57.3 96 128s57.3 128 128 128zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"></path>
+                    </svg>
+                </p>
+                {{ form.username |attr:'placeholder:Usuario' }}
             </div>
-            <input type="submit" class="btn-login" value="Iniciar">
-        </div>
-        <a href="" class="forget-password">&iquest;Olvidaste la contraseña?</a>
-    </form>
-</div>
-<p class="copyright">&copy;A&J Company INC</p>
-<script type="application/javascript">
+            <div class="box-input">
+                <p class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path d="M336 352c97.2 0 176-78.8 176-176S433.2 0 336 0S160 78.8 160 176c0 18.7 2.9 36.8 8.3 53.7L7 391c-4.5 4.5-7 10.6-7 17v80c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24V448h40c13.3 0 24-10.7 24-24V384h40c6.4 0 12.5-2.5 17-7l33.3-33.3c16.9 5.4 35 8.3 53.7 8.3zm40-176c-22.1 0-40-17.9-40-40s17.9-40 40-40s40 17.9 40 40s-17.9 40-40 40z"></path>
+                    </svg>
+                </p>
+                {{ form.password|attr:'autocomplete:off'|attr:'placeholder:Contraseña' }}
+            </div>
+            <div class="separate-grid">
+                <div class="box-check">
+                    <input type="checkbox">
+                    <label for="">Recordar contrase&ntilde;a</label>
+                </div>
+                <input type="submit" class="btn-login" value="Iniciar">
+            </div>
+            <a href="{% url 'reset_password' %}" class="forget-password">&iquest;Olvidaste la contraseña?</a>
+        </form>
+    </div>
+    <p class="copyright">&copy;A&J Company INC</p>
+    <script type="application/javascript">
 
-    {% if form.errors %}
-        var errors = '';
-        {% for field in form %}
-            {% for error in field.errors %}
+        {% if form.errors %}
+            var errors = '';
+            {% for field in form %}
+                {% for error in field.errors %}
+                    errors += '{{ error }}\n';
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
                 errors += '{{ error }}\n';
             {% endfor %}
-        {% endfor %}
-        {% for error in form.non_field_errors %}
-            errors += '{{ error }}\n';
-        {% endfor %}
-        Swal.fire({
-            title: 'Error!',
-            text: errors,
-            icon: 'error'
-        });
-    {% endif %}
-</script>
+            Swal.fire({
+                title: 'Error!',
+                text: errors,
+                icon: 'error'
+            });
+        {% endif %}
+    </script>
 
-</body>
-{#{% endblock %}#}
-</html>
+{% endblock %}

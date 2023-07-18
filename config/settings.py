@@ -142,6 +142,6 @@ EMAIL_HOST_USER = 'german03prueba@gmail.com'
 EMAIL_HOST_PASSWORD = 'xfikezkywmhttsum'
 # EMAIL_HOST_PASSWORD = 'zevjdhputnjzrosc' 'app_password de joelgerman671'
 EMAIL_USE_TLS = True
-
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DOMAIN = ''

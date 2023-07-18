@@ -27,6 +27,7 @@ let salary = {
                     tblHeadings = $('#tblHeadings').DataTable({
                         autoWidth: false,
                         destroy: true,
+                        paging:false,
                         data: request.detail,
                         columns: request.columns,
                         columnDefs: [

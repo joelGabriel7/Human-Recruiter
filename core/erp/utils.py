@@ -1,8 +1,5 @@
-import datetime
-
 from config.wsgi import *
 from datetime import time
-import random
 from datetime import date
 from django.utils.crypto import get_random_string
 from core.erp.models import *
@@ -22,7 +19,7 @@ user.save()
 print(f'Bienvenido {user.first_name}')
 
 # Agregar datos en el modelo Candidatos
-for _ in range(500):
+for _ in range(50):
     cedula = get_random_string(length=10)
     firstname = get_random_string(length=6)
     lastname = get_random_string(length=8)
@@ -82,7 +79,7 @@ departments_data = [
     'Reubicación Despostada - 86'
 ]
 
-# Insertar departamentos sin duplicados
+
 # Insertar departamentos sin duplicados
 unique_departments = set(departments_data)
 for department_name in unique_departments:
@@ -92,8 +89,6 @@ for department_name in unique_departments:
     else:
         department = Departments.objects.create(name=department_name.capitalize())
 print(f"Se creó el departamento")
-
-
 
 positions_data = [
     'Analista de ByS', 'Gerente Industrial', 'Coordinador', 'Supervisor', 'Encargado de PCP', 'Contador',
@@ -141,13 +136,9 @@ for position, department_name in zip(positions_data, departments_data):
     EmployeePositions.objects.create(name=position.capitalize(), departament=department)
 print(f"Se creó la posición")
 
-
-
-
-
 # # Agregar datos en el modelo Vacants
 positions = EmployeePositions.objects.all()
-for _ in range(500):
+for _ in range(50):
     position = random.choice(positions)
     description = get_random_string(length=20)
     min_salary = round(random.uniform(1000, 2000), 2)
@@ -161,7 +152,7 @@ for _ in range(500):
 print('guardados')
 candidates = Candidatos.objects.all()
 vacants = Vacants.objects.all()
-for _ in range(500):
+for _ in range(50):
     person = random.choice(candidates)
     vacant = random.choice(vacants)
     Selection.objects.create(
@@ -175,7 +166,7 @@ departments = Departments.objects.all()
 positions = EmployeePositions.objects.all()
 turns = EmployeeTurn.objects.all()
 
-for _ in range(500):
+for _ in range(50):
     person = random.choice(candidates)
     department = random.choice(departments)
     position = random.choice(positions)
