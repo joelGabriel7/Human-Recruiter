@@ -534,3 +534,10 @@ class SalaryForm(ModelForm):
         'multiple': 'multiple',
         'style': 'width: 100%;'
     }), label='Empleado')
+
+
+class ReportForm(forms.Form):
+    date_range = CharField(widget=TextInput(attrs={
+        'class': 'form-control',
+        'autocomplete': 'off'
+    }), label='Buscar por rango de fechas')

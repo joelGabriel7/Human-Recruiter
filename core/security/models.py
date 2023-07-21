@@ -21,7 +21,7 @@ class AccessUser(models.Model):
         item = model_to_dict(self)
         item['user'] = self.user.toJson()
         item['date_joined'] = self.date_joined.strftime('%d-%m-%Y')
-        item['time_joined'] = self.time_joined.strftime('%H:%M %p')
+        item['time_joined'] = self.time_joined.strftime('%H:%M:%p')
         return item
 
 
@@ -34,3 +34,4 @@ class AccessUser(models.Model):
             ('view_user_access', 'Can view Acceso del usuario'),
             ('delete_user_access', 'Can delete Acceso del usuario'),
         )
+        ordering = ['id']

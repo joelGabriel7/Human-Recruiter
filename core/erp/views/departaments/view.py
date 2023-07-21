@@ -1,18 +1,16 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import TemplateView
 from core.erp.forms import DepartmentsForm
-from core.erp.models import *
 from core.erp.mixins import *
+from core.erp.models import *
 
 
 # Create your views here.
 
-class DepartamentListView(LoginRequiredMixin,ValidatePermissionRequiredMixin, TemplateView):
+class DepartamentListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, TemplateView):
     model = Departments
     template_name = 'departaments/list.html'
     permission_required = 'view_departments'
@@ -55,7 +53,6 @@ class DepartamentListView(LoginRequiredMixin,ValidatePermissionRequiredMixin, Te
         context['list_url'] = reverse_lazy('erp:departaments_list')
         context['entity'] = 'Departamentos'
         return context
-
 
 # class DepartamentCreateView(CreateView):
 #     model = Departments
