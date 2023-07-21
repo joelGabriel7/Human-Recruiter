@@ -44,7 +44,7 @@ class AssistanceListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Fo
                 if len(start_date) and len(end_date):
                     queryset = queryset.filter(assistance__date_joined__range=[start_date, end_date])
                 for i in queryset.order_by('assistance__date_joined'):
-                    data.append(i.toJSON())
+                    data.append(i.toJSON)
             elif action == 'export_assistences_excel':
                 start_date = request.POST['start_date']
                 end_date = request.POST['end_date']
@@ -132,7 +132,7 @@ class AssistanceCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, 
             elif action == 'generate_assistance':
                 data = []
                 for i in Employee.objects.filter(person__isnull=False).order_by('id'):
-                    item = i.toJSON()
+                    item = i.toJSON
                     item['state'] = 0
                     item['description'] = ''
                     data.append(item)
@@ -206,7 +206,7 @@ class AssistanceUpdateView(LoginRequiredMixin, FormView):
                 data = []
                 date_joined = self.kwargs['date_joined']
                 for i in Employee.objects.filter(person__isnull=False):
-                    item = i.toJSON()
+                    item = i.toJSON
                     item['state'] = 0
                     item['description'] = ''
                     queryset = AssistanceDetail.objects.filter(assistance__date_joined=date_joined, employee_id=i.id)

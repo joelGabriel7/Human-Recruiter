@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'core.erp',
     'core.user',
     'widget_tweaks',
-    'core.erp.templatetags'
+    'core.erp.templatetags',
+    'core.security',
 
 
 ]

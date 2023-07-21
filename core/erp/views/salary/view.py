@@ -56,14 +56,14 @@ class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView
                 if len(pks):
                     queryset = SalaryDetail.objects.filter(employee__id__in=pks)
                 for i in queryset:
-                    data.append(i.toJSON())
+                    data.append(i.toJSON)
             elif action == 'search_employee':
                 data = []
                 term = request.POST['term']
                 for i in Employee.objects.filter(
                         Q(person__firstname__icontains=term) | Q(person__cedula__icontains=term) | Q(
                             codigo__icontains=term)).order_by('person__employee')[0:10]:
-                    item = i.toJSON()
+                    item = i.toJSON
                     item['text'] = i.get_full_name()
                     data.append(item)
             elif action == 'search_detail_headings':
@@ -185,7 +185,7 @@ class SalaryCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Create
                 for i in Employee.objects.filter(
                         Q(person__firstname__icontains=term) | Q(person__cedula__icontains=term) | Q(
                                 codigo__icontains=term)).order_by('person__employee')[0:10]:
-                    item = i.toJSON()
+                    item = i.toJSON
                     item['text'] = i.get_full_name()
                     data.append(item)
             elif action == 'search_employees':
@@ -212,7 +212,7 @@ class SalaryCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Create
                 for employee in employees:
                     heading = {}
                     for d in headings.filter(type='remuneracion').order_by('order'):
-                        item = d.toJSON()
+                        item = d.toJSON
                         item['cant'] = 0
                         item['amount'] = 0.00
                         if d.code == 'salario':
@@ -224,7 +224,7 @@ class SalaryCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Create
                             item['cant'] = queryset.cant
                         heading[d.code] = item
                     for d in headings.filter(type='descuentos').order_by('order'):
-                        item = d.toJSON()
+                        item = d.toJSON
                         item['cant'] = 0
                         item['amount'] = 0.00
                         queryset = d.get_amount_detail_salary(employee=employee.id, year=year, month=month)
@@ -244,7 +244,7 @@ class SalaryCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Create
                         heading['total_assets'] = {'code': 'total_assets', 'amount': 0.00}
                         heading['total_discounts'] = {'code': 'total_discounts', 'amount': 0.00}
                         heading['total_charge'] = {'code': 'total_charge', 'amount': float(employee.salary)}
-                    heading['employee'] = employee.toJSON()
+                    heading['employee'] = employee.toJSON
                     detail.append(heading)
                 data = {'detail': detail, 'columns': columns}
             else:
