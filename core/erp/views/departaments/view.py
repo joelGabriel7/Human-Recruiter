@@ -26,7 +26,7 @@ class DepartamentListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, T
             if action == 'searchdata':
                 data = []
                 for i in Departments.objects.all():
-                    data.append(i.toJSON)
+                    data.append(i.toJSON())
             elif action == 'add':
                 depart = Departments()
                 depart.name = request.POST['name']

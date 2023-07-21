@@ -28,7 +28,7 @@ class DescuentosListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Temp
             if action == 'search':
                 data = []
                 for i in Headings.objects.all().order_by('type', 'order'):
-                    data.append(i.toJSON)
+                    data.append(i.toJSON())
             else:
                 data['error'] = 'No se ha seleccionado ninguna opcion'
         except Exception as e:

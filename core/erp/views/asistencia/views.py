@@ -44,7 +44,7 @@ class AssistanceListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Fo
                 if len(start_date) and len(end_date):
                     queryset = queryset.filter(assistance__date_joined__range=[start_date, end_date])
                 for i in queryset.order_by('assistance__date_joined'):
-                    data.append(i.toJSON)
+                    data.append(i.toJSON())
             elif action == 'export_assistences_excel':
                 start_date = request.POST['start_date']
                 end_date = request.POST['end_date']

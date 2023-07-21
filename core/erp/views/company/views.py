@@ -11,7 +11,7 @@ from core.erp.models import Company
 class CompanyUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, UpdateView):
     form_class = CompanyForm
     template_name = 'company/create.html'
-    success_url = reverse_lazy('erp:company_update')
+    success_url = reverse_lazy('dashboard')
     permission_required = 'view_company'
 
     def get_object(self, queryset=None):

@@ -34,4 +34,4 @@ class AccessUser(models.Model):
             ('view_user_access', 'Can view Acceso del usuario'),
             ('delete_user_access', 'Can delete Acceso del usuario'),
         )
-        ordering = ['id']
+        ordering = ['-id']

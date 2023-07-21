@@ -27,7 +27,7 @@ class CandidateListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListV
             if action == 'searchdata':
                 data = []
                 for i in Candidatos.objects.all():
-                    data.append(i.toJSON)
+                    data.append(i.toJSON())
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:

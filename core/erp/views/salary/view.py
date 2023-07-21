@@ -56,7 +56,7 @@ class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView
                 if len(pks):
                     queryset = SalaryDetail.objects.filter(employee__id__in=pks)
                 for i in queryset:
-                    data.append(i.toJSON)
+                    data.append(i.toJSON())
             elif action == 'search_employee':
                 data = []
                 term = request.POST['term']

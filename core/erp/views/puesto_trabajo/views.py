@@ -24,7 +24,7 @@ class PositionsJobListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Li
             if action == 'searchdata':
                 data = []
                 for i in EmployeePositions.objects.all():
-                    data.append(i.toJSON)
+                    data.append(i.toJSON())
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:

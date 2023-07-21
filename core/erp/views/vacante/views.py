@@ -51,7 +51,7 @@ class VacantsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListVie
                 page = paginator.get_page(page_number)
 
                 data = {
-                    'data': [item.toJSON for item in page],
+                    'data': [item.toJSON() for item in page],
                     'recordsTotal': queryset.count(),
                     'recordsFiltered': paginator.count,
                 }
