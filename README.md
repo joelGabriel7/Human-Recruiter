@@ -47,6 +47,7 @@ La arquitectura usada para ese proyecto es la basica que utiliza django que es M
 * Select2
 * SweetAlert
 * Jquery Confirm
+* AdminLTE3
 
 # Bases de datos
 ## Es compatible con las siguientes Bases de datos
