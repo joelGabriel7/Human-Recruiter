@@ -1,21 +1,17 @@
 import json
-from decimal import Decimal
 from datetime import date
+from decimal import Decimal
 from io import BytesIO
-
+import datetime
 import xlsxwriter as xlsxwriter
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.db.models import Q
-from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.views.generic import *
+
 from core.erp.forms import *
-from core.erp.models import *
 from core.erp.mixins import *
-from django.core.paginator import Paginator
+from core.erp.models import *
 
 
 class CustomJSONEncoder(json.JSONEncoder):
@@ -132,7 +128,7 @@ class AssistanceCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, 
             elif action == 'generate_assistance':
                 data = []
                 for i in Employee.objects.filter(person__isnull=False).order_by('id'):
-                    item = i.toJSON
+                    item = i.toJSON()
                     item['state'] = 0
                     item['description'] = ''
                     data.append(item)
@@ -193,8 +189,7 @@ class AssistanceUpdateView(LoginRequiredMixin, FormView):
                             detail = AssistanceDetail.objects.get(pk=i['pk'])
                         else:
                             date_joined = datetime.datetime.strptime(self.kwargs['date_joined'], '%Y-%m-%d')
-                            assistance = \
-                                Assistance.objects.get_or_create(date_joined=date_joined, year=date_joined.year,
+                            assistance =  Assistance.objects.get_or_create(date_joined=date_joined, year=date_joined.year,
                                                                  month=date_joined.month, day=date_joined.day)[0]
                             detail = AssistanceDetail()
                             detail.assistance_id = assistance.id
@@ -206,7 +201,7 @@ class AssistanceUpdateView(LoginRequiredMixin, FormView):
                 data = []
                 date_joined = self.kwargs['date_joined']
                 for i in Employee.objects.filter(person__isnull=False):
-                    item = i.toJSON
+                    item = i.toJSON()
                     item['state'] = 0
                     item['description'] = ''
                     queryset = AssistanceDetail.objects.filter(assistance__date_joined=date_joined, employee_id=i.id)
@@ -230,7 +225,6 @@ class AssistanceUpdateView(LoginRequiredMixin, FormView):
         context = super().get_context_data()
         context['title'] = 'Edición de una Asistencia'
         context['list_url'] = self.success_url
-
         context['action'] = 'edit'
         return context
 

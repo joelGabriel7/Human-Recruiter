@@ -28,7 +28,6 @@ class AccessUser(models.Model):
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         request = get_current_request()
         self.ip_address = request.META['REMOTE_ADDR']
-        print(request.META['REMOTE_HOST'])
         super(AccessUser,self).save()
 
     class Meta:

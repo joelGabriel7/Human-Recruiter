@@ -45,4 +45,24 @@ class AccessUsersListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, F
         context['entity'] = 'Acceso de Usuario'
         return context
 
-# Create your views here.
+
+class AccessUsersDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):
+    model = AccessUser
+    template_name = 'delete.html'
+    permission_required = 'delete_user_access'
+    success_url = reverse_lazy('acceso_usuario_list')
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            self.get_object().delete()
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Alerta de eliminación'
+        context['list_url'] = self.success_url
+        context['entity'] = 'Acceso de Usuario'
+        return context
