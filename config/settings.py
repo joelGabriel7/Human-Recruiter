@@ -141,9 +141,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'german03prueba@gmail.com'
-# EMAIL_HOST_USER = 'joelgerman671@gmail.com'
 EMAIL_HOST_PASSWORD = 'xfikezkywmhttsum'
-# EMAIL_HOST_PASSWORD = 'zevjdhputnjzrosc' 'app_password de joelgerman671'
 EMAIL_USE_TLS = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

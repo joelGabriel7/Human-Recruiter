@@ -1,6 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
-from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -34,7 +32,6 @@ class AccessUsersListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, F
                     queryset = queryset.filter(date_joined__range=[start_date, end_date])
                 for i in queryset:
                     data.append(i.toJSON())
-
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
