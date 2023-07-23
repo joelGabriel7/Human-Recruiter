@@ -3,7 +3,7 @@ import uuid
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.http import JsonResponse, HttpResponseRedirect
@@ -17,20 +17,27 @@ import config.settings as setting
 from config import settings
 from core.user.models import User
 from .form import ResetPasswordForm, ChangePasswordForm
+from ..security.models import AccessUser
 
 
-class LoginHumanRecruiterView(LoginView):
-    template_name = 'login.html'
+class LoginHumanRecruiterView(FormView):
     form_class = AuthenticationForm
+    template_name = 'login.html'
+    success_url = settings.LOGIN_REDIRECT_URL
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect(setting.LOGIN_REDIRECT_URL)
+            return HttpResponseRedirect(self.success_url)
         return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        login(self.request, user=form.get_user())
+        AccessUser(user=self.request.user).save()
+        return super(LoginHumanRecruiterView,self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Inicio de Sesion'
+        context['title'] = 'Iniciar sesión'
         return context
 
 
@@ -127,7 +134,7 @@ class ChangePasswordView(FormView):
                 user.token = uuid.uuid4()
                 user.save()
             else:
-                data['error']= form.errors
+                data['error'] = form.errors
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data, safe=False)

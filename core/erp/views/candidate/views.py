@@ -1,13 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
-from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+
 from core.erp.forms import CandidateForm
-from core.erp.models import *
 from core.erp.mixins import *
+from core.erp.models import *
 
 
 # Create your views here.

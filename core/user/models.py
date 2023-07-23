@@ -1,7 +1,6 @@
 import uuid
 
 from crum import get_current_request
-# from crum import get_current_request
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.forms import model_to_dict
