@@ -13,9 +13,9 @@ var access_users = {
         }
         $('#data').DataTable({
             responsive: true,
-            orderable: trueú,
+            orderable: true,
             // scrollX: true,
-            // autoWidth: false,
+            autoWidth: false,
             destroy: true,
             deferRender: true,
             ajax: {

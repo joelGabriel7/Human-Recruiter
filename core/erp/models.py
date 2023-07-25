@@ -65,11 +65,14 @@ class Candidatos(models.Model):
     def __str__(self):
         return f'{self.firstname} {self.lastname}'
 
+    def get_full_name(self):
+        return f'{self.firstname} {self.lastname}'
+
     def toJSON(self):
         item = model_to_dict(self)
         item['gender'] = {'id': self.gender, 'name': self.get_gender_display()}
         item['birthdate'] = self.birthdate.strftime('%Y-%m-%d')
-        item['fullname'] = self.firstname + ' ' + self.lastname
+        item['fullname'] = self.get_full_name()
         return item
 
     class Meta:

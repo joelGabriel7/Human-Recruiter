@@ -2,7 +2,8 @@ import json
 from decimal import Decimal
 from datetime import date
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.db.models import Q
+from django.db.models import Q, Value
+from django.db.models.functions import Concat
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
@@ -39,12 +40,15 @@ class EmpleadoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
             action = request.POST['action']
             if action == 'searchdata':
                 search_value = request.POST.get('search[value]', '')
+                print(search_value)
 
-                employees = Employee.objects.filter(
+                employees = Employee.objects.annotate(
+                    full_name=Concat('person__firstname', Value(' '), 'person__lastname')
+                ).filter(
                     Q(id__icontains=search_value) |
                     Q(hiring_date__icontains=search_value) |
                     Q(codigo__icontains=search_value) |
-                    Q(person__firstname__icontains=search_value) |
+                    Q(full_name__icontains=search_value) |  # Búsqueda por nombre completo usando el método get_full_name
                     Q(department__name__icontains=search_value) |
                     Q(position__name__icontains=search_value) |
                     Q(turn__name__icontains=search_value) |
@@ -64,7 +68,7 @@ class EmpleadoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
                             'id': employee.id,
                             'hiring_date': employee.hiring_date.strftime('%Y-%m-%d'),
                             'codigo': employee.codigo,
-                            'person__firstname': employee.person.firstname,
+                            'full_name': employee.get_full_name(),
                             'department__name': employee.department.name,
                             'position__name': employee.position.name,
                             'turn__name': employee.turn.name,

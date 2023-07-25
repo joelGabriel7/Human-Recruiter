@@ -1,4 +1,120 @@
 {% extends 'body.html' %}
 {% load static %}
+{% block breadcrumb %}{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-danger"><i class="fas fa-box"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Posiciones</span>
+                        <span class="info-box-number">{{ positions }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-success"><i class="fas fa-truck"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Departamentos</span>
+                        <span class="info-box-number">{{ areas }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-primary"><i class="fas fa-truck-loading"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Descuentos</span>
+                        <span class="info-box-number">{{ headings }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-info"><i class="fas fa-suitcase"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Empleados</span>
+                        <span class="info-box-number">{{ employees }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header border-transparent">
+                    <h3 class="card-title"><i class="fas fa-hand-holding-usd"></i> Los 10 Últimos Salarios</h3>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table m-0 table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Codigo</th>
+                                <th>Empleado</th>
+                                <th>Año/Mes</th>
+                                <th>Ingresos</th>
+                                <th>Egresos</th>
+                                <th>Total a recibir</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for detail in salaries %}
+                                <tr>
+                                    <td><span class="badge badge-secondary">{{ detail.employee.codigo }}</span></td>
+                                    <td>{{ detail.employee.get_full_name }}</td>
+                                    <td>{{ detail.salary.year }}/{{ detail.salary.month }}</td>
+                                    <td><span class="badge badge-primary">${{ detail.income }}</span></td>
+                                    <td><span class="badge badge-danger">${{ detail.expenses }}</span></td>
+                                    <td><span class="badge badge-success">${{ detail.total_amount }}</span></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header border-transparent">
+                    <h3 class="card-title"><i class="fas fa-user-friends"></i> Ultimos 10 Empleados</h3>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table m-0 table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Codigo</th>
+                                <th>Empleado</th>
+                                <th>Departamento</th>
+                                <th>Puesto</th>
+                                <th>Horario</th>
+                                <th>Salario</th>
 
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for detail in employee %}
+                                <tr>
+                                    <td><span class="badge badge-secondary">{{ detail.codigo }}</span></td>
+                                    <td>{{ detail.get_full_name }}</td>
+                                    <td>{{ detail.department.name }}</td>
+                                    <td>{{ detail.position.name }}</td>
+                                    <td>{{ detail.turn.name }}</td>
+                                    <td><span class="badge badge-success">${{ detail.salary }}</span></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,12 +1,20 @@
 from config.wsgi import *
+from django.contrib.auth.models import Group, Permission
+
 from datetime import time
 from datetime import date
 from django.utils.crypto import get_random_string
 from core.erp.models import *
 from core.user.models import User
+from faker import Faker
 
+
+group = Group.objects.create(name='Administrador')
+group.permissions.set(Permission.objects.all())
+group.save()
 
 user = User()
+user.id=1
 user.first_name = 'Joel Gabriel'
 user.last_name = 'German Valdez'
 user.username = 'JoelG'
@@ -16,29 +24,34 @@ user.is_superuser = True
 user.is_staff = True
 user.set_password('german2023')
 user.save()
+user.groups.add(group)
 print(f'Bienvenido {user.first_name}')
 
-# Agregar datos en el modelo Candidatos
-for _ in range(50):
-    cedula = get_random_string(length=10)
-    firstname = get_random_string(length=6)
-    lastname = get_random_string(length=8)
-    birthdate = date(random.randint(1980, 2000), random.randint(1, 12), random.randint(1, 28))
-    gender = random.choice(['Male', 'Female'])
-    phone = get_random_string(length=10, allowed_chars='1234567890')
-    email = f'{firstname.lower()}.{lastname.lower()}@example.com'
-    address = get_random_string(length=20)
-    Candidatos.objects.create(
-        cedula=cedula,
-        firstname=firstname,
-        lastname=lastname,
-        birthdate=birthdate,
-        gender=gender,
-        phone=phone,
-        email=email,
-        address=address
-    )
 
+
+# Agregar datos en el modelo Candidatos
+def crear_candidatos(num_registros):
+    fake = Faker()
+    gender_choices = ['Male', 'Female']
+
+    for _ in range(num_registros):
+        candidato = Candidatos(
+            cedula=fake.unique.random_number(digits=9),
+            firstname=fake.first_name(),
+            lastname=fake.last_name(),
+            birthdate=fake.date_of_birth(minimum_age=18, maximum_age=80),
+            gender=fake.random_element(elements=gender_choices),
+            phone=fake.phone_number(),
+            email=fake.email(),
+            address=fake.address(),
+        )
+        candidato.save()
+
+
+if __name__ == "__main__":
+    num_registros = 50
+    crear_candidatos(num_registros)
+    print(f"Se han creado {num_registros} registros en el modelo Candidatos.")
 # Agregar datos en el modelo Departments
 
 turn_data = [
@@ -78,7 +91,6 @@ departments_data = [
     'BIENESTAR ANIMAL - 82', 'TRIPERIA - 56', 'DESPOSTADA - 30 ', 'MENUDENCIAS - 27 ', 'CARNICERIA - 63',
     'Reubicación Despostada - 86'
 ]
-
 
 # Insertar departamentos sin duplicados
 unique_departments = set(departments_data)
@@ -192,7 +204,6 @@ Headings.objects.create(name='MOVILIZACION', type='remuneracion', order=3, has_q
 Headings.objects.create(name='DECIMO TERCERO MENSUAL', type='remuneracion', order=4, has_quantity=False)
 Headings.objects.create(name='DECIMO CUARTO MENSUAL', type='remuneracion', order=5, has_quantity=False)
 Headings.objects.create(name='BONIFICACION', type='remuneracion', order=6, has_quantity=False)
-
 
 Headings.objects.create(name='PRESTAMO A LA EMPRESA', type='descuentos', order=1, has_quantity=False)
 Headings.objects.create(name='PRESTAMO HIPOTECARIO', type='descuentos', order=2, has_quantity=False)

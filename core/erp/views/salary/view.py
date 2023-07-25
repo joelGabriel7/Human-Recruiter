@@ -63,7 +63,8 @@ class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView
                 for i in Employee.objects.filter(
                         Q(person__firstname__icontains=term) | Q(person__cedula__icontains=term) | Q(
                             codigo__icontains=term)).order_by('person__employee')[0:10]:
-                    item = i.toJSON
+                    item = i.toJSON()
+                    print(item)
                     item['text'] = i.get_full_name()
                     data.append(item)
             elif action == 'search_detail_headings':
