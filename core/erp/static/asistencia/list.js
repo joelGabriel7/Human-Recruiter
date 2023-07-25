@@ -37,7 +37,7 @@ let assistance = {
 
             columns: [
                 {"data": "assistance.date_joined"},
-                {"data": "employee.person.firstname"},
+                {"data": "employee.fullname"},
                 {"data": "employee.person.cedula"},
                 {"data": "employee.position.name"},
                 {"data": "employee.department.name"},

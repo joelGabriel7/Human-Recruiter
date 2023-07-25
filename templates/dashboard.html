@@ -1,12 +1,42 @@
 {% extends 'body.html' %}
 {% load static %}
 {% block breadcrumb %}{% endblock %}
+
+<style>
+    /* Estilos para contenedores de tablas */
+    .table-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 400px; /* Ajusta la altura según tu preferencia */
+        overflow-y: auto;
+    }
+
+    /* Estilo para que ambas tablas tengan la misma altura */
+    .table-equal-height tbody {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Estilo para cada fila de la tabla */
+    .table-equal-height tr {
+        flex: 1;
+    }
+
+    /* Estilos para evitar que las celdas de la tabla se ajusten automáticamente en altura */
+    .table.table-bordered td,
+    .table.table-bordered th {
+        white-space: nowrap;
+    }
+</style>
+
+
+
 {% block content %}
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-3 col-sm-6 col-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-danger"><i class="fas fa-box"></i></span>
+                    <span class="info-box-icon bg-danger"><i class="fas fa-suitcase"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Posiciones</span>
                         <span class="info-box-number">{{ positions }}</span>
@@ -15,7 +45,7 @@
             </div>
             <div class="col-md-3 col-sm-6 col-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-success"><i class="fas fa-truck"></i></span>
+                    <span class="info-box-icon bg-success"><i class=" fas fa-layer-group"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Departamentos</span>
                         <span class="info-box-number">{{ areas }}</span>
@@ -24,7 +54,7 @@
             </div>
             <div class="col-md-3 col-sm-6 col-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-primary"><i class="fas fa-truck-loading"></i></span>
+                    <span class="info-box-icon bg-primary"><i class="fas fa-calculator"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Descuentos</span>
                         <span class="info-box-number">{{ headings }}</span>
@@ -33,7 +63,7 @@
             </div>
             <div class="col-md-3 col-sm-6 col-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-info"><i class="fas fa-suitcase"></i></span>
+                    <span class="info-box-icon bg-info"><i class="fas fa-user-group"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Empleados</span>
                         <span class="info-box-number">{{ employees }}</span>
@@ -50,8 +80,8 @@
                     <h3 class="card-title"><i class="fas fa-hand-holding-usd"></i> Los 10 Últimos Salarios</h3>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table m-0 table-bordered">
+                    <div class="table-responsive table-wrapper">
+                        <table class="table m-0 table-bordered table-equal-height ">
                             <thead>
                             <tr>
                                 <th>Codigo</th>
@@ -63,6 +93,7 @@
                             </tr>
                             </thead>
                             <tbody>
+
                             {% for detail in salaries %}
                                 <tr>
                                     <td><span class="badge badge-secondary">{{ detail.employee.codigo }}</span></td>
@@ -82,32 +113,45 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header border-transparent">
-                    <h3 class="card-title"><i class="fas fa-user-friends"></i> Ultimos 10 Empleados</h3>
+                    <h3 class="card-title"><i class="fas fa-user-clock"></i> Ultimas 10 Asistencias</h3>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table m-0 table-bordered">
+                    <div class="table-responsive table-wrapper">
+                        <table class="table  tab-custom-content m-0 table-bordered table-equal-height ">
                             <thead>
                             <tr>
-                                <th>Codigo</th>
-                                <th>Empleado</th>
-                                <th>Departamento</th>
-                                <th>Puesto</th>
-                                <th>Horario</th>
-                                <th>Salario</th>
+                                <th style="width: 125px">Fecha</th>
+                                <th style="width: 150px">Empleados</th>
+                                <th style="width: 165px">Departamentos</th>
+                                <th style="width: 175px">Puesto</th>
+                                <th style="width: 25px">Observación</th>
+                                <th>Asistencia</th>
 
                             </tr>
                             </thead>
                             <tbody>
-                            {% for detail in employee %}
+
+                            {% for detail in asistance %}
+
                                 <tr>
-                                    <td><span class="badge badge-secondary">{{ detail.codigo }}</span></td>
-                                    <td>{{ detail.get_full_name }}</td>
-                                    <td>{{ detail.department.name }}</td>
-                                    <td>{{ detail.position.name }}</td>
-                                    <td>{{ detail.turn.name }}</td>
-                                    <td><span class="badge badge-success">${{ detail.salary }}</span></td>
+                                    <td><span
+                                            class="badge badge-info">{{ detail.assistance.date_joined |date:'d-m-Y' }}</span>
+                                    </td>
+
+                                    <td>{{ detail.employee.get_full_name }}</td>
+
+                                    <td>{{ detail.employee.department.name }}</td>
+                                    <td>{{ detail.employee.position.name }}</td>
+                                    <td>{{ detail.description }}</td>
+                                    {% if  detail.state %}
+
+                                        <td><span class="badge badge-success">Si</span></td>
+                                    {% else %}
+                                        <td><span class="badge badge-danger">No</span></td>
+                                    {% endif %}
+
                                 </tr>
+
                             {% endfor %}
                             </tbody>
                         </table>

@@ -26,6 +26,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['year'] = datetime.datetime.now().year
         context['month'] = MONTHS[datetime.datetime.now().month][1]
         context['employee'] = Employee.objects.filter().order_by('-id')[0:10]
+        context['asistance'] = AssistanceDetail.objects.filter().order_by('-id')[0:10]
         context['positions'] = EmployeePositions.objects.all().count()
         context['areas'] = Departments.objects.all().count()
         context['headings'] = Headings.objects.all().count()

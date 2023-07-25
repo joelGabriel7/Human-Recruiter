@@ -30,7 +30,7 @@ let assistance = {
             lengthChange: false,
             paging: false,
             columns: [
-                {data: "person.firstname"},
+                {data: "fullname"},
                 {data: "person.cedula"},
                 {data: "position.name"},
                 {data: "department.name"},
