@@ -73,7 +73,7 @@ var salary = {
                     class: 'text-center',
                     render: function (data, type, row) {
                         var buttons = '<a class="btn btn-success btn-xs btn-flat" rel="detail" data-toggle="tooltip" title="Detalle"><i style="color: #FFFFFF" class="fas fa-folder-open"></i></a> ';
-                        buttons += '<a href="' + pathname + 'print/receipt/' + row.id + '/" target="_blank" data-toggle="tooltip" title="Imprimir" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-file-alt"></i></a>';
+                        // buttons += '<a href="' + pathname + 'print/receipt/' + row.id + '/" target="_blank" data-toggle="tooltip" title="Imprimir" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-file-alt"></i></a>';
                         return buttons;
                     }
                 },

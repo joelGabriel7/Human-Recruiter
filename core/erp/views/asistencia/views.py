@@ -1,5 +1,5 @@
 import json
-from datetime import date
+from datetime import *
 from decimal import Decimal
 from io import BytesIO
 import datetime
@@ -111,7 +111,7 @@ class AssistanceCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, 
         try:
             if action == 'add':
                 with transaction.atomic():
-                    date_joined = datetime.strptime(request.POST['date_joined'], '%Y-%m-%d')
+                    date_joined = datetime.datetime.strptime(request.POST['date_joined'], '%Y-%m-%d')
                     assistance = Assistance()
                     assistance.date_joined = date_joined
                     assistance.year = date_joined.year

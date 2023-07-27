@@ -36,7 +36,7 @@ $(function () {
         columns: [
             {"data": "hiring_date"},
             {"data": "codigo"},
-            {"data": "person__firstname"},
+            {"data": "full_name"},
             {"data": "department__name"},
             {"data": "position__name"},
             {"data": "turn__name"},
@@ -53,6 +53,18 @@ $(function () {
                 render: function (data, type, row) {
                     let html = '';
                     html += '<span class="badge badge-secondary">' + data + '</span>  '
+                    return html;
+                }
+            },
+
+              {
+
+                targets: [-3],
+                class: 'text-center',
+                orderable: false,
+                render: function (data, type, row) {
+                    let html = '';
+                    html += '<span class="badge badge-success">$' + data + '</span>  '
                     return html;
                 }
             },

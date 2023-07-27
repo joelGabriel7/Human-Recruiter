@@ -2,7 +2,8 @@ import json
 from decimal import Decimal
 from datetime import date
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.db.models import Q
+from django.db.models import Q, Value
+from django.db.models.functions import Concat
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
@@ -23,11 +24,11 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class EmpleadoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView):
+class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
     model = Employee
     template_name = 'empleado/list.html'
     permission_required = 'view_employee'
-    paginate_by = 10
+
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -40,11 +41,14 @@ class EmpleadoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
             if action == 'searchdata':
                 search_value = request.POST.get('search[value]', '')
 
-                employees = Employee.objects.filter(
+
+                employees = Employee.objects.annotate(
+                    full_name=Concat('person__firstname', Value(' '), 'person__lastname')
+                ).filter(
                     Q(id__icontains=search_value) |
                     Q(hiring_date__icontains=search_value) |
                     Q(codigo__icontains=search_value) |
-                    Q(person__firstname__icontains=search_value) |
+                    Q(full_name__icontains=search_value) |  # Búsqueda por nombre completo usando el método get_full_name
                     Q(department__name__icontains=search_value) |
                     Q(position__name__icontains=search_value) |
                     Q(turn__name__icontains=search_value) |
@@ -52,7 +56,9 @@ class EmpleadoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
                     Q(estado__icontains=search_value)
                 ).order_by('id')
 
-                paginator = Paginator(employees, request.POST.get('length', 10))
+                e = Employee.objects.all().count()
+
+                paginator = Paginator(employees, request.POST.get('length', e))
                 start = int(request.POST.get('start', 0))
                 length = int(request.POST.get('length', 10))
                 page_number = start // length + 1
@@ -64,7 +70,7 @@ class EmpleadoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
                             'id': employee.id,
                             'hiring_date': employee.hiring_date.strftime('%Y-%m-%d'),
                             'codigo': employee.codigo,
-                            'person__firstname': employee.person.firstname,
+                            'full_name': employee.get_full_name(),
                             'department__name': employee.department.name,
                             'position__name': employee.position.name,
                             'turn__name': employee.turn.name,

@@ -12,6 +12,8 @@ from django.db.models import Sum, Q, DecimalField
 from django.db.models.functions import Coalesce
 from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
 from openpyxl.styles import Alignment, Border, Side
 from openpyxl.utils import get_column_letter
@@ -19,6 +21,7 @@ from openpyxl.utils import get_column_letter
 from core.erp.forms import SalaryForm
 from core.erp.models import Salary, SalaryDetail, Employee, Headings, SalaryHeadings
 from core.erp.mixins import *
+
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -29,7 +32,7 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView):
+class SalaryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, FormView):
     form_class = SalaryForm
     template_name = 'salary/list.html'
     permission_required = 'view_salary'
@@ -38,6 +41,10 @@ class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView
         form = SalaryForm()
         form.fields['year'].initial = datetime.now().date().year
         return form
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         action = request.POST['action']
@@ -63,7 +70,7 @@ class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView
                 for i in Employee.objects.filter(
                         Q(person__firstname__icontains=term) | Q(person__cedula__icontains=term) | Q(
                             codigo__icontains=term)).order_by('person__employee')[0:10]:
-                    item = i.toJSON
+                    item = i.toJSON()
                     item['text'] = i.get_full_name()
                     data.append(item)
             elif action == 'search_detail_headings':
@@ -114,8 +121,10 @@ class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView
                     row += 1
                 workbook.close()
                 output.seek(0)
-                response = HttpResponse(output,content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                response['Content-Disposition'] = f"attachment; filename='PLANILLA_{datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
+                response = HttpResponse(output,
+                                        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response[
+                    'Content-Disposition'] = f"attachment; filename='PLANILLA_{datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
                 return response
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
@@ -124,28 +133,30 @@ class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView
         serialized_data = json.dumps(data, cls=CustomJSONEncoder)
         return HttpResponse(serialized_data, content_type='application/json')
 
-
     def get_context_data(self, **kwargs):
-            context = super(SalaryListView, self).get_context_data()
-            context['title'] = 'Listado de Nomina'
-            context['entity'] = 'Nomina'
-            context['create_url'] = reverse_lazy('erp:salary_create')
-            return context
+        context = super(SalaryListView, self).get_context_data()
+        context['title'] = 'Listado de Nomina'
+        context['entity'] = 'Nomina'
+        context['create_url'] = reverse_lazy('erp:salary_create')
+        return context
 
 
-class SalaryCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):
+class SalaryCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
     model = Salary
     template_name = 'salary/create.html'
     form_class = SalaryForm
     success_url = reverse_lazy('erp:salary_list')
     permission_required = 'add_salary'
+
     def post(self, request, *args, **kwargs):
         action = request.POST['action']
+
         data = {}
         try:
             if action == 'add':
                 with transaction.atomic():
-                    salary = Salary.objects.get_or_create(year=int(request.POST['year']), month=int(request.POST['month']))[0]
+                    salary = \
+                    Salary.objects.get_or_create(year=int(request.POST['year']), month=int(request.POST['month']))[0]
                     for i in json.loads(request.POST['headings']):
                         heading = i
                         employee = Employee.objects.get(pk=int(heading['employee']['id']))
@@ -183,7 +194,7 @@ class SalaryCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Create
                 term = request.POST['term']
                 for i in Employee.objects.filter(
                         Q(person__firstname__icontains=term) | Q(person__cedula__icontains=term) | Q(
-                                codigo__icontains=term)).order_by('person__employee')[0:10]:
+                            codigo__icontains=term)).order_by('person__employee')[0:10]:
                     item = i.toJSON()
                     item['text'] = i.get_full_name()
                     data.append(item)
@@ -194,8 +205,10 @@ class SalaryCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Create
                 employees_ids = json.loads(request.POST['employees_ids'])
                 employees = Employee.objects.filter(person__isnull=False)
                 if len(employees_ids):
-                    employees = employees.filter(id_in=employees_ids)
+                    employees = employees.filter(id__in=employees_ids)
+                    print(f'EMPLEADOS DICT: {employees}')
                 columns = [{'data': 'employees.person.first_name'}]
+
                 headings = Headings.objects.filter(state=True)
                 for i in headings.filter(type='remuneracion').order_by('type', 'order', 'has_quantity'):
                     if i.has_quantity:
