@@ -22,10 +22,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Panel de administración'
-        context['salaries'] = SalaryDetail.objects.filter().order_by('id')[0:10]
+        context['salaries'] = SalaryDetail.objects.filter().order_by('-id')[0:10]
         context['year'] = datetime.datetime.now().year
         context['month'] = MONTHS[datetime.datetime.now().month][1]
-        context['employee'] = Employee.objects.filter().order_by('-id')[0:10]
         context['asistance'] = AssistanceDetail.objects.filter().order_by('-id')[0:10]
         context['positions'] = EmployeePositions.objects.all().count()
         context['areas'] = Departments.objects.all().count()

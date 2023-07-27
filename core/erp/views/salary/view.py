@@ -12,6 +12,8 @@ from django.db.models import Sum, Q, DecimalField
 from django.db.models.functions import Coalesce
 from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
 from openpyxl.styles import Alignment, Border, Side
 from openpyxl.utils import get_column_letter
@@ -29,7 +31,7 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView):
+class SalaryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin,FormView):
     form_class = SalaryForm
     template_name = 'salary/list.html'
     permission_required = 'view_salary'
@@ -38,6 +40,10 @@ class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView
         form = SalaryForm()
         form.fields['year'].initial = datetime.now().date().year
         return form
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         action = request.POST['action']
@@ -64,7 +70,6 @@ class SalaryListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,FormView
                         Q(person__firstname__icontains=term) | Q(person__cedula__icontains=term) | Q(
                             codigo__icontains=term)).order_by('person__employee')[0:10]:
                     item = i.toJSON()
-                    print(item)
                     item['text'] = i.get_full_name()
                     data.append(item)
             elif action == 'search_detail_headings':
@@ -142,6 +147,7 @@ class SalaryCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Create
     permission_required = 'add_salary'
     def post(self, request, *args, **kwargs):
         action = request.POST['action']
+        print(action)
         data = {}
         try:
             if action == 'add':
@@ -195,8 +201,10 @@ class SalaryCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Create
                 employees_ids = json.loads(request.POST['employees_ids'])
                 employees = Employee.objects.filter(person__isnull=False)
                 if len(employees_ids):
-                    employees = employees.filter(id_in=employees_ids)
+                    employees = employees.filter(id__in=employees_ids)
+                    print(f'EMPLEADOS DICT: {employees}')
                 columns = [{'data': 'employees.person.first_name'}]
+
                 headings = Headings.objects.filter(state=True)
                 for i in headings.filter(type='remuneracion').order_by('type', 'order', 'has_quantity'):
                     if i.has_quantity:

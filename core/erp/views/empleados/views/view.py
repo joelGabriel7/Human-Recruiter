@@ -24,11 +24,11 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class EmpleadoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView):
+class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
     model = Employee
     template_name = 'empleado/list.html'
     permission_required = 'view_employee'
-    paginate_by = 10
+
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -40,7 +40,7 @@ class EmpleadoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
             action = request.POST['action']
             if action == 'searchdata':
                 search_value = request.POST.get('search[value]', '')
-                print(search_value)
+
 
                 employees = Employee.objects.annotate(
                     full_name=Concat('person__firstname', Value(' '), 'person__lastname')
@@ -56,7 +56,9 @@ class EmpleadoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
                     Q(estado__icontains=search_value)
                 ).order_by('id')
 
-                paginator = Paginator(employees, request.POST.get('length', 10))
+                e = Employee.objects.all().count()
+
+                paginator = Paginator(employees, request.POST.get('length', e))
                 start = int(request.POST.get('start', 0))
                 length = int(request.POST.get('length', 10))
                 page_number = start // length + 1
