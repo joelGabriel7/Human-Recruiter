@@ -22,6 +22,7 @@ from core.erp.forms import SalaryForm
 from core.erp.models import Salary, SalaryDetail, Employee, Headings, SalaryHeadings
 from core.erp.mixins import *
 
+
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Decimal):
@@ -31,7 +32,7 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class SalaryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin,FormView):
+class SalaryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, FormView):
     form_class = SalaryForm
     template_name = 'salary/list.html'
     permission_required = 'view_salary'
@@ -120,8 +121,10 @@ class SalaryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin,FormVie
                     row += 1
                 workbook.close()
                 output.seek(0)
-                response = HttpResponse(output,content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                response['Content-Disposition'] = f"attachment; filename='PLANILLA_{datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
+                response = HttpResponse(output,
+                                        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response[
+                    'Content-Disposition'] = f"attachment; filename='PLANILLA_{datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
                 return response
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
@@ -130,29 +133,30 @@ class SalaryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin,FormVie
         serialized_data = json.dumps(data, cls=CustomJSONEncoder)
         return HttpResponse(serialized_data, content_type='application/json')
 
-
     def get_context_data(self, **kwargs):
-            context = super(SalaryListView, self).get_context_data()
-            context['title'] = 'Listado de Nomina'
-            context['entity'] = 'Nomina'
-            context['create_url'] = reverse_lazy('erp:salary_create')
-            return context
+        context = super(SalaryListView, self).get_context_data()
+        context['title'] = 'Listado de Nomina'
+        context['entity'] = 'Nomina'
+        context['create_url'] = reverse_lazy('erp:salary_create')
+        return context
 
 
-class SalaryCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):
+class SalaryCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
     model = Salary
     template_name = 'salary/create.html'
     form_class = SalaryForm
     success_url = reverse_lazy('erp:salary_list')
     permission_required = 'add_salary'
+
     def post(self, request, *args, **kwargs):
         action = request.POST['action']
-        print(action)
+
         data = {}
         try:
             if action == 'add':
                 with transaction.atomic():
-                    salary = Salary.objects.get_or_create(year=int(request.POST['year']), month=int(request.POST['month']))[0]
+                    salary = \
+                    Salary.objects.get_or_create(year=int(request.POST['year']), month=int(request.POST['month']))[0]
                     for i in json.loads(request.POST['headings']):
                         heading = i
                         employee = Employee.objects.get(pk=int(heading['employee']['id']))
@@ -190,7 +194,7 @@ class SalaryCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Create
                 term = request.POST['term']
                 for i in Employee.objects.filter(
                         Q(person__firstname__icontains=term) | Q(person__cedula__icontains=term) | Q(
-                                codigo__icontains=term)).order_by('person__employee')[0:10]:
+                            codigo__icontains=term)).order_by('person__employee')[0:10]:
                     item = i.toJSON()
                     item['text'] = i.get_full_name()
                     data.append(item)

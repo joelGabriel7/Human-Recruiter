@@ -2,32 +2,13 @@
 {% load static %}
 {% block breadcrumb %}{% endblock %}
 
-<style>
-    /* Estilos para contenedores de tablas */
-    .table-wrapper {
-        display: flex;
-        flex-direction: column;
-        height: 400px; /* Ajusta la altura según tu preferencia */
-        overflow-y: auto;
-    }
-
-    /* Estilo para que ambas tablas tengan la misma altura */
-    .table-equal-height tbody {
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* Estilo para cada fila de la tabla */
-    .table-equal-height tr {
-        flex: 1;
-    }
-
-    /* Estilos para evitar que las celdas de la tabla se ajusten automáticamente en altura */
-    .table.table-bordered td,
-    .table.table-bordered th {
-        white-space: nowrap;
-    }
-</style>
+{% block head %}
+    <script src="{% static 'lib/highcharts-9.1.1/highcharts.js' %}" type="text/javascript"></script>
+    <script src="{% static 'lib/highcharts-9.1.1/highcharts-3d.js' %}" type="text/javascript"></script>
+    <script src="{% static 'lib/highcharts-9.1.1/modules/exporting.js' %}" type="text/javascript"></script>
+    <script src="{% static 'lib/highcharts-9.1.1/modules/data.js' %}" type="text/javascript"></script>
+    <script src="{% static 'lib/highcharts-9.1.1/modules/drilldown.js' %}" type="text/javascript"></script>
+{% endblock %}
 
 
 
@@ -160,5 +141,105 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-calendar-check"></i> Salarios del año {{ year }}
+                    </h3>
+                </div>
+                <div class="card-body p-0">
+                    <div class="container-fluid p-3" id="graph_salaries_by_year">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="application/javascript">
+        let chart = {
+            getGraphSalariesByYear: function () {
+                $.ajax({
+                    url: pathname,
+                    type: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    data: {
+                        'action': 'get_graph_salaries_by_year'
+                    },
+                    dataType: 'json',
+                    success: function (request) {
+                        if (!request.hasOwnProperty('error')) {
+                            Highcharts.chart('graph_salaries_by_year', {
+                                title: {
+                                    text: ''
+                                },
+                                subtitle: {
+                                    text: ''
+                                },
+                                exporting: {
+                                    enabled: false
+                                },
+                                xAxis: {
+                                    categories: [
+                                        'Enero',
+                                        'Febrero',
+                                        'Marzo',
+                                        'Abril',
+                                        'Mayo',
+                                        'Junio',
+                                        'Julio',
+                                        'Agosto',
+                                        'Septiembre',
+                                        'Octubre',
+                                        'Noviembre',
+                                        'Diciembre'
+                                    ],
+                                    crosshair: true
+                                },
+                                yAxis: {
+                                    min: 0,
+                                    title: {
+                                        text: 'Valores $'
+                                    }
+                                },
+                                tooltip: {
+                                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                        '<td style="padding:0"><b>${point.y:.2f}</b></td></tr>',
+                                    footerFormat: '</table>',
+                                    shared: true,
+                                    useHTML: true
+                                },
+                                plotOptions: {
+                                    column: {
+                                        pointPadding: 0.2,
+                                        borderWidth: 0
+                                    }
+                                },
+                                series: [{
+                                    type: 'column',
+                                    colorByPoint: true,
+                                    data: request,
+                                    showInLegend: false
+                                }]
+                            });
+                            return false;
+                        }
+                        message_error(request.error);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        message_error(errorThrown + ' ' + textStatus);
+                    }
+                });
+            }
+        }
+        $(function () {
+            chart.getGraphSalariesByYear();
+        });
+
+
+    </script>
 
 {% endblock %}
