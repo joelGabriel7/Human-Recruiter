@@ -8,7 +8,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.http import HttpResponse
 from django.views.generic import *
-
 from core.erp.forms import *
 from core.erp.mixins import *
 from core.erp.models import *
@@ -132,7 +131,6 @@ class AssistanceCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, 
                     item['state'] = 0
                     item['description'] = ''
                     data.append(item)
-                print(data)
             elif action == 'validate_data':
                 data = {
                     'valid': not Assistance.objects.filter(date_joined=request.POST['date_joined'].strip()).exists()
