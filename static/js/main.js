@@ -33,7 +33,7 @@ var page = {
         }
     },
     initial: function () {
-        console.log(localStorage);
+        // console.log(localStorage);
         var element = null;
         // vertical
         if (localStorage.getItem(this.components.vertical.nav)) {

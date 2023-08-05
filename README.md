@@ -1,7 +1,9 @@
 
 # Human-Recruiter
 
-## Este proyecto es un sistema para gestion de recursos humanos esta en desarrollo aun, este sistema cuenta con varios funcionamientos los cuales son :
+## Human Recruiter es un sistema de gestion de recursos humanos que cuenta con varias funcionalidades
+
+### Funcionamientos
 
 * Recursos Humanos
 * Reclutadores

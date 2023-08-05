@@ -115,7 +115,7 @@ class SalaryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, FormVi
                 for salary_detail in queryset.order_by('employee'):
                     worksheet.write(row, 0, salary_detail.employee.hiring_date_format(), row_format)
                     worksheet.write(row, 1, salary_detail.employee.codigo, row_format)
-                    worksheet.write(row, 2, salary_detail.employee.person.firstname, row_format)
+                    worksheet.write(row, 2, salary_detail.employee.get_full_name(), row_format)
                     worksheet.write(row, 3, salary_detail.employee.person.cedula, row_format)
                     worksheet.write(row, 4, salary_detail.get_total_amount_format(), row_format)
                     row += 1
