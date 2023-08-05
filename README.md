@@ -2,7 +2,6 @@
 # Human-Recruiter
 
 ## Human Recruiter es un sistema de gestion de recursos humanos que cuenta con varias funcionalidades
-
 ### Funcionamientos
 
 * Recursos Humanos
