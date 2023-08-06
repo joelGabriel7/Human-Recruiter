@@ -33,7 +33,8 @@
                             {% if group.id != request.session.group.id %}
                                 <li><a href="{% url 'user:user_change_group' group.id %}"
                                        class="dropdown-item">{{ group.name }}</a></li>
-                                <li class="dropdown-divider"></li>
+                                {% if not forloop.last %} <li class="dropdown-divider"></li>{% endif %} 
+                                
                             {% endif %}
 
                         {% endfor %}
