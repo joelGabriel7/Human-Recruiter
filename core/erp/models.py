@@ -311,7 +311,7 @@ class Salary(models.Model):
 
 class SalaryDetail(models.Model):
     salary = models.ForeignKey(Salary, on_delete=models.CASCADE)
-    employee = models.ForeignKey(Employee, on_delete=models.PROTECT, verbose_name='Empleado')
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name='Empleado')
     income = models.FloatField(default=0.00)
     expenses = models.FloatField(default=0.00)
     total_amount = models.FloatField(default=0.00)
@@ -353,7 +353,7 @@ class SalaryDetail(models.Model):
 
 class SalaryHeadings(models.Model):
     salary_detail = models.ForeignKey(SalaryDetail, on_delete=models.CASCADE)
-    headings = models.ForeignKey(Headings, on_delete=models.PROTECT)
+    headings = models.ForeignKey(Headings, on_delete=models.CASCADE)
     cant = models.IntegerField(default=0)
     valor = models.FloatField(default=0.00)
 
@@ -406,7 +406,7 @@ class Assistance(models.Model):
 
 class AssistanceDetail(models.Model):
     assistance = models.ForeignKey(Assistance, on_delete=models.CASCADE)
-    employee = models.ForeignKey(Employee, on_delete=models.PROTECT, verbose_name='Empleado')
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name='Empleado')
     description = models.CharField(max_length=500, null=True, blank=True)
     state = models.BooleanField(default=False)
 
