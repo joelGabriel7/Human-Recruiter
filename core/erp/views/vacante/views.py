@@ -1,4 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
+from linkedin import linkedin
+
+from django.conf import settings
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render
@@ -13,6 +17,7 @@ from core.erp.mixins import *
 import json
 from decimal import Decimal
 from datetime import date
+
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Decimal):
@@ -158,3 +163,5 @@ class VacantsDeleteView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Delet
         context['list_url'] = reverse_lazy('erp:vacante_list')
         context['create_url'] = reverse_lazy('erp:vacante_create')
         return context
+
+

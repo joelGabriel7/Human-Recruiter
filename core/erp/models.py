@@ -206,7 +206,7 @@ class Employee(models.Model):
     )
 
     codigo = models.CharField(max_length=64, default=generate_employee_code, verbose_name='Codigo Empleado')
-    person = models.ForeignKey(Candidatos, on_delete=models.CASCADE, verbose_name='Empleado')
+    person = models.ForeignKey(Candidatos, on_delete=models.PROTECT, verbose_name='Empleado')
     department = models.ForeignKey(Departments, on_delete=models.CASCADE, verbose_name='Departamento')
     position = models.ForeignKey(EmployeePositions, on_delete=models.CASCADE, verbose_name='Posición')
     turn = models.ForeignKey(EmployeeTurn, on_delete=models.CASCADE, verbose_name='Turno')

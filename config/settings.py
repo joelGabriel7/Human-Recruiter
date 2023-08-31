@@ -145,3 +145,6 @@ EMAIL_HOST_PASSWORD = 'xfikezkywmhttsum'
 EMAIL_USE_TLS = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DOMAIN = ''
+
+LINKEDIN_CLIENT_ID = '77s1pzurm9q7p3'
+LINKEDIN_CLIENT_SECRET = 'GB2swxcYFrMDgI69'

@@ -35,8 +35,12 @@ def crear_candidatos(num_registros):
     gender_choices = ['Male', 'Female']
 
     for _ in range(num_registros):
+        cedula_numero = fake.unique.random_number(digits=12)
+        cedula_str = str(cedula_numero)
+        cedula_con_formato = f"{cedula_str[:3]}-{cedula_str[3:11]}-{cedula_str[11:12]}"
+
         candidato = Candidatos(
-            cedula=fake.unique.random_number(digits=9),
+            cedula=cedula_con_formato,
             firstname=fake.first_name(),
             lastname=fake.last_name(),
             birthdate=fake.date_of_birth(minimum_age=18, maximum_age=80),
@@ -49,9 +53,10 @@ def crear_candidatos(num_registros):
 
 
 if __name__ == "__main__":
-    num_registros = 50
+    num_registros = 10
     crear_candidatos(num_registros)
     print(f"Se han creado {num_registros} registros en el modelo Candidatos.")
+
 # Agregar datos en el modelo Departments
 
 turn_data = [
@@ -150,7 +155,7 @@ print(f"Se creó la posición")
 
 # # Agregar datos en el modelo Vacants
 positions = EmployeePositions.objects.all()
-for _ in range(50):
+for _ in range(10):
     position = random.choice(positions)
     description = get_random_string(length=20)
     min_salary = round(random.uniform(1000, 2000), 2)
@@ -164,7 +169,7 @@ for _ in range(50):
 print('guardados')
 candidates = Candidatos.objects.all()
 vacants = Vacants.objects.all()
-for _ in range(50):
+for _ in range(10):
     person = random.choice(candidates)
     vacant = random.choice(vacants)
     Selection.objects.create(
@@ -178,7 +183,7 @@ departments = Departments.objects.all()
 positions = EmployeePositions.objects.all()
 turns = EmployeeTurn.objects.all()
 
-for _ in range(50):
+for _ in range(10):
     person = random.choice(candidates)
     department = random.choice(departments)
     position = random.choice(positions)

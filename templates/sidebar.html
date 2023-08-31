@@ -17,10 +17,10 @@
             </div>
         </div>
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" data-accordion="true">
                 {% if request.session.group.id == 1 %}
                 <li class="nav-header">Funcionamientos</li>
-                <li class="nav-item  menu-open">
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-users"></i>
                         <p>
@@ -28,7 +28,7 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview" style="display: block;">
+                    <ul class="nav nav-treeview" style="display: none;">
                         <li class="nav-item">
                             <a href="{% url 'erp:empleados_list' %}" class="nav-link">
                                 <i class="nav-icon fas fa-user-clock"></i>
@@ -89,7 +89,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item menu-open">
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-search"></i>
                         <p>
@@ -97,7 +97,7 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                    <ul class="nav-treeview" style="display: block;">
+                    <ul class="nav-treeview" style="display: none;">
                         <li class="nav-item">
                             <a href="{% url 'erp:vacante_list' %}" class="nav-link">
                                 <i class="nav-icon fas fa-suitcase"></i>
@@ -130,7 +130,7 @@
 
                 </li>
 
-                <li class="nav-item menu-is-opening menu-open">
+                <li class="nav-item menu-is-opening">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-lock"></i>
                         <p>
@@ -138,7 +138,7 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                    <ul class="nav-treeview" style="display: block;">
+                    <ul class="nav-treeview" style="display: none;">
                         <!--  Accesos  -->
                         <li class="nav-item">
                             <a href="{% url 'acceso_usuario_list' %}" class="nav-link">

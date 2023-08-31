@@ -77,15 +77,16 @@ class AssistanceListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Fo
                     row += 1
                 workbook.close()
                 output.seek(0)
-                response = HttpResponse(output,
-                                        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                print(response)
                 response[
-                    'Content-Disposition'] = f"attachment; filename='ASISTENCIAS_{datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
+                    'Content-Disposition'] = f"attachment; filename='ASISTENCIAS_{datetime.datetime.now().date().strftime('%d_%m_%Y')}.xlsx'"
                 return response
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
         except Exception as e:
             data['error'] = str(e)
+            print(data['error'])
         serialized_data = json.dumps(data, cls=CustomJSONEncoder)
         return HttpResponse(serialized_data, content_type='application/json')
 
