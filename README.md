@@ -81,7 +81,7 @@ cd venv\Scripts\activate.bat
 ##### 4) Instalar todas las librerias del proyecto que se encuentran en el archivo de requirements.txt
 
 ```bash
-pip install -r deploy/txt/requirements.txt
+pip install -r requirements.txt
 ```
 
 ##### 5) Iniciar el servidor del proyecto
