@@ -152,12 +152,19 @@ class Selection(models.Model):
     vacants = models.ForeignKey(Vacants, on_delete=models.CASCADE, verbose_name='Vacantes')
 
     def __str__(self):
-        return self.person.firstname
+        return f'{person.firstname} {person.lastname}'
+
+    # def __str__(self):
+    #     return f'{person.firstname} {self.lastname}'
+    def get_full_name(self):
+        return f'{self.person.firstname} {self.person.lastname}'
+
 
     def toJSON(self):
         item = model_to_dict(self)
         item['person'] = self.person.toJSON()
         item['vacants'] = self.vacants.toJSON()
+        item['fullname'] = self.get_full_name()
         return item
 
     class Meta:

@@ -62,7 +62,7 @@ class SelectListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Templa
                     'data': [
                         {
                             'id': selection.id,
-                            'person__firstname': selection.person.firstname,
+                            'fullname': selection.get_full_name(),
                             'person__phone': selection.person.phone,
                             'vacants__posicion__name': selection.vacants.posicion.name,
                             'vacants__max_salary': selection.vacants.max_salary,

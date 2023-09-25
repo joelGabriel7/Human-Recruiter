@@ -59,4 +59,33 @@ La arquitectura usada para ese proyecto es la basica que utiliza django que es M
 * PostgreSQL
 * MySQL
   
-# Guia de Instalacion
+# Guia de Instalación
+
+##### 1) Descomprimir el proyecto en una carpeta de tu sistema operativo
+
+##### 2) Crear un entorno virtual para posteriormente instalar las librerias del proyecto
+
+Para windows:
+
+```bash
+python3 -m venv venv 
+```
+##### 3) Activar el entorno virtual de nuestro proyecto
+
+Para windows:
+
+```bash
+cd venv\Scripts\activate.bat 
+```
+
+##### 4) Instalar todas las librerias del proyecto que se encuentran en el archivo de requirements.txt
+
+```bash
+pip install -r deploy/txt/requirements.txt
+```
+
+##### 5) Iniciar el servidor del proyecto
+
+```bash
+python manage.py runserver 
+```
