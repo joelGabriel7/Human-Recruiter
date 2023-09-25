@@ -1,16 +1,17 @@
 import uuid
-
+from core.erp.models import Employee
 from crum import get_current_request
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.forms import model_to_dict
-
 from config.settings import MEDIA_URL, STATIC_URL
 
 
 class User(AbstractUser):
     image = models.ImageField(upload_to='users/%Y/%m/%d', null=True, blank=True)
     token = models.UUIDField(primary_key=False, editable=False, null=True, blank=True)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name="Employee", unique=False,null=True)
+
 
     def get_image(self):
         if self.image:
@@ -25,6 +26,12 @@ class User(AbstractUser):
         item['image'] = self.get_image()
         item['groups'] = [{'id': g.id, 'name': g.name} for g in self.groups.all()]
         item['full_name'] = self.get_full_name()
+
+        if self.employee:
+            item['employee__firstname'] = self.employee.person.firstname
+            item['employee__lastname'] = self.employee.person.lastname
+            self.first_name = self.employee.person.firstname
+            self.last_name = self.employee.person.lastname
         return item
 
 

@@ -35,15 +35,17 @@ class UserListView(LoginRequiredMixin,ValidatePermissionRequiredMixin, ListView)
             action = request.POST['action']
             if action == 'searchdata':
                 data = []
-                position = 1
                 for i in User.objects.all():
                     item= i.toJson()
-                    data.append(item)
-
+                    if item is not None:
+                        data.append(item)
+                    else:
+                        print(f"El usuario con ID {i.id} no tiene datos JSON válidos.")
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
             data['error'] = str(e)
+
         return JsonResponse(data, safe=False)
 
     def get_context_data(self, **kwargs):

@@ -13,6 +13,8 @@ group = Group.objects.create(name='Administrador')
 group.permissions.set(Permission.objects.all())
 group.save()
 
+
+
 user = User()
 user.id=1
 user.first_name = 'Joel Gabriel'

@@ -7,38 +7,38 @@ class UserForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['first_name'].widget.attrs['autofocus'] = True
-        self.fields['first_name'].widget.attrs['autocomplete'] = 'off'
+        self.fields['username'].widget.attrs['autofocus'] = True
+        self.fields['username'].widget.attrs['autocomplete'] = 'off'
         self.fields['image'].widget.attrs['class'] = 'form-control'
 
     class Meta:
         model = User
-        fields = 'first_name', 'last_name', 'email', 'username', 'password', 'image', 'groups'
+        fields = 'username', 'password', 'image', 'groups','employee'
         labels = {
             'groups': 'Perfil de usuario'
         }
         widgets = {
-            'first_name': TextInput(
-                attrs={
-                    'placeholder': 'Ingrese sus nombre',
-                    'class': 'form-control',
-
-                }
-            ),
-            'last_name': TextInput(
-                attrs={
-                    'placeholder': 'Ingrese sus apellido',
-                    'class': 'form-control',
-
-                }
-            ),
-            'email': TextInput(
-                attrs={
-                    'placeholder': 'Ingrese su Email',
-                    'class': 'form-control',
-
-                }
-            ),
+            # 'first_name': TextInput(
+            #     attrs={
+            #         'placeholder': 'Ingrese sus nombre',
+            #         'class': 'form-control',
+            #
+            #     }
+            # ),
+            # 'last_name': TextInput(
+            #     attrs={
+            #         'placeholder': 'Ingrese sus apellido',
+            #         'class': 'form-control',
+            #
+            #     }
+            # ),
+            # 'email': TextInput(
+            #     attrs={
+            #         'placeholder': 'Ingrese su Email',
+            #         'class': 'form-control',
+            #
+            #     }
+            # ),
 
             'username': TextInput(
                 attrs={
@@ -53,6 +53,14 @@ class UserForm(ModelForm):
                     'placeholder': 'Crea una Contraseña',
                     'class': 'form-control',
                 }),
+
+            'employee': Select(
+                attrs={
+                    'class': 'form-control select2',
+                    'style': 'width: 100%'
+                }
+            ),
+
             'groups': SelectMultiple(attrs={
                 'class': 'form-control select2',
                 'style': 'width: 100%',

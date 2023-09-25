@@ -70,8 +70,7 @@ class LoginResetPasswordView(FormView):
             mailServer.ehlo()
             mailServer.starttls()
             mailServer.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
-            email_to = user.email
-
+            email_to = user.employee.person.email
             messages = MIMEMultipart("""Este es el mensaje de las narices""")
             messages['From'] = settings.EMAIL_HOST_USER
             messages['To'] = email_to

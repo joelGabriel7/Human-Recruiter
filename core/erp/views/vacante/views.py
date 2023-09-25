@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from linkedin import linkedin
+
 
 from django.conf import settings
 from django.core.paginator import Paginator

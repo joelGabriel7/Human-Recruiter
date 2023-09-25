@@ -10,12 +10,13 @@ $(function () {
             data: {
                 'action': 'searchdata'
             },
-            dataSrc: ""
+            dataSrc: "",
+
         },
         columns: [
             {"data": "id"},
-            {"data": "first_name"},
-            {"data": "last_name"},
+            {"data": "employee__firstname"}, // Cambia a la propiedad real
+            {"data": "employee__lastname"},  // Cambia a la propiedad real
             {"data": "username"},
             {"data": "date_joined"},
             {"data": "image"},
