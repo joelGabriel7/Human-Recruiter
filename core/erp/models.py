@@ -158,7 +158,13 @@ class Selection(models.Model):
     vacants = models.ForeignKey(Vacants, on_delete=models.CASCADE, verbose_name='Vacantes')
 
     def __str__(self):
-        return self.person.firstname
+        return f'{person.firstname} {person.lastname}'
+
+    # def __str__(self):
+    #     return f'{person.firstname} {self.lastname}'
+    def get_full_name(self):
+        return f'{self.person.firstname} {self.person.lastname}'
+
 
     
     def get_full_name(self):
