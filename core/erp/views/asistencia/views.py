@@ -68,7 +68,7 @@ class AssistanceListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Fo
                 row = 1
                 for i in queryset.order_by('assistance__date_joined'):
                     worksheet.write(row, 0, i.assistance.date_joined_format(), row_format)
-                    worksheet.write(row, 1, i.employee.person.firstname, row_format)
+                    worksheet.write(row, 1, i.employee.get_full_name(), row_format)
                     worksheet.write(row, 2, i.employee.person.cedula, row_format)
                     worksheet.write(row, 3, i.employee.position.name, row_format)
                     worksheet.write(row, 4, i.employee.department.name, row_format)
@@ -127,7 +127,7 @@ class AssistanceCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, 
                         detail.save()
             elif action == 'generate_assistance':
                 data = []
-                for i in Employee.objects.filter(person__isnull=False).order_by('id'):
+                for i in Employee.objects.filter(estado='Contratado').order_by('id'):
                     item = i.toJSON()
                     item['state'] = 0
                     item['description'] = ''

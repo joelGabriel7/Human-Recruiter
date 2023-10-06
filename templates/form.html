@@ -97,7 +97,6 @@
                 e.preventDefault();
                 let parameters = new FormData(this);
                 submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de realizar la siguiente acción?', parameters, () => {
-
                     Swal.fire({
                         title: 'Alerta!',
                         text: 'Registro actualizado correctamente!',

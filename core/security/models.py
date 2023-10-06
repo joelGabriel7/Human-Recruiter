@@ -1,9 +1,9 @@
 from datetime import datetime
-
 from crum import get_current_request
 from django.db import models
 from django.forms import model_to_dict
 from core.user.models import User
+import time
 
 
 # Create your models here.
@@ -22,7 +22,7 @@ class AccessUser(models.Model):
         item = model_to_dict(self)
         item['user'] = self.user.toJson()
         item['date_joined'] = self.date_joined.strftime('%d-%m-%Y')
-        item['time_joined'] = self.time_joined.strftime('%H:%M:%p')
+        item['time_joined'] = self.time_joined.strftime("%I:%M %p")
         return item
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):

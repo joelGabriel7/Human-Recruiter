@@ -20,7 +20,7 @@ function getData() {
         },
         columns: [
             {"data": "id"},
-            {"data": "person__firstname"},
+            {"data": "fullname"},
             {"data": "person__phone"},
             {"data": "vacants__posicion__name"},
             {"data": "vacants__max_salary"},

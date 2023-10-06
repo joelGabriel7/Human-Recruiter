@@ -53,7 +53,7 @@ class Candidatos(models.Model):
         ('Female', 'Femenino')
     )
 
-    cedula = models.CharField(max_length=64, null=False, unique=True)
+    cedula = models.CharField(max_length=11, null=False, unique=True)
     firstname = models.CharField(max_length=64, verbose_name='Nombre')
     lastname = models.CharField(max_length=64, verbose_name='Apellido')
     birthdate = models.DateField(verbose_name='Fecha de nacimiento')
@@ -68,12 +68,18 @@ class Candidatos(models.Model):
     def get_full_name(self):
         return f'{self.firstname} {self.lastname}'
 
+    def format_cedula(self):
+        return  f"{self.cedula[:3]}-{self.cedula[3:10]}-{self.cedula[10:11]}"
+
     def toJSON(self):
         item = model_to_dict(self)
         item['gender'] = {'id': self.gender, 'name': self.get_gender_display()}
         item['birthdate'] = self.birthdate.strftime('%Y-%m-%d')
         item['fullname'] = self.get_full_name()
         return item
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.cedula = self.format_cedula()
+        super().save()
 
     class Meta:
         verbose_name = 'Candidato'
@@ -154,10 +160,15 @@ class Selection(models.Model):
     def __str__(self):
         return self.person.firstname
 
+    
+    def get_full_name(self):
+        return f'{self.person.firstname} {self.person.lastname}'        
+
     def toJSON(self):
         item = model_to_dict(self)
         item['person'] = self.person.toJSON()
         item['vacants'] = self.vacants.toJSON()
+        item['fullname'] = self.get_full_name()
         return item
 
     class Meta:

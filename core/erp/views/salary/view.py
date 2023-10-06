@@ -62,6 +62,8 @@ class SalaryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, FormVi
                     queryset = SalaryDetail.objects.filter(salary__month=month)
                 if len(pks):
                     queryset = SalaryDetail.objects.filter(employee__id__in=pks)
+                if len(month) and len(pks):
+                    queryset = SalaryDetail.objects.filter(employee__id__in=pks, salary__month=month)
                 for i in queryset:
                     data.append(i.toJSON())
             elif action == 'search_employee':
@@ -69,7 +71,7 @@ class SalaryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, FormVi
                 term = request.POST['term']
                 for i in Employee.objects.filter(
                         Q(person__firstname__icontains=term) | Q(person__cedula__icontains=term) | Q(
-                            codigo__icontains=term)).order_by('person__employee')[0:10]:
+                            codigo__icontains=term), estado='Contratado').order_by('person__employee')[0:5]:
                     item = i.toJSON()
                     item['text'] = i.get_full_name()
                     data.append(item)
@@ -82,7 +84,8 @@ class SalaryListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, FormVi
                 for i in detail.salaryheadings_set.filter(headings__type='descuentos', valor__gt=0).order_by(
                         'headings__order'):
                     data.append([i.headings.name, i.get_cant(), '---', i.get_valor_format()])
-                data.append(['Subtotal de Ingresos', '---', '---', detail.get_income_format()])
+                data.append(['     ', '     ', '     ', '     '])
+                data.append(['Subtotal de Ingresos', '---', f'${detail.get_income_format()}', '-----'])
                 data.append(['Subtotal de Descuentos', '---', '---', detail.get_expenses_format()])
                 data.append(['Total a recibir', '---', '---', detail.get_total_amount_format()])
             elif action == 'export_salaries_excel':
@@ -194,7 +197,7 @@ class SalaryCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Crea
                 term = request.POST['term']
                 for i in Employee.objects.filter(
                         Q(person__firstname__icontains=term) | Q(person__cedula__icontains=term) | Q(
-                            codigo__icontains=term)).order_by('person__employee')[0:10]:
+                            codigo__icontains=term), estado='Contratado').order_by('person__employee')[0:10]:
                     item = i.toJSON()
                     item['text'] = i.get_full_name()
                     data.append(item)
@@ -203,7 +206,7 @@ class SalaryCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Crea
                 year = int(request.POST['year'])
                 month = int(request.POST['month'])
                 employees_ids = json.loads(request.POST['employees_ids'])
-                employees = Employee.objects.filter(person__isnull=False)
+                employees = Employee.objects.filter(estado='Contratado')
                 if len(employees_ids):
                     employees = employees.filter(id__in=employees_ids)
                     print(f'EMPLEADOS DICT: {employees}')

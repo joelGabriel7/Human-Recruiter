@@ -55,10 +55,28 @@ var salary = {
                     }
                 },
                 {
-                    targets: [-2, -3, -4],
+                    targets: [-2],
                     class: 'text-center',
                     render: function (data, type, row) {
-                        return '$' + data;
+                        let html = '<span class="badge badge-success">$' + data + '</span>';
+                        return html;
+
+                    }
+                },  {
+                    targets: [-3],
+                    class: 'text-center',
+                    render: function (data, type, row) {
+                        let html = '<span class="badge badge-danger">$' + data + '</span>';
+                        return html;
+
+                    }
+                },  {
+                    targets: [-4],
+                    class: 'text-center',
+                    render: function (data, type, row) {
+                        let html = '<span class="badge badge-primary">$' + data + '</span>';
+                        return html;
+
                     }
                 },
                 {
@@ -82,6 +100,7 @@ var salary = {
                 $('[data-toggle="tooltip"]').tooltip();
                 $(this).wrap('<div class="dataTables_scroll"><div/>');
             }
+
         });
     }
 };
@@ -157,7 +176,7 @@ $(function () {
                             if (data === '---') {
                                 return data;
                             }
-                            return '$' + data
+                            return  data
                         }
                     },
                 ],
