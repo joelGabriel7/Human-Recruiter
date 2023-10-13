@@ -35,10 +35,16 @@ let salary = {
                                 targets: '_all',
                                 class: 'text-center',
                                 render: function (data, type, row) {
+
                                     if (typeof data === "object") {
                                         var disabled = ['total_assets', 'total_discounts', 'total_charge'].includes(data.code) ? 'disabled' : '';
-                                        return '<input type="text" ' + disabled + ' rel="valor" class="form-control form-control-sm" autocomplete="off" value="' + parseFloat(data.amount).toFixed(2) + '" placeholder="Ingrese un valor" name="' + data.code + '">';
+                                        let name_discounts = data.code
+                                        // console.log("name_discounts:", name_discounts);
+                                        // console.log("data.code:", data.code);
+                                        return '<input type="text" ' + disabled + ' rel="valor" class="form-control form-control-sm" autocomplete="off" value="' + parseFloat(data.amount).toFixed(2) + '" placeholder="Ingrese un valor" name="' + name_discounts + '">';
+
                                     }
+
                                     if (Number.isInteger(data)) {
                                         return '<input type="text" class="form-control form-control-sm" name="cant" value="' + data + '" autocomplete="off">';
                                     }
@@ -102,9 +108,12 @@ let salary = {
     },
     calculateRol: function (position) {
         let headings = tblHeadings.row(position).data();
-        let total_assets = 0.00; //parseFloat(headings.employee.remuneration);
+        let total_assets = 0.00;
         let total_discounts = 0.00;
         let total_charge;
+         console.log("Valores iniciales:");
+        console.log("total_discounts:", total_discounts);
+        console.log("total_assets:", total_assets);
         $.each(headings, function (index, value) {
             if (!['employee', 'total_assets', 'total_discounts', 'total_charge'].includes(index)) {
                 switch (value.type.id) {
@@ -117,9 +126,18 @@ let salary = {
                 }
             }
         });
+        console.log("Valores intermedios:");
+        console.log("total_assets:", total_assets);
+        console.log("total_discounts:", total_discounts);
+
         headings.total_assets.amount = parseFloat(total_assets);
         headings.total_discounts.amount = parseFloat(total_discounts);
         total_charge = total_assets - total_discounts;
+
+        console.log("Valores finales:");
+        console.log("total_assets:", total_assets);
+        console.log("total_discounts:", total_discounts);
+        console.log("total_charge:", total_charge);
         headings.total_charge.amount = total_charge;
     }
 };

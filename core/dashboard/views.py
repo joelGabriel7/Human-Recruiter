@@ -33,7 +33,6 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                     result = SalaryDetail.objects.filter(salary__month=month, salary__year=year).aggregate(
                         result=Coalesce(Sum('total_amount'), 0.00, output_field=FloatField())).get('result')
                     data.append(float(result))
-
             else:
                 data['error'] = 'No ha seleccionado ninguna opción'
         except Exception as e:

@@ -222,7 +222,7 @@ class SalaryCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Crea
                     if i.has_quantity:
                         columns.append({'data': f'{i.code}.cant'})
                     columns.append({'data': i.code})
-                columns.append({'data': 'total_assets'})
+                columns.append({'data': 'total_discounts'})
                 columns.append({'data': 'total_charge'})
                 for employee in employees:
                     heading = {}
@@ -247,13 +247,11 @@ class SalaryCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Crea
                             item['amount'] = float(queryset.valor)
                             item['cant'] = queryset.cant
                         heading[d.code] = item
-                    salary_detail = SalaryDetail.objects.filter(employee_id=employee.id, salary__year=year,
-                                                                salary__month=month)
+                    salary_detail = SalaryDetail.objects.filter(employee_id=employee.id, salary__year=year,salary__month=month)
                     if salary_detail.exists():
                         salary_detail = salary_detail[0]
                         heading['total_assets'] = {'code': 'total_assets', 'amount': float(salary_detail.income)}
-                        heading['total_discounts'] = {'code': 'total_discounts',
-                                                      'amount': float(salary_detail.expenses)}
+                        heading['total_discounts'] = {'code': 'total_discounts','amount': float(salary_detail.expenses)}
                         heading['total_charge'] = {'code': 'total_charge', 'amount': float(salary_detail.total_amount)}
                     else:
                         heading['total_assets'] = {'code': 'total_assets', 'amount': 0.00}

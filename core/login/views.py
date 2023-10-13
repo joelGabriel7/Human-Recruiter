@@ -61,11 +61,9 @@ class LoginResetPasswordView(FormView):
     def send_email_reset_password(self, user):
         data = {}
         try:
-
             url = settings.DOMAIN if not setting.DEBUG else self.request.META['HTTP_HOST']
             user.token = uuid.uuid4()
             user.save()
-
             mailServer = smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT)
             mailServer.ehlo()
             mailServer.starttls()
@@ -75,20 +73,16 @@ class LoginResetPasswordView(FormView):
             messages['From'] = settings.EMAIL_HOST_USER
             messages['To'] = email_to
             messages['Subject'] = "Solicitud de cambio de contraseña"
-
             content = render_to_string('login/send_email.html', {
                 'user': user,
                 'link_resetpwd': f'http://{url}/login/change/password/{str(user.token)}/',
                 'link_home': f'http://{url}'
             })
-            # content = render_to_string('send_email.html', {'user': User.objects.get(pk=1)})
             messages.attach(MIMEText(content, 'html'))
-
             mailServer.sendmail(settings.EMAIL_HOST_USER, email_to, messages.as_string())
         except Exception as e:
             data['error'] = str(e)
         return data
-
     def post(self, request, *args, **kwargs):
         data = {}
         try:

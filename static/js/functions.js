@@ -195,3 +195,44 @@ function submit_with_formdata(args) {
         }
     });
 }
+
+function validate_text_box(args) {
+    if (!args.hasOwnProperty('type')) {
+        args.type = 'numbers';
+    }
+    var key = args.event.keyCode || args.event.which;
+    var numbers = (key > 47 && key < 58) || key === 8;
+    var numbers_spaceless = key > 47 && key < 58;
+    var letters = !((key !== 32) && (key < 65) || (key > 90) && (key < 97) || (key > 122 && key !== 241 && key !== 209 && key !== 225 && key !== 233 && key !== 237 && key !== 243 && key !== 250 && key !== 193 && key !== 201 && key !== 205 && key !== 211 && key !== 218)) || key === 8;
+    var letters_spaceless = !((key < 65) || (key > 90) && (key < 97) || (key > 122 && key !== 241 && key !== 209 && key !== 225 && key !== 233 && key !== 237 && key !== 243 && key !== 250 && key !== 193 && key !== 201 && key !== 205 && key !== 211 && key !== 218)) || key === 8;
+    var decimals = ((key > 47 && key < 58) || key === 8 || key === 46);
+
+    switch (args.type) {
+        case "numbers":
+            return numbers;
+        case "numbers_spaceless":
+            return numbers_spaceless;
+        case "letters":
+            return letters;
+        case "numbers_letters":
+            return numbers || letters;
+        case "letters_spaceless":
+            return letters_spaceless;
+        case "decimals":
+            return decimals;
+    }
+    return true;
+}
+
+function load_image(args) {
+    if (!args.hasOwnProperty('alt')) {
+        args.alt = '';
+    }
+    Swal.fire({
+        imageUrl: args.url,
+        imageWidth: '100%',
+        imageHeight: 250,
+        imageAlt: args.alt,
+        animation: false
+    })
+}
