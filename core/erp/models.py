@@ -447,3 +447,43 @@ class AssistanceDetail(models.Model):
     class Meta:
         verbose_name = 'Detalle de Asistencia'
         verbose_name_plural = 'Detalles de Asistencia'
+
+
+# Models vacations
+
+class Vacations(models.Model):
+
+    states_choices = (
+        ('Accepted', 'Acceptada'),
+        ('Processing', 'Pendiente'),
+        ('Denied', 'Denegada')
+    )
+
+    empledo = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name='Empleado solicitar')
+    start_date  = models.DateField(default=datetime.datetime.now, verbose_name='Fecha de inicio de vacaciones')
+    end_date  = models.DateField(default=datetime.datetime.now, verbose_name='Fecha de termino de vacaciones')
+    motivo  = models.CharField(max_length=100, verbose_name='Motivo de vacaciones', null=True, blank=True)
+    observaciones  = models.CharField(max_length=100, verbose_name='Observaciones extras',null=True, blank=True)
+    state_vacations = models.CharField(max_length=25, choices=states_choices, verbose_name='Estado de vacaciones')
+
+    def __str__(self):
+        return  self.empledo.get_full_name()
+
+    def start_date_format(self):
+        return self.start_date.strftime('%Y-%m-%d')
+
+    def end_date_format(self):
+        return self.end_date.strftime('%Y-%m-%d')
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['employee'] = self.empledo.toJSON()
+        item['state_vacations'] = {'id': self.state_vacations, 'name': self.state_vacations}
+        item['start_date'] = self.start_date_format()
+        item['end_date'] = self.end_date_format()
+        return item
+
+    class Meta:
+        verbose_name = 'Vacacion'
+        verbose_name_plural = 'Vacaciones'
+
