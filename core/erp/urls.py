@@ -12,6 +12,7 @@ from core.erp.views.turnos_trabajo.views import *
 from core.erp.views.vacante.views import *
 from core.erp.views.asistencia.views import *
 from core.erp.views.descuentos.view import *
+from core.erp.views.Vacations.views import *
 
 app_name = 'erp'
 
@@ -73,6 +74,9 @@ urlpatterns = [
 
     path('salary/list/', SalaryListView.as_view(), name='salary_list'),
     path('salary/add/', SalaryCreateView.as_view(), name='salary_create'),
+
+    # Vacations
+    path('vacations/list/', VacationsListView.as_view(), name='vacations_list'),
 
     #Company
     path('company/update/', CompanyUpdateView.as_view(), name='company_update')

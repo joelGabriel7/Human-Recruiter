@@ -1,7 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-
-
 from django.conf import settings
 from django.core.paginator import Paginator
 from django.db.models import Q

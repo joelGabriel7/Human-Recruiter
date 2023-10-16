@@ -1,0 +1,56 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
+from django.conf import settings
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from core.erp.forms import *
+from core.erp.models import *
+from core.erp.mixins import *
+import json
+from decimal import Decimal
+from datetime import date
+
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        if isinstance(obj, date):
+            return obj.strftime('%Y-%m-%d')
+        return super().default(obj)
+
+class VacationsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
+    model = Vacations
+    template_name = 'vacations/list.html'
+    permission_required = 'view_vacations'
+    paginate_by = 10
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'searchdata':
+                data = []
+                for i in Vacations.objects.all():
+                    data.append(i.toJSON())
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        serialized_data = json.dumps(data, cls=CustomJSONEncoder)
+        return HttpResponse(serialized_data, content_type='application/json')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listados de Vacations'
+        context['entity'] = 'Vacations'
+        return context

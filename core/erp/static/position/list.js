@@ -19,9 +19,6 @@ $( function () {
             {"data": "desc"},
         ],
         columnDefs: [
-
-
-
             {
                 targets: [3],
                 class: 'text-center',

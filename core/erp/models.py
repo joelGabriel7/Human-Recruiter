@@ -2,10 +2,12 @@ import datetime
 import random
 import string
 from django.db import models
+from django.db.models.signals import post_save
 from django.forms import model_to_dict
 from django.utils import timezone
 from config import settings
 from core.erp.choice import *
+
 
 
 def generate_employee_code():
@@ -220,6 +222,7 @@ class Employee(models.Model):
         ('Contratado', 'Contratado'),
         ('Despedido', 'Despedido'),
         ('Licencia', 'Licencia'),
+        ('Vacaciones', 'Vacaciones'),
     )
 
     codigo = models.CharField(max_length=64, default=generate_employee_code, verbose_name='Codigo Empleado')
@@ -454,9 +457,10 @@ class AssistanceDetail(models.Model):
 class Vacations(models.Model):
 
     states_choices = (
-        ('Accepted', 'Acceptada'),
-        ('Processing', 'Pendiente'),
-        ('Denied', 'Denegada')
+        ('Acceptada', 'Accepted'),
+        ('Pendiente', 'Processing'),
+        ('Denegada', 'Denied'),
+        ('Finalizada', 'Finished')
     )
 
     empledo = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name='Empleado solicitar')
@@ -478,6 +482,7 @@ class Vacations(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         item['employee'] = self.empledo.toJSON()
+        item['fullname'] = self.empledo.get_full_name()
         item['state_vacations'] = {'id': self.state_vacations, 'name': self.state_vacations}
         item['start_date'] = self.start_date_format()
         item['end_date'] = self.end_date_format()
@@ -485,5 +490,23 @@ class Vacations(models.Model):
 
     class Meta:
         verbose_name = 'Vacacion'
-        verbose_name_plural = 'Vacaciones'
+        verbose_name_plural = 'Vacations'
 
+def change_state_employe(sender, instance, **kwargs):
+    if instance.state_vacations == 'Acceptada':
+        employee = instance.empledo
+        if employee.estado != 'Vacaciones':
+            employee.estado = 'Vacaciones'
+            employee.save()
+    if datetime.date.today() >= instance.end_date:
+        vacations_state = instance
+        if vacations_state.state_vacations != 'Finalizada':
+            vacations_state.state_vacations = 'Finalizada'
+            vacations_state.save()
+            print(f'======== estado de vacaciones {vacations_state.state_vacations}=========')
+            employee = instance.empledo
+            if employee.estado != 'Contratado':
+                employee.estado = 'Contratado'
+                employee.save()
+                print(f'======== estado de empleado {employee.estado}=========')
+post_save.connect(change_state_employe, sender=Vacations)

@@ -81,6 +81,8 @@ $(function () {
                         html += '<span class="badge badge-danger">' + data + '</span>';
                     } else if (data === 'Licencia') {
                         html += '<span class="badge badge-info">' + data + '</span>';
+                    } else if (data === 'Vacaciones') {
+                        html += '<span class="badge badge-primary">' + data + '</span>';
                     } else {
                         html += data;
                     }

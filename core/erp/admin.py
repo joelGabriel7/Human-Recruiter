@@ -6,6 +6,7 @@ from core.erp.models import *
 
 admin.site.register(Departments)
 admin.site.register(Headings)
+admin.site.register(Vacations)
 admin.site.register(SalaryHeadings)
 admin.site.register(Salary)
 admin.site.register(SalaryDetail)
