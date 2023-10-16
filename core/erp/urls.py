@@ -77,6 +77,7 @@ urlpatterns = [
 
     # Vacations
     path('vacations/list/', VacationsListView.as_view(), name='vacations_list'),
+    path('vacations/add/', VacationsCreatView.as_view(), name='vacations_create'),
 
     #Company
     path('company/update/', CompanyUpdateView.as_view(), name='company_update')

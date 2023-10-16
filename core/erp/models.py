@@ -463,7 +463,7 @@ class Vacations(models.Model):
         ('Finalizada', 'Finished')
     )
 
-    empledo = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name='Empleado solicitar')
+    empleado = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name='Empleado solicitar')
     start_date  = models.DateField(default=datetime.datetime.now, verbose_name='Fecha de inicio de vacaciones')
     end_date  = models.DateField(default=datetime.datetime.now, verbose_name='Fecha de termino de vacaciones')
     motivo  = models.CharField(max_length=100, verbose_name='Motivo de vacaciones', null=True, blank=True)
@@ -471,7 +471,7 @@ class Vacations(models.Model):
     state_vacations = models.CharField(max_length=25, choices=states_choices, verbose_name='Estado de vacaciones')
 
     def __str__(self):
-        return  self.empledo.get_full_name()
+        return  self.empleado.get_full_name()
 
     def start_date_format(self):
         return self.start_date.strftime('%Y-%m-%d')
@@ -481,8 +481,8 @@ class Vacations(models.Model):
 
     def toJSON(self):
         item = model_to_dict(self)
-        item['employee'] = self.empledo.toJSON()
-        item['fullname'] = self.empledo.get_full_name()
+        item['employee'] = self.empleado.toJSON()
+        item['fullname'] = self.empleado.get_full_name()
         item['state_vacations'] = {'id': self.state_vacations, 'name': self.state_vacations}
         item['start_date'] = self.start_date_format()
         item['end_date'] = self.end_date_format()
@@ -494,7 +494,7 @@ class Vacations(models.Model):
 
 def change_state_employe(sender, instance, **kwargs):
     if instance.state_vacations == 'Acceptada':
-        employee = instance.empledo
+        employee = instance.empleado
         if employee.estado != 'Vacaciones':
             employee.estado = 'Vacaciones'
             employee.save()
@@ -504,7 +504,7 @@ def change_state_employe(sender, instance, **kwargs):
             vacations_state.state_vacations = 'Finalizada'
             vacations_state.save()
             print(f'======== estado de vacaciones {vacations_state.state_vacations}=========')
-            employee = instance.empledo
+            employee = instance.empleado
             if employee.estado != 'Contratado':
                 employee.estado = 'Contratado'
                 employee.save()
