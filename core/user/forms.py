@@ -10,6 +10,7 @@ class UserForm(ModelForm):
         self.fields['username'].widget.attrs['autofocus'] = True
         self.fields['username'].widget.attrs['autocomplete'] = 'off'
         self.fields['image'].widget.attrs['class'] = 'form-control'
+        self.fields['employee'].queryset = Employee.objects.filter(estado='Contratado')
 
     class Meta:
         model = User
@@ -17,29 +18,8 @@ class UserForm(ModelForm):
         labels = {
             'groups': 'Perfil de usuario'
         }
+        queryset = Employee.objects.filter(estado='Contratado'),
         widgets = {
-            # 'first_name': TextInput(
-            #     attrs={
-            #         'placeholder': 'Ingrese sus nombre',
-            #         'class': 'form-control',
-            #
-            #     }
-            # ),
-            # 'last_name': TextInput(
-            #     attrs={
-            #         'placeholder': 'Ingrese sus apellido',
-            #         'class': 'form-control',
-            #
-            #     }
-            # ),
-            # 'email': TextInput(
-            #     attrs={
-            #         'placeholder': 'Ingrese su Email',
-            #         'class': 'form-control',
-            #
-            #     }
-            # ),
-
             'username': TextInput(
                 attrs={
                     'placeholder': 'Crea un Nombre de Usuario',
