@@ -541,7 +541,7 @@ class VacationsForm(ModelForm):
             form.field.widget.attrs["autocomplete"] = 'off'
         self.fields['empleado'].widget.attrs['class'] = ' form-control select2 '
         self.fields['state_vacations'].widget.attrs['class'] = ' form-control select2 '
-        self.fields['empleado'].queryset = Employee.objects.filter(estado='Contratado')
+        self.fields['empleado'].queryset = Employee.objects.filter(estado__in=['Contratado','Vacaciones'])
 
     class Meta:
         model = Vacations

@@ -36,6 +36,9 @@ class VacationsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListV
                 data = []
                 for i in Vacations.objects.all():
                     data.append(i.toJSON())
+            elif action == 'delete':
+              vacations = Vacations.objects.get(pk=request.POST['id'])
+              vacations.delete()
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:

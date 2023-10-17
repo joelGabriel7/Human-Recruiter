@@ -20,7 +20,6 @@ $(function () {
 $(function () {
     $('#end_date').datetimepicker({
         format: 'YYYY-MM-DD',
-        date: moment().format('YYYY-MM-DD'),
         locale: 'es',
         icons: {
             time: 'far fa-clock'
