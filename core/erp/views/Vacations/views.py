@@ -79,3 +79,33 @@ class VacationsCreatView(LoginRequiredMixin,ValidatePermissionRequiredMixin, Cre
         context['list_url'] = reverse_lazy('erp:vacations_list')
         context['action'] = 'add'
         return context
+
+class VacationsUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin, UpdateView):
+    model = Vacations
+    form_class = VacationsForm
+    template_name = 'Vacations/create.html'
+    permission_required = 'change_vacations'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'edit':
+                form = self.get_form()
+                data = form.save()
+            else:
+                data['error']= 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edición de una solicitud de Vacaciones'
+        context['entity'] = 'Vacaciones'
+        context['list_url'] = reverse_lazy('erp:vacations_list')
+        context['action'] = 'edit'
+        return context
