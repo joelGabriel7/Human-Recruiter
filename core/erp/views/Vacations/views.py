@@ -1,9 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
-from django.conf import settings
-from django.core.paginator import Paginator
-from django.db.models import Q
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
@@ -28,7 +23,6 @@ class VacationsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListV
     model = Vacations
     template_name = 'vacations/list.html'
     permission_required = 'view_vacations'
-    paginate_by = 10
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -66,6 +60,18 @@ class VacationsCreatView(LoginRequiredMixin,ValidatePermissionRequiredMixin, Cre
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'add':
+                form = self.get_form()
+                data = form.save()
+            else:
+                data['error']= 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Solicitud de Vacaciones'
