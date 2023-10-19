@@ -48,8 +48,8 @@ class VacationsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListV
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Listados de Vacations'
-        context['entity'] = 'Vacations'
+        context['title'] = 'Listados de Vacaciones'
+        context['entity'] = 'Vacaciones'
         context['create_url'] = reverse_lazy('erp:vacations_create')
         return context
 

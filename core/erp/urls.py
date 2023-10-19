@@ -58,7 +58,7 @@ urlpatterns = [
     path('empleados/list/', EmpleadoListView.as_view(), name='empleados_list'),
     path('empleados/add/', EmpleadoCreateView.as_view(), name='empleados_create'),
     path('empleados/edit/<int:pk>/', EmpleadoUpdateView.as_view(), name='empleados_update'),
-    path('empleados/delete/<int:pk>/', EmpleadoDeleteView.as_view(), name='empleados_delete'),
+  
 
     # Asistencia
     path('asistencia/list/', AssistanceListView.as_view(), name='asistencia_list'),

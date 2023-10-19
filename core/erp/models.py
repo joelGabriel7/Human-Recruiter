@@ -508,4 +508,5 @@ def change_state_employe(sender, instance, **kwargs):
             if employee.estado != 'Contratado':
                 employee.estado = 'Contratado'
                 employee.save()
+
 post_save.connect(change_state_employe, sender=Vacations)
