@@ -20,13 +20,15 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             today = timezone.now().date()
             vacations_to_complete = Vacations.objects.filter(end_date=today)
             for vacations in vacations_to_complete:
-                vacations.state_vacations = 'Finalizada'
-                vacations.save()
+                if vacations.state_vacations != 'Finalizada':
+                  vacations.state_vacations = 'Finalizada'
+                  vacations.save()
+                  print(f"¡{employee.get_full_name()} Tus vacaciones han finalizado! {vacations.start_date} - {vacations.end_date}")  
                 employee = vacations.empleado
                 if vacations.end_date == today:
                     employee.estado = 'Contratado'
                     employee.save()
-                print(f"¡{employee.get_full_name()} Tus vacaciones han finalizado! {vacations.start_date} - {vacations.end_date}")
+           
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):

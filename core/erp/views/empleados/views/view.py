@@ -84,7 +84,7 @@ class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListVi
                 }
             elif action == 'deactive':
                 employe = Employee.objects.get(pk=request.POST['id'])
-                if employe.estado == 'Contratado':
+                if employe.estado == 'Contratado' or employe.estado == 'Vacaciones':
                         employe.estado = 'Despedido'
                         employe.save()
                 else:
