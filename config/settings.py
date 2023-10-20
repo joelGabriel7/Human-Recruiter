@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os.path
+from datetime import timedelta
 from pathlib import Path
 from config import db as db
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'core.erp.templatetags',
     'core.security',
+    'django_extensions',
 
 
 ]
@@ -147,5 +149,7 @@ EMAIL_USE_TLS = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DOMAIN = ''
 
-LINKEDIN_CLIENT_ID = '77s1pzurm9q7p3'
-LINKEDIN_CLIENT_SECRET = 'GB2swxcYFrMDgI69'
+SESSION_NAME = 'HumanRecruiter'
+SESSION_COOKIE_AGE = 900 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SAVE_EVERY_REQUEST = True

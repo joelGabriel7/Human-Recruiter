@@ -26,6 +26,7 @@ class CompanyForm(ModelForm):
             'email': EmailInput(attrs={'placeholder': 'Ingrese su correo empresarial', }),
             'description': Textarea(attrs={'placeholder': 'Ingrese una descripcion', 'rows': 3, 'cols': 3}),
         }
+        exclude = ['reminder_sent']
 
     def save(self, commit=True):
         data = {}
@@ -66,7 +67,7 @@ class DepartmentsForm(ModelForm):
             'description': Textarea(
                 attrs={
                     # 'class': 'form-control',
-                    'placeholder': 'Ingrese un nombre',
+                    'placeholder': 'Ingrese una descripción',
                     # 'autocomplete': 'off',
                     'rows': 3,
                     'cols': 3
@@ -409,13 +410,6 @@ class EmployeForm(ModelForm):
                     'style': 'width: 100%'
                 }
             ),
-
-            'accounts': Select(
-                attrs={
-                    'class': 'form-control select2',
-                    'style': 'width: 100%'
-                }
-            ),
             'estado': Select(
                 attrs={
                     'class': 'form-control select2',
@@ -497,7 +491,6 @@ class DescuentoForm(ModelForm):
             data['error'] = str(e)
         return data
 
-
 class SalaryForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -528,16 +521,90 @@ class SalaryForm(ModelForm):
             'data-target': '#year_month',
         }
     ), label='Año/Mes')
-
     employee = ChoiceField(widget=SelectMultiple(attrs={
         'class': 'form-control select2',
         'multiple': 'multiple',
         'style': 'width: 100%;'
     }), label='Empleado')
 
-
 class ReportForm(forms.Form):
     date_range = CharField(widget=TextInput(attrs={
         'class': 'form-control',
         'autocomplete': 'off'
     }), label='Buscar por rango de fechas')
+
+class VacationsForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs["class"] = 'form-control '
+            form.field.widget.attrs["autocomplete"] = 'off'
+        self.fields['empleado'].widget.attrs['class'] = ' form-control select2 '
+        self.fields['state_vacations'].widget.attrs['class'] = ' form-control select2 '
+        self.fields['empleado'].queryset = Employee.objects.filter(estado__in=['Contratado','Vacaciones'])
+
+    class Meta:
+        model = Vacations
+        fields = '__all__'
+        widgets = {
+            'empleado': Select(
+                attrs={
+
+                    'style': 'width: 100%'
+                }
+            ),
+            'start_date': TimeInput(
+                format='%Y-%m-%d',
+                attrs={
+                    'autocomplete': 'off',
+                    'class': 'input-group timepicker-input',
+                    'id': 'start_date',
+                    'data-target': '#start_date',
+                    'data-toggle': 'datetimepicker'
+                }
+            ),
+            'end_date': TimeInput(
+                format='%Y-%m-%d',
+                attrs={
+                    'autocomplete': 'off',
+                    'class': 'input-group timepicker-input',
+                    'id': 'end_date',
+                    'data-target': '#end_date',
+                    'data-toggle': 'datetimepicker'
+                }
+            ),
+            'motivo':TextInput(
+                 attrs={
+                     'placeholder': 'Motivo de vacaciones',
+                 }
+            ),
+            'observaciones': Textarea(
+                attrs={
+                    'placeholder': 'Observaciones extras',
+                    'rows': 3,
+                    'cols': 3
+
+                }
+            ),
+            'state_vacations':Select(
+                attrs={
+                    'class':'form-control select2',
+                     'style': 'width: 100%'
+
+                }
+            )
+        }
+
+    def save(self, commit=True):
+        data = {}
+        form = super()
+        try:
+            if form.is_valid():
+                form.save()
+            else:
+                data['error'] = form.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return data
+

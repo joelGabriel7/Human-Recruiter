@@ -2,10 +2,18 @@ import datetime
 import random
 import string
 from django.db import models
+from django.db.models.signals import post_save
 from django.forms import model_to_dict
 from django.utils import timezone
 from config import settings
 from core.erp.choice import *
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from django.template.loader import render_to_string
+from config import settings
+
+
 
 
 def generate_employee_code():
@@ -220,6 +228,7 @@ class Employee(models.Model):
         ('Contratado', 'Contratado'),
         ('Despedido', 'Despedido'),
         ('Licencia', 'Licencia'),
+        ('Vacaciones', 'Vacaciones'),
     )
 
     codigo = models.CharField(max_length=64, default=generate_employee_code, verbose_name='Codigo Empleado')
@@ -248,7 +257,6 @@ class Employee(models.Model):
         item = model_to_dict(self)
         item['person'] = self.person.toJSON()
         item['estado'] = {'id': self.estado, 'name': self.estado}
-        item['fullname'] = self.person.firstname + ' ' + self.person.lastname
         item['department'] = self.department.toJSON()
         item['position'] = self.position.toJSON()
         item['hiring_date'] = self.hiring_date.strftime('%Y-%m-%d')
@@ -260,6 +268,33 @@ class Employee(models.Model):
         verbose_name = 'Empleado'
         verbose_name_plural = 'Empleados'
         # ordering = [id]
+# Envio de correo
+def send_hiring_notification(employee):
+    try:
+        mailServer = smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT)
+        mailServer.ehlo()
+        mailServer.starttls()
+        mailServer.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
+        email_to = employee.person.email
+        messages = MIMEMultipart()
+        messages['From'] = settings.EMAIL_HOST_USER
+        messages['To'] = email_to
+        messages['Subject'] = "¡Felicidades, ha sido contratado!"
+        content = render_to_string('email/hiring_notification.html', {'employee': employee})
+        messages.attach(MIMEText(content, 'html'))
+        mailServer.sendmail(settings.EMAIL_HOST_USER, email_to, messages.as_string())
+    except Exception as e:
+        print(f"Error al enviar el correo de notificación de contratación: {str(e)}")
+
+# Notificar que fue contratado al empleado
+def email_hiring(sender, instance, created, **kwargs):
+    if created:
+        send_hiring_notification(instance)
+        print('Mensaje enviado')
+    if instance.estado == 'Contratado':
+        send_hiring_notification(instance)
+        print('Mensaje enviado X2')
+post_save.connect(email_hiring, sender=Employee)
 
 
 class Headings(models.Model):
@@ -447,3 +482,64 @@ class AssistanceDetail(models.Model):
     class Meta:
         verbose_name = 'Detalle de Asistencia'
         verbose_name_plural = 'Detalles de Asistencia'
+
+
+# Models vacations
+
+class Vacations(models.Model):
+
+    states_choices = (
+        ('Acceptada', 'Accepted'),
+        ('Pendiente', 'Processing'),
+        ('Denegada', 'Denied'),
+        ('Finalizada', 'Finished')
+    )
+
+    empleado = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name='Empleado solicitar')
+    start_date  = models.DateField(default=datetime.datetime.now, verbose_name='Fecha de inicio de vacaciones')
+    end_date  = models.DateField(default=datetime.datetime.now, verbose_name='Fecha de termino de vacaciones')
+    motivo  = models.CharField(max_length=100, verbose_name='Motivo de vacaciones', null=True, blank=True)
+    observaciones  = models.CharField(max_length=100, verbose_name='Observaciones extras',null=True, blank=True)
+    state_vacations = models.CharField(max_length=25, choices=states_choices, verbose_name='Estado de vacaciones')
+    reminder_sent  = models.BooleanField(verbose_name='Recordatorio enviado?', default=False)
+
+    def __str__(self):
+        return  self.empleado.get_full_name()
+
+    def start_date_format(self):
+        return self.start_date.strftime('%Y-%m-%d')
+
+    def end_date_format(self):
+        return self.end_date.strftime('%Y-%m-%d')
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['employee'] = self.empleado.toJSON()
+        item['fullname'] = self.empleado.get_full_name()
+        item['state_vacations'] = {'id': self.state_vacations, 'name': self.state_vacations}
+        item['start_date'] = self.start_date_format()
+        item['end_date'] = self.end_date_format()
+        return item
+
+    class Meta:
+        verbose_name = 'Vacacion'
+        verbose_name_plural = 'Vacations'
+
+# def change_state_employe(sender, instance, **kwargs):
+#     if instance.state_vacations == 'Acceptada':
+#         employee = instance.empleado
+#         if employee.estado != 'Vacaciones':
+#             employee.estado = 'Vacaciones'
+#             employee.save()
+#     if datetime.date.today() >= instance.end_date:
+#         vacations_state = instance
+#         if vacations_state.state_vacations != 'Finalizada':
+#             vacations_state.state_vacations = 'Finalizada'
+#             vacations_state.save()
+
+#             employee = instance.empleado
+#             if employee.estado != 'Contratado':
+#                 employee.estado = 'Contratado'
+#                 employee.save()
+
+# post_save.connect(change_state_employe, sender=Vacations)

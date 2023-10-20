@@ -14,7 +14,6 @@ django-widget-tweaks==1.4.12
 et-xmlfile==1.1.0
 Faker==19.2.0
 idna==3.4
-linkedin-api-client==0.3.0
 mysqlclient==2.1.1
 oauthlib==3.2.2
 openpyxl==3.1.2
@@ -32,3 +31,4 @@ typing_extensions==4.5.0
 tzdata==2022.7
 urllib3==2.0.4
 XlsxWriter==3.1.2
+

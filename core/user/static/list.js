@@ -15,8 +15,7 @@ $(function () {
         },
         columns: [
             {"data": "id"},
-            {"data": "employee__firstname"}, // Cambia a la propiedad real
-            {"data": "employee__lastname"},  // Cambia a la propiedad real
+            {"data": "full_name"}, // Cambia a la propiedad rea  // Cambia a la propiedad real
             {"data": "username"},
             {"data": "date_joined"},
             {"data": "image"},

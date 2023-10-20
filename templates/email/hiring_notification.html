@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notificación de Contratación</title>
+    <!-- Agrega tus estilos CSS aquí -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 600px;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¡Felicidades, ha sido contratado!</h1>
+        <p>Estimado {{employee.get_full_name}},</p>
+        <p>Le informamos que ha sido contratado en [Nombre de la Empresa]. Estamos emocionados de darle la bienvenida a nuestro equipo.</p>
+        <p>Nuestro equipo de Recursos Humanos se pondra en contacto con usted para darles más detalles sobre su contratación.</p>
+        <p>¡Esperamos que tenga una experiencia laboral exitosa con nosotros!</p>
+    </div>
+</body>
+</html>

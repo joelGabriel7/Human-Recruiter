@@ -82,7 +82,20 @@ class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListVi
                     'recordsTotal': employees.count(),
                     'recordsFiltered': paginator.count,
                 }
-
+            elif action == 'deactive':
+                employe = Employee.objects.get(pk=request.POST['id'])
+                if employe.estado == 'Contratado' or employe.estado == 'Vacaciones':
+                        employe.estado = 'Despedido'
+                        employe.save()
+                else:
+                    employe.save()        
+            elif action == 'active':
+                employe = Employee.objects.get(pk=request.POST['id'])
+                if employe.estado == 'Despedido':
+                        employe.estado = 'Contratado' #Contratado
+                        employe.save()
+                else:
+                    employe.save()  
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
@@ -163,28 +176,3 @@ class EmpleadoUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Up
         context['create_url'] = reverse_lazy('erp:empleados_create')
         return context
 
-
-class EmpleadoDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):
-    model = Employee
-    template_name = 'empleado/delete.html'
-    success_url = reverse_lazy('erp:empleados_list')
-    permission_required = 'delete_employee'
-
-    def dispatch(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        return super().dispatch(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        data = {}
-        try:
-            self.object.delete()
-        except Exception as e:
-            data['error'] = str(e)
-        return JsonResponse(data)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Elimina un empleado'
-        context['entity'] = 'Empleados'
-        context['list_url'] = self.success_url
-        return context

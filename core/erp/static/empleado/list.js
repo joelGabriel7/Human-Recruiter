@@ -1,5 +1,5 @@
 $(function () {
-    $('#data').DataTable({
+    tblEmploye= $('#data').DataTable({
         responsive: true,
         autoWidth: false,
         destroy: true,
@@ -81,6 +81,8 @@ $(function () {
                         html += '<span class="badge badge-danger">' + data + '</span>';
                     } else if (data === 'Licencia') {
                         html += '<span class="badge badge-info">' + data + '</span>';
+                    } else if (data === 'Vacaciones') {
+                        html += '<span class="badge badge-primary">' + data + '</span>';
                     } else {
                         html += data;
                     }
@@ -94,8 +96,11 @@ $(function () {
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {
-                    var buttons = '<a href="/erp/empleados/edit/' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
-                    buttons += '<a href="/erp/empleados/delete/' + row.id + '/" type="button" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
+                    let buttons = '<a href="#' + row.id + '/" type="button" rel="active" class="btn btn-primary btn-xs btn-flat"><i class="fas fa-plus"></i></a>';
+                    buttons += '&nbsp;';
+                    buttons += '<a href="#' + row.id + '/" type="button" rel="deactive" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
+                    buttons += '&nbsp;';
+                    buttons += '<a href="/erp/empleados/edit/' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
                     return buttons;
                 }
             },
@@ -106,3 +111,39 @@ $(function () {
         }
     });
 });
+
+$(function () {
+    $('#data tbody').on('click', 'a[rel="deactive"]', function () {
+         let tr = tblEmploye.cell($(this).closest('td li')).index();
+         let data = tblEmploye.row($(this).closest('tr')).data();
+         let parameters = new FormData();
+         parameters.append('action', 'deactive');
+         parameters.append('id', data.id);
+         submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro despedir este empleado?', parameters, () => {
+             Swal.fire({
+                 title: 'Alerta!',
+                 text: 'Empleado despedido correctamente!',
+                 icon: 'success',
+                 timer: 2000,
+             });
+             tblEmploye.ajax.reload();
+         });
+     });
+
+     $('#data tbody').on('click', 'a[rel="active"]', function () {
+        let tr = tblEmploye.cell($(this).closest('td li')).index();
+        let data = tblEmploye.row($(this).closest('tr')).data();
+        let parameters = new FormData();
+        parameters.append('action', 'active');
+        parameters.append('id', data.id);
+        submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro recontratar a este empleado?', parameters, () => {
+            Swal.fire({
+                title: 'Alerta!',
+                text: 'Empleado recontratado correctamente!',
+                icon: 'success',
+                timer: 2000,
+            });
+            tblEmploye.ajax.reload();
+        });
+    });
+ });
