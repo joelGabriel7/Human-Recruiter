@@ -6,8 +6,8 @@ from django.db.models import Sum, FloatField
 from django.db.models.functions import Coalesce
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import TemplateView
-
 from core.erp.models import *
+from django.utils import timezone
 
 
 # Create your views here.
@@ -16,6 +16,15 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard.html'
 
     def dispatch(self, request, *args, **kwargs):
+        
+        if request.user.is_authenticated:
+            today = timezone.now().date()
+            vacations_to_complete = Vacations.objects.filter(end_date=today)
+            for vacations in vacations_to_complete:
+                vacations.state_vacations = 'Finalizada'
+                vacations.save()
+                print(f"¡Tus vacaciones han finalizado! {vacations.start_date} - {vacations.end_date}")
+
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):

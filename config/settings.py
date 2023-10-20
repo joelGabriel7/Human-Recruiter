@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'core.erp.templatetags',
     'core.security',
+    'django_extensions',
 
 
 ]
@@ -147,3 +148,7 @@ EMAIL_HOST_PASSWORD = 'xfikezkywmhttsum'
 EMAIL_USE_TLS = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DOMAIN = ''
+
+SESSION_NAME = 'HumanRecruiter'
+SESSION_COOKIE_AGE = 60
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

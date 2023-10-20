@@ -492,21 +492,21 @@ class Vacations(models.Model):
         verbose_name = 'Vacacion'
         verbose_name_plural = 'Vacations'
 
-def change_state_employe(sender, instance, **kwargs):
-    if instance.state_vacations == 'Acceptada':
-        employee = instance.empleado
-        if employee.estado != 'Vacaciones':
-            employee.estado = 'Vacaciones'
-            employee.save()
-    if datetime.date.today() >= instance.end_date:
-        vacations_state = instance
-        if vacations_state.state_vacations != 'Finalizada':
-            vacations_state.state_vacations = 'Finalizada'
-            vacations_state.save()
+# def change_state_employe(sender, instance, **kwargs):
+#     if instance.state_vacations == 'Acceptada':
+#         employee = instance.empleado
+#         if employee.estado != 'Vacaciones':
+#             employee.estado = 'Vacaciones'
+#             employee.save()
+#     if datetime.date.today() >= instance.end_date:
+#         vacations_state = instance
+#         if vacations_state.state_vacations != 'Finalizada':
+#             vacations_state.state_vacations = 'Finalizada'
+#             vacations_state.save()
 
-            employee = instance.empleado
-            if employee.estado != 'Contratado':
-                employee.estado = 'Contratado'
-                employee.save()
+#             employee = instance.empleado
+#             if employee.estado != 'Contratado':
+#                 employee.estado = 'Contratado'
+#                 employee.save()
 
-post_save.connect(change_state_employe, sender=Vacations)
+# post_save.connect(change_state_employe, sender=Vacations)
