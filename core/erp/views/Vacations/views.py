@@ -27,8 +27,6 @@ class VacationsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListV
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            print('Funciona')
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -115,22 +113,3 @@ class VacationsUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin, Up
         context['action'] = 'edit'
         return context
 
-def finalizar_tareas_de_vacaciones():
-    today = timezone.now().date()  # Obtiene la fecha actual sin la hora.
-    # Filtra las vacaciones pendientes o aceptadas que han terminado.
-    vacaciones_pendientes = Vacations.objects.filter(
-        state_vacations__in=['Pendiente', 'Acceptada'],
-        end_date__lte=today
-    )
-
-    for vacacion in vacaciones_pendientes:
-        # Actualiza el estado de las vacaciones a 'Finalizada'.
-        vacacion.state_vacations = 'Finalizada'
-        vacacion.save()
-
-        # Aquí puedes agregar el código para enviar un correo electrónico al empleado si lo deseas.
-        # Por ejemplo, utilizando Django's EmailMessage.
-
-        # También puedes realizar otras acciones que desees al finalizar las vacaciones.
-
-    return f'Se han finalizado {len(vacaciones_pendientes)} tareas de vacaciones.'
