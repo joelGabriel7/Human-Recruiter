@@ -469,6 +469,7 @@ class Vacations(models.Model):
     motivo  = models.CharField(max_length=100, verbose_name='Motivo de vacaciones', null=True, blank=True)
     observaciones  = models.CharField(max_length=100, verbose_name='Observaciones extras',null=True, blank=True)
     state_vacations = models.CharField(max_length=25, choices=states_choices, verbose_name='Estado de vacaciones')
+    reminder_sent  = models.BooleanField(verbose_name='Recordatorio enviado?', default=False)
 
     def __str__(self):
         return  self.empleado.get_full_name()

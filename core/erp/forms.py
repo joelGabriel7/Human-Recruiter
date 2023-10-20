@@ -26,6 +26,7 @@ class CompanyForm(ModelForm):
             'email': EmailInput(attrs={'placeholder': 'Ingrese su correo empresarial', }),
             'description': Textarea(attrs={'placeholder': 'Ingrese una descripcion', 'rows': 3, 'cols': 3}),
         }
+        exclude = ['reminder_sent']
 
     def save(self, commit=True):
         data = {}

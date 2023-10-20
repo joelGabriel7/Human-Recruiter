@@ -1,6 +1,5 @@
 import datetime
 import json
-import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum, FloatField
 from django.db.models.functions import Coalesce
@@ -8,7 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.generic import TemplateView
 from core.erp.models import *
 from django.utils import timezone
-
+from core.erp.views.Vacations.views import send_email_vacation_finished, send_reminder_vacation_ending
 
 # Create your views here.
 
@@ -18,21 +17,30 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             today = timezone.now().date()
+            tomorrow = today + datetime.timedelta(days=1)
             vacations_to_complete = Vacations.objects.filter(end_date=today)
+            vacations_to_remind = Vacations.objects.filter(end_date=tomorrow, state_vacations='Acceptada')
+            for vacations in vacations_to_remind:
+                if  not vacations.reminder_sent:
+                    send_reminder_vacation_ending(vacations)
+                    vacations.reminder_sent = True
+                    vacations.save()
             for vacations in vacations_to_complete:
                 if vacations.state_vacations != 'Finalizada':
-                  vacations.state_vacations = 'Finalizada'
-                  vacations.save()
-                  print(f"¡{employee.get_full_name()} Tus vacaciones han finalizado! {vacations.start_date} - {vacations.end_date}")  
+                    vacations.state_vacations = 'Finalizada'
+                    vacations.save()
+                    send_email_vacation_finished(vacations)
                 employee = vacations.empleado
                 if vacations.end_date == today:
                     employee.estado = 'Contratado'
                     employee.save()
-           
+                
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         request.user.get_group_session()
+        # 
+        # print('se envio')
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
