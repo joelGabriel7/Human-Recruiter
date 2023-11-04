@@ -50,8 +50,8 @@ $(function () {
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {
-                    var buttons = '<a href="/erp/vacations/edit/' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
-                    buttons += '<a href="/erp/vacations/generar_reporte_vacaciones/'+  row.id + '/" type="button" target="_blank" class="btn btn-info btn-xs btn-flat"><i class="fas fa-file"></i></a>';
+                    var buttons = '<a href="/erp/vacations/edit/' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> &nbsp;';
+                    buttons += '<a href="/erp/vacations/generar_reporte_vacaciones/'+  row.id + '/" type="button" target="_blank" class="btn btn-info btn-xs btn-flat"><i class="fas fa-file"></i></a> &nbsp;';
                     buttons += '<a href="#' + row.id + '/" type="button" rel="delete" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
                     return buttons;
                 }
