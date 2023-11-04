@@ -79,6 +79,7 @@ urlpatterns = [
     path('vacations/list/', VacationsListView.as_view(), name='vacations_list'),
     path('vacations/add/', VacationsCreatView.as_view(), name='vacations_create'),
     path('vacations/edit/<int:pk>/', VacationsUpdateView.as_view(), name='vacations_update'),
+    path('vacations/generar_reporte_vacaciones/<int:pk>/', generate_pdf_report, name='generar_reporte_vacaciones'),
 
     #Company
     path('company/update/', CompanyUpdateView.as_view(), name='company_update')

@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'core.erp.templatetags',
     'core.security',
-    'django_extensions',
+  
 
 
 ]
@@ -150,6 +150,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DOMAIN = ''
 
 SESSION_NAME = 'HumanRecruiter'
-SESSION_COOKIE_AGE = 900 
+SESSION_COOKIE_AGE = 3600
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SAVE_EVERY_REQUEST = True
