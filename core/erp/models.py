@@ -1,5 +1,6 @@
 import datetime
 import random
+import re
 import string
 from django.db import models
 from django.db.models.signals import post_save
@@ -14,13 +15,13 @@ from django.template.loader import render_to_string
 from config import settings
 
 
-
-
 def generate_employee_code():
     letters = string.ascii_uppercase
     numbers = string.digits
     code = ''.join(random.choice(letters) for i in range(6)) + ''.join(random.choice(numbers) for i in range(3))
     return code
+
+
 employe_code = generate_employee_code()
 
 
@@ -46,6 +47,20 @@ class Company(models.Model):
         item = model_to_dict(self)
         return item
 
+    def format_phone(self):
+        phone_number = self.mobile
+        phone_number = re.sub(r'[^0-9]', '', phone_number)
+        if len(phone_number) == 10:
+            formatted_phone = f'({phone_number[0:3]}) {phone_number[3:6]}-{phone_number[6:]}'
+        else:
+            formatted_phone = phone_number
+        return formatted_phone
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.mobile = self.format_phone()
+        self.phone = self.format_phone()
+        super().save()
+
     class Meta:
         verbose_name = 'Empresa'
         verbose_name_plural = 'Empresas'
@@ -61,7 +76,7 @@ class Candidatos(models.Model):
         ('Female', 'Femenino')
     )
 
-    cedula = models.CharField(max_length=11, null=False, unique=True)
+    cedula = models.CharField(max_length=13, null=False, unique=True)
     firstname = models.CharField(max_length=64, verbose_name='Nombre')
     lastname = models.CharField(max_length=64, verbose_name='Apellido')
     birthdate = models.DateField(verbose_name='Fecha de nacimiento')
@@ -77,7 +92,7 @@ class Candidatos(models.Model):
         return f'{self.firstname} {self.lastname}'
 
     def format_cedula(self):
-        return  f"{self.cedula[:3]}-{self.cedula[3:10]}-{self.cedula[10:11]}"
+        return f"{self.cedula[:3]}-{self.cedula[3:10]}-{self.cedula[10:11]}"
 
     def toJSON(self):
         item = model_to_dict(self)
@@ -85,6 +100,7 @@ class Candidatos(models.Model):
         item['birthdate'] = self.birthdate.strftime('%Y-%m-%d')
         item['fullname'] = self.get_full_name()
         return item
+
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.cedula = self.format_cedula()
         super().save()
@@ -173,10 +189,8 @@ class Selection(models.Model):
     def get_full_name(self):
         return f'{self.person.firstname} {self.person.lastname}'
 
-
-    
     def get_full_name(self):
-        return f'{self.person.firstname} {self.person.lastname}'        
+        return f'{self.person.firstname} {self.person.lastname}'
 
     def toJSON(self):
         item = model_to_dict(self)
@@ -268,6 +282,8 @@ class Employee(models.Model):
         verbose_name = 'Empleado'
         verbose_name_plural = 'Empleados'
         # ordering = [id]
+
+
 # Envio de correo
 def send_hiring_notification(employee):
     try:
@@ -286,6 +302,7 @@ def send_hiring_notification(employee):
     except Exception as e:
         print(f"Error al enviar el correo de notificación de contratación: {str(e)}")
 
+
 # Notificar que fue contratado al empleado
 def email_hiring(sender, instance, created, **kwargs):
     if created:
@@ -294,6 +311,8 @@ def email_hiring(sender, instance, created, **kwargs):
     if instance.estado == 'Contratado':
         send_hiring_notification(instance)
         print('Mensaje enviado X2')
+
+
 post_save.connect(email_hiring, sender=Employee)
 
 
@@ -487,7 +506,6 @@ class AssistanceDetail(models.Model):
 # Models vacations
 
 class Vacations(models.Model):
-
     states_choices = (
         ('Acceptada', 'Accepted'),
         ('Pendiente', 'Processing'),
@@ -496,15 +514,15 @@ class Vacations(models.Model):
     )
 
     empleado = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name='Empleado solicitar')
-    start_date  = models.DateField(default=datetime.datetime.now, verbose_name='Fecha de inicio de vacaciones')
-    end_date  = models.DateField(default=datetime.datetime.now, verbose_name='Fecha de termino de vacaciones')
-    motivo  = models.CharField(max_length=100, verbose_name='Motivo de vacaciones', null=True, blank=True)
-    observaciones  = models.CharField(max_length=100, verbose_name='Observaciones extras',null=True, blank=True)
+    start_date = models.DateField(default=datetime.datetime.now, verbose_name='Fecha de inicio de vacaciones')
+    end_date = models.DateField(default=datetime.datetime.now, verbose_name='Fecha de termino de vacaciones')
+    motivo = models.CharField(max_length=100, verbose_name='Motivo de vacaciones', null=True, blank=True)
+    observaciones = models.CharField(max_length=100, verbose_name='Observaciones extras', null=True, blank=True)
     state_vacations = models.CharField(max_length=25, choices=states_choices, verbose_name='Estado de vacaciones')
-    reminder_sent  = models.BooleanField(verbose_name='Recordatorio enviado?', default=False)
+    reminder_sent = models.BooleanField(verbose_name='Recordatorio enviado?', default=False)
 
     def __str__(self):
-        return  self.empleado.get_full_name()
+        return self.empleado.get_full_name()
 
     def start_date_format(self):
         return self.start_date.strftime('%Y-%m-%d')

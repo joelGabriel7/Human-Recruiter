@@ -1,22 +1,18 @@
+import json
+from datetime import date
+from decimal import Decimal
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponse
+from django.template.loader import get_template
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView
+from weasyprint import HTML
+
 from core.erp.forms import *
-from core.erp.models import *
 from core.erp.mixins import *
-import json
-from decimal import Decimal
-import datetime
-from datetime import date
-from django.utils import timezone
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from django.template.loader import render_to_string
-from config import settings
+from core.erp.models import *
 
 
 class CustomJSONEncoder(json.JSONEncoder):
@@ -27,7 +23,8 @@ class CustomJSONEncoder(json.JSONEncoder):
             return obj.strftime('%Y-%m-%d')
         return super().default(obj)
 
-class VacationsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
+
+class VacationsListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView):
     model = Vacations
     template_name = 'vacations/list.html'
     permission_required = 'view_vacations'
@@ -45,8 +42,8 @@ class VacationsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListV
                 for i in Vacations.objects.all():
                     data.append(i.toJSON())
             elif action == 'delete':
-              vacations = Vacations.objects.get(pk=request.POST['id'])
-              vacations.delete()
+                vacations = Vacations.objects.get(pk=request.POST['id'])
+                vacations.delete()
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
@@ -61,7 +58,8 @@ class VacationsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListV
         context['create_url'] = reverse_lazy('erp:vacations_create')
         return context
 
-class VacationsCreatView(LoginRequiredMixin,ValidatePermissionRequiredMixin, CreateView):
+
+class VacationsCreatView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
     model = Vacations
     form_class = VacationsForm
     template_name = 'Vacations/create.html'
@@ -78,10 +76,11 @@ class VacationsCreatView(LoginRequiredMixin,ValidatePermissionRequiredMixin, Cre
                 form = self.get_form()
                 data = form.save()
             else:
-                data['error']= 'Ha ocurrido un error'
+                data['error'] = 'Ha ocurrido un error'
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Solicitud de Vacaciones'
@@ -90,7 +89,8 @@ class VacationsCreatView(LoginRequiredMixin,ValidatePermissionRequiredMixin, Cre
         context['action'] = 'add'
         return context
 
-class VacationsUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin, UpdateView):
+
+class VacationsUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, UpdateView):
     model = Vacations
     form_class = VacationsForm
     template_name = 'Vacations/create.html'
@@ -108,10 +108,11 @@ class VacationsUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin, Up
                 form = self.get_form()
                 data = form.save()
             else:
-                data['error']= 'Ha ocurrido un error'
+                data['error'] = 'Ha ocurrido un error'
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Edición de una solicitud de Vacaciones'
@@ -119,6 +120,7 @@ class VacationsUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin, Up
         context['list_url'] = reverse_lazy('erp:vacations_list')
         context['action'] = 'edit'
         return context
+
 
 def send_email_vacation_finished(vacations):
     try:
@@ -143,19 +145,40 @@ def send_email_vacation_finished(vacations):
 
 
 def send_reminder_vacation_ending(vacations):
-        try:
-            mailServer = smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT)
-            mailServer.ehlo()
-            mailServer.starttls()
-            mailServer.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
-            email_to = vacations.empleado.person.email
-            messages = MIMEMultipart()
-            messages['From'] = settings.EMAIL_HOST_USER
-            messages['To'] = email_to
-            messages['Subject'] = "Recordatorio: Vacaciones tus finalizan mañana"
-            content = render_to_string('Vacations/vacation_reminder.html', {'vacations': vacations})
-            messages.attach(MIMEText(content, 'html'))
-            mailServer.sendmail(settings.EMAIL_HOST_USER, email_to, messages.as_string())
-           
-        except Exception as e:
-            print(f"Error al enviar el correo de recordatorio: {str(e)}")        
+    try:
+        mailServer = smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT)
+        mailServer.ehlo()
+        mailServer.starttls()
+        mailServer.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
+        email_to = vacations.empleado.person.email
+        messages = MIMEMultipart()
+        messages['From'] = settings.EMAIL_HOST_USER
+        messages['To'] = email_to
+        messages['Subject'] = "Recordatorio: Vacaciones tus finalizan mañana"
+        content = render_to_string('Vacations/vacation_reminder.html', {'vacations': vacations})
+        messages.attach(MIMEText(content, 'html'))
+        mailServer.sendmail(settings.EMAIL_HOST_USER, email_to, messages.as_string())
+
+    except Exception as e:
+        print(f"Error al enviar el correo de recordatorio: {str(e)}")
+
+
+def generate_pdf_report(request,pk):
+    empleado = Employee.objects.get(id=pk)
+    vacations = Vacations.objects.filter(empleado=empleado)
+    company = Company.objects.first()
+    current_day = datetime.date.today()
+    template = get_template("pdf_vacations.html")
+    context = {
+        'fecha': current_day,
+        "vacations": vacations,
+        'compañia': company,
+    }
+    html_template = template.render(context)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="Solicitud_de_Vacaciones.pdf"'
+
+    HTML(string=html_template, base_url=request.build_absolute_uri()).write_pdf(response)
+    return response
+

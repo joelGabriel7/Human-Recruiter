@@ -4,7 +4,7 @@ from datetime import datetime
 from decimal import Decimal
 from io import BytesIO
 
-import openpyxl
+# import openpyxl
 import xlsxwriter
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
@@ -15,9 +15,6 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
-from openpyxl.styles import Alignment, Border, Side
-from openpyxl.utils import get_column_letter
-# from openpyxl.writer.excel import save_virtual_workbook
 from core.erp.forms import SalaryForm
 from core.erp.models import Salary, SalaryDetail, Employee, Headings, SalaryHeadings
 from core.erp.mixins import *

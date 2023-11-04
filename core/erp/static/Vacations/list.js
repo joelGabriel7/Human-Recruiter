@@ -1,5 +1,5 @@
 $(function () {
-    tblVacations= $('#data').DataTable({
+    tblVacations = $('#data').DataTable({
         responsive: true,
         autoWidth: false,
         destroy: true,
@@ -51,6 +51,7 @@ $(function () {
                 orderable: false,
                 render: function (data, type, row) {
                     var buttons = '<a href="/erp/vacations/edit/' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
+                    buttons += '<a href="/erp/vacations/generar_reporte_vacaciones/'+  row.id + '/" type="button" target="_blank" class="btn btn-info btn-xs btn-flat"><i class="fas fa-file"></i></a>';
                     buttons += '<a href="#' + row.id + '/" type="button" rel="delete" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
                     return buttons;
                 }
@@ -62,7 +63,7 @@ $(function () {
     });
 });
 $(function () {
-   $('#data tbody').on('click', 'a[rel="delete"]', function () {
+    $('#data tbody').on('click', 'a[rel="delete"]', function () {
         let tr = tblVacations.cell($(this).closest('td li')).index();
         let data = tblVacations.row($(this).closest('tr')).data();
         let parameters = new FormData();
