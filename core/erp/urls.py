@@ -58,6 +58,7 @@ urlpatterns = [
     path('empleados/list/', EmpleadoListView.as_view(), name='empleados_list'),
     path('empleados/add/', EmpleadoCreateView.as_view(), name='empleados_create'),
     path('empleados/edit/<int:pk>/', EmpleadoUpdateView.as_view(), name='empleados_update'),
+    path('generar_informe_empleados/', generar_informe_empleados, name='generar_informe_empleados'),
   
 
     # Asistencia

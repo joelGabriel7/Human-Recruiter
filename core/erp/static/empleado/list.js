@@ -147,3 +147,20 @@ $(function () {
         });
     });
  });
+
+
+$(function () {
+    $('.generar_report').on('click', function () {
+        $("#ModalSelectReport").modal('show')
+    })
+
+    $('.select2').select2({
+        theme: "bootstrap4",
+        language: 'es',
+
+    });
+
+})
+
+
+

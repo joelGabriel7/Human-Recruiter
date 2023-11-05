@@ -1,5 +1,6 @@
 import json
 from decimal import Decimal
+import datetime
 from datetime import date
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Q, Value
@@ -9,6 +10,8 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
+from weasyprint import HTML
+
 from core.erp.forms import *
 from core.erp.models import *
 from core.erp.mixins import *
@@ -24,11 +27,10 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
+class EmpleadoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView):
     model = Employee
     template_name = 'empleado/list.html'
     permission_required = 'view_employee'
-
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -40,7 +42,6 @@ class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListVi
             action = request.POST['action']
             if action == 'searchdata':
                 search_value = request.POST.get('search[value]', '')
-
 
                 employees = Employee.objects.annotate(
                     full_name=Concat('person__firstname', Value(' '), 'person__lastname')
@@ -85,17 +86,17 @@ class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListVi
             elif action == 'deactive':
                 employe = Employee.objects.get(pk=request.POST['id'])
                 if employe.estado == 'Contratado' or employe.estado == 'Vacaciones':
-                        employe.estado = 'Despedido'
-                        employe.save()
+                    employe.estado = 'Despedido'
+                    employe.save()
                 else:
-                    employe.save()        
+                    employe.save()
             elif action == 'active':
                 employe = Employee.objects.get(pk=request.POST['id'])
                 if employe.estado == 'Despedido':
-                        employe.estado = 'Contratado' #Contratado
-                        employe.save()
+                    employe.estado = 'Contratado'  # Contratado
+                    employe.save()
                 else:
-                    employe.save()  
+                    employe.save()
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
@@ -109,6 +110,7 @@ class EmpleadoListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListVi
         context['entity'] = 'Empleados'
         context['list_url'] = reverse_lazy('erp:empleados_list')
         context['create_url'] = reverse_lazy('erp:empleados_create')
+        context['estados'] = Employee.objects.values_list('estado', flat=True).distinct()
         return context
 
 
@@ -176,3 +178,23 @@ class EmpleadoUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Up
         context['create_url'] = reverse_lazy('erp:empleados_create')
         return context
 
+
+def generar_informe_empleados(request):
+    company = Company.objects.first()
+    current_day = datetime.today()
+    estado = request.GET.get('estado')
+    if estado:
+        empleados = Employee.objects.filter(estado=estado)
+    else:
+        empleados = Employee.objects.all()
+    context = {
+        'empleados': empleados,
+        'company': company,
+        'fecha': current_day,
+        'title': estado
+    }
+    html_string = render_to_string('pdf_report_employee.html', context)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename=informe_empleados.pdf'
+    HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(response)
+    return response

@@ -175,10 +175,8 @@ def generate_pdf_report(request,pk):
         'compañia': company,
     }
     html_template = template.render(context)
-
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="Solicitud_de_Vacaciones.pdf"'
-
     HTML(string=html_template, base_url=request.build_absolute_uri()).write_pdf(response)
     return response
 

@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Informe de Empleados</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+         body {
+            font-family: 'Montserrat', sans-serif;
+
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            margin: 20px auto;
+            max-width: 100%;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px 0px #000;
+        }
+
+        #header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        #contact-info {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        #contact-info p {
+            margin: 5px 0;
+        }
+
+        #employee-table {
+            margin: 17px auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 6px;
+            text-align: center;
+        }
+
+        /*th {
+            background-color: #333;
+            color: #fff;
+        }*/
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .date {
+            text-align: right;
+            margin-top: 0;
+        }
+        .title{
+            text-align:center;
+        }
+         table {
+            font-size: 10px;
+        }
+      .company-logo {
+        max-width: 200px; /* Ajusta el ancho según tus necesidades */
+        display: block;
+        margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p class="date">{{ fecha|date }}</p>
+        <img class="company-logo" src="{% static 'img/company_imagen.jpg' %}" alt="Logo de la empresa">
+        <div id="contact-info">
+            <p>Teléfono: {{ company.mobile }}</p>
+             <p>{{ company.address }}</p>
+        </div>
+        <br>
+        <h2 class="title">Reporte de Personal {{ title }}</h2>
+        <div id="employee-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha de Contratación</th>
+                        <th>No.</th>
+                        <th>Nombre</th>
+                        <th>Cedula</th>
+                        <th>Departamento</th>
+                        <th>Puesto</th>
+                        <th>Horario</th>
+                        <th>Salario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {% for empleado in empleados %}
+                <tr>
+                    <td>{{ empleado.hiring_date_format }}</td>
+                    <td>{{ empleado.codigo }}</td>
+                    <td>{{ empleado.get_full_name }}</td>
+                    <td>{{ empleado.person.cedula }}</td>
+                    <td>{{ empleado.department.name }}</td>
+                    <td>{{ empleado.position.name }}</td>
+                    <td>{{ empleado.turn.name }}</td>
+                    <td>{{ empleado.salary }}</td>
+                </tr>
+            {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

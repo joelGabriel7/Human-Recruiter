@@ -6,15 +6,22 @@ import datetime
 from django.http import HttpResponse
 
 
-def report_vacations():
-    vacations = Vacations.objects.all()
+def report():
+    empleados = Employee.objects.filter()
     company = Company.objects.first()
     current_day = datetime.date.today()
-    template = get_template("pdf_vacations.html")
-    context = {'fecha': current_day, "vacations": vacations, 'compañia': company}
+    template = get_template("pdf_report_employee.html")
+    context = {
+        'empleados': empleados,
+        'company': company,
+        'fecha': current_day,
+
+    }
     html_template = template.render(context)
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="Solicitud_de_Vacaciones.pdf"'
-    HTML(string=html_template).write_pdf(response)
-    return response
-report_vacations()
+    # response = HttpResponse(content_type='application/pdf')
+    # response['Content-Disposition'] = 'attachment; filename="Reporte Personal.pdf"'
+    HTML(string=html_template).write_pdf('Reporte Personal.pdf')
+    # return response
+
+
+report()
