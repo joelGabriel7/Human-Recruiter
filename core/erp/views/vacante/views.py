@@ -1,20 +1,19 @@
+import json
+from datetime import date
+from decimal import Decimal
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
-from django.conf import settings
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+
 from core.erp.forms import *
-from core.erp.models import *
 from core.erp.mixins import *
-import json
-from decimal import Decimal
-from datetime import date
+from core.erp.models import *
+
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -23,7 +22,9 @@ class CustomJSONEncoder(json.JSONEncoder):
         if isinstance(obj, date):
             return obj.strftime('%Y-%m-%d')
         return super().default(obj)
-class VacantsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListView):
+
+
+class VacantsListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView):
     model = Vacants
     template_name = 'vacante/list.html'
     permission_required = 'view_vacants'
@@ -75,7 +76,7 @@ class VacantsListView(LoginRequiredMixin,ValidatePermissionRequiredMixin,ListVie
         return context
 
 
-class VacantsCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,CreateView):
+class VacantsCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
     model = Vacants
     form_class = VacantsForm
     template_name = 'vacante/create.html'
@@ -106,7 +107,7 @@ class VacantsCreateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Creat
         return context
 
 
-class VacantsUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,UpdateView):
+class VacantsUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, UpdateView):
     model = Vacants
     form_class = VacantsForm
     template_name = 'vacante/create.html'
@@ -138,10 +139,11 @@ class VacantsUpdateView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Updat
         return context
 
 
-class VacantsDeleteView(LoginRequiredMixin,ValidatePermissionRequiredMixin,DeleteView):
+class VacantsDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):
     model = Vacants
     template_name = 'vacante/delete.html'
     permission_required = 'delete_vacants'
+
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().dispatch(request, *args, **kwargs)
@@ -161,5 +163,3 @@ class VacantsDeleteView(LoginRequiredMixin,ValidatePermissionRequiredMixin,Delet
         context['list_url'] = reverse_lazy('erp:vacante_list')
         context['create_url'] = reverse_lazy('erp:vacante_create')
         return context
-
-
