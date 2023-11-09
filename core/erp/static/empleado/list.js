@@ -101,6 +101,7 @@ $(function () {
                     buttons += '<a href="#' + row.id + '/" type="button" rel="deactive" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a>';
                     buttons += '&nbsp;';
                     buttons += '<a href="/erp/empleados/edit/' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
+                    buttons += '<a href="/erp/empleados/report/' + row.id + '/" class="btn btn-info btn-xs btn-flat" target="_blank"><i class="fas fa-file-pdf"></i></a> ';
                     return buttons;
                 }
             },

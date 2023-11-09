@@ -5,11 +5,12 @@ from datetime import date
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Q, Value
 from django.db.models.functions import Concat
+from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, View
 from weasyprint import HTML
 
 from core.erp.forms import *
@@ -75,7 +76,7 @@ class EmpleadoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
                             'department__name': employee.department.name,
                             'position__name': employee.position.name,
                             'turn__name': employee.turn.name,
-                            'salary': float(employee.salary),
+                            'salary': employee.format_salary_as_dominican_currency(),
                             'estado': employee.estado,
                         }
                         for employee in page
@@ -177,6 +178,32 @@ class EmpleadoUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Up
         context['list_url'] = reverse_lazy('erp:empleados_list')
         context['create_url'] = reverse_lazy('erp:empleados_create')
         return context
+
+
+class EmpleadoInformeView(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            employee = Employee.objects.get(pk=self.kwargs['pk'])
+            start_turn = datetime.combine(datetime.now(), employee.turn.start_turn)
+            end_turn = datetime.combine(datetime.now(), employee.turn.end_turn)
+            shift_duration = end_turn - start_turn
+            total_hours = int(shift_duration.total_seconds() * 5 / 3600)
+            template = get_template("empleado/report-empleado.html")
+            context = {
+                'employee': employee,
+                "company" : Company.objects.first(),
+                "current_day" : datetime.today(),
+                'total_hours':total_hours
+            }
+            html_template = template.render(context)
+            # Crear un flujo de bytes para el archivo PDF
+            pdf_file = HTML(string=html_template,base_url=request.build_absolute_uri()).write_pdf()
+            response = HttpResponse(pdf_file, content_type='application/pdf')
+            # response['Content-Disposition'] = 'attachment; filename="Informe_personal_de_empleado.pdf"'
+            return response
+        except Exception as e:
+            print(e)
+        return HttpResponseRedirect(reverse_lazy('erp:empleados_list'))
 
 
 def generar_informe_empleados(request):

@@ -79,15 +79,19 @@
         display: block;
         margin: 0 auto;
         }
+      .contact-info {
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <p class="date">{{ fecha|date }}</p>
         <img class="company-logo" src="{% static 'img/company_imagen.jpg' %}" alt="Logo de la empresa">
-        <div id="contact-info">
-            <p>Teléfono: {{ company.mobile }}</p>
-             <p>{{ company.address }}</p>
+        <div class="contact-info">
+              <p>{{ compañia.address }}</p>
+               <p>Teléfono: {{ compañia.mobile }}</p>
         </div>
         <br>
         <h2 class="title">Reporte de Personal {{ title }}</h2>

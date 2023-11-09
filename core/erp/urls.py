@@ -59,7 +59,8 @@ urlpatterns = [
     path('empleados/add/', EmpleadoCreateView.as_view(), name='empleados_create'),
     path('empleados/edit/<int:pk>/', EmpleadoUpdateView.as_view(), name='empleados_update'),
     path('generar_informe_empleados/', generar_informe_empleados, name='generar_informe_empleados'),
-  
+    path('empleados/report/<int:pk>/', EmpleadoInformeView.as_view(), name='reporte_empleado'),
+
 
     # Asistencia
     path('asistencia/list/', AssistanceListView.as_view(), name='asistencia_list'),

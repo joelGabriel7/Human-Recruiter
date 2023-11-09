@@ -267,9 +267,15 @@ class Employee(models.Model):
         return self.assistancedetail_set.filter(assistance__date_joined__year=year,
                                                 assistance__date_joined__month=month, state=True).count()
 
+    def format_salary_as_dominican_currency(self):
+        salary_str = f'{self.salary:,.2f}'
+        # salary_str = salary_str.replace(",", "x").replace(".", ",").replace("x", ".")
+        return salary_str
+
     def toJSON(self):
         item = model_to_dict(self)
         item['person'] = self.person.toJSON()
+        item['fullname'] = self.get_full_name()
         item['estado'] = {'id': self.estado, 'name': self.estado}
         item['department'] = self.department.toJSON()
         item['position'] = self.position.toJSON()
@@ -277,7 +283,6 @@ class Employee(models.Model):
         item['turn'] = self.turn.toJSON()
         return item
 
-    # self.firstname + ' ' + self.lastname
     class Meta:
         verbose_name = 'Empleado'
         verbose_name_plural = 'Empleados'
@@ -399,14 +404,18 @@ class SalaryDetail(models.Model):
     def format_decimal(self, valor):
         return '{:,}'.format(round(valor)).replace(',', '.')
 
+    def format_salary_as_dominican_currency(self, valor):
+        salary_str = f'{valor:,.2f}'
+        return salary_str
+
     def get_income_format(self):
-        return self.format_decimal(self.income)
+        return self.format_salary_as_dominican_currency(self.income)
 
     def get_expenses_format(self):
-        return self.format_decimal(self.expenses)
+        return self.format_salary_as_dominican_currency(self.expenses)
 
     def get_total_amount_format(self):
-        return f'{self.format_decimal(self.total_amount)}'
+        return f'{self.format_salary_as_dominican_currency(self.total_amount)}'
 
     def toJSON(self):
         item = model_to_dict(self)
@@ -436,11 +445,16 @@ class SalaryHeadings(models.Model):
             return self.cant
         return ' '
 
-    def format_decimal(self, valor):
-        return '{:,}'.format(round(valor)).replace(',', '.')
+    # def format_decimal(self, valor):
+    #     return '{:,}'.format(round(valor)).replace(',', '.')
+
+    @staticmethod
+    def format_salary_as_dominican_currency(valor):
+        salary_str = f'{valor:,.2f}'
+        return salary_str
 
     def get_valor_format(self):
-        return self.format_decimal(self.valor)
+        return self.format_salary_as_dominican_currency(self.valor)
 
     def toJSON(self):
         item = model_to_dict(self, exclude=['salary'])
