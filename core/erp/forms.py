@@ -608,3 +608,85 @@ class VacationsForm(ModelForm):
             data['error'] = str(e)
         return data
 
+
+
+class ApplicationForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        selected_vacant_id = kwargs.pop('selected_vacant_id', None)
+        super().__init__(*args, **kwargs)
+
+        if selected_vacant_id is not None:
+            self.fields['selected_vacant_id'] = IntegerField(widget=HiddenInput(), initial=int(selected_vacant_id))
+
+        for form in self.visible_fields():
+            form.field.widget.attrs["class"] = 'form-control'
+            form.field.widget.attrs["autocomplete"] = 'off'
+
+        self.fields['firstname'].widget.attrs['autofocus'] = True
+    class Meta:
+        model = Candidatos
+        fields = ['cedula', 'firstname', 'lastname', 'birthdate', 'gender', 'phone', 'email', 'address']
+        widgets = {
+            'firstname': TextInput(
+                attrs={
+                    'placeholder': 'Escriba su nombre',
+                }
+            ),
+
+            'cedula': TextInput(
+                attrs={
+                    'placeholder': 'Escriba su cedula'
+                }
+            ),
+            'lastname': TextInput(
+                attrs={
+                    'placeholder': 'Escriba su apellido',
+                }
+            ),
+            'birthdate': DateInput(
+                format='%Y-%m-%d',
+                attrs={
+                    # 'class': 'form-control',
+                    # 'value': datetime.datetime.now().strftime('%Y-%m-%d'),
+                    'autocomplete': 'off',
+                    'class': ' input-group timepicker-input',
+                    'id': 'birthdate',
+                    'data-target': '#birthdate',
+                    'data-toggle': 'datetimepicker'
+
+                }
+            ),
+            'gender': Select(
+                attrs={
+                    'class': 'select2',
+                    'style': 'width: 100%'
+                }
+            ),
+            'phone': TextInput(
+                attrs={
+                    'placeholder': 'Escriba su número telefonico'
+                }
+            ),
+            'email': EmailInput(
+                attrs={
+                    'placeholder': 'Escriba su email'
+                }
+            ),
+            'address': TextInput(
+                attrs={
+                    'placeholder': 'Escriba su direccion'
+                }
+            )
+        }
+
+
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        vacante_id = self.cleaned_data['selected_vacant_id']
+        instance.vacante = Vacants.objects.get(pk=vacante_id)
+        if commit:
+            instance.save()
+            Selection.objects.create(person=instance, vacants=instance.vacante)
+        return instance

@@ -54,11 +54,11 @@
 </head>
 <body>
 <div class="container">
-    <p class="date-right">{{ fecha }}</p>
+    <p class="date-right">{{ fecha|date }}</p>
     <img class="company-logo" src="{% static 'img/company_imagen.jpg' %}" alt="Logo de la empresa">
     <div class="contact-info">
         <p>{{ compañia.address }}</p>
-        <p>Teléfono: {{ compañia.mobile }}</p>
+        <p>{{ compañia.mobile }}</p>
     </div>
 </div>
 <h2 style="text-align: center;">Detalles de la Solicitud</h2>

@@ -2,13 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Informe de Empleados</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
-         body {
+        body {
             font-family: 'Montserrat', sans-serif;
-
             margin: 0;
             padding: 0;
             display: flex;
@@ -23,17 +20,6 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0px 0px 10px 0px #000;
-        }
-
-        #header {
-            text-align: center;
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        #contact-info {
-            text-align: center;
-            margin-top: 10px;
         }
 
         #contact-info p {
@@ -60,10 +46,6 @@
             color: #fff;
         }*/
 
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
         .date {
             text-align: right;
             margin-top: 0;
@@ -71,27 +53,31 @@
         .title{
             text-align:center;
         }
-         table {
+        table {
             font-size: 10px;
         }
-      .company-logo {
-        max-width: 200px; /* Ajusta el ancho según tus necesidades */
-        display: block;
-        margin: 0 auto;
+        .company-logo {
+            max-width: 200px; /* Ajusta el ancho según tus necesidades */
+            display: block;
+            margin: 0 auto;
         }
-      .contact-info {
+        .contact-info {
             text-align: center;
         }
 
     </style>
+    <meta charset="UTF-8">
+    <title>Informe de Empleados</title>
 </head>
 <body>
     <div class="container">
         <p class="date">{{ fecha|date }}</p>
-        <img class="company-logo" src="{% static 'img/company_imagen.jpg' %}" alt="Logo de la empresa">
+{#        <img class="company-logo" src="{% static 'img/company_imagen.jpg' %}" alt="Logo de la empresa">#}
+    <img class="company-logo" src="{{ company.image.url }}" alt="Logo de la empresa">
+
         <div class="contact-info">
-              <p>{{ compañia.address }}</p>
-               <p>Teléfono: {{ compañia.mobile }}</p>
+              <p>{{ company.address }}</p>
+               <p>{{ company.mobile }}</p>
         </div>
         <br>
         <h2 class="title">Reporte de Personal {{ title }}</h2>
@@ -103,7 +89,6 @@
                         <th>No.</th>
                         <th>Nombre</th>
                         <th>Cedula</th>
-                        <th>Departamento</th>
                         <th>Puesto</th>
                         <th>Horario</th>
                         <th>Salario</th>
@@ -116,15 +101,16 @@
                     <td>{{ empleado.codigo }}</td>
                     <td>{{ empleado.get_full_name }}</td>
                     <td>{{ empleado.person.cedula }}</td>
-                    <td>{{ empleado.department.name }}</td>
                     <td>{{ empleado.position.name }}</td>
                     <td>{{ empleado.turn.name }}</td>
-                    <td>{{ empleado.salary }}</td>
+                    <td>{{ empleado.format_salary_as_dominican_currency }}</td>
                 </tr>
             {% endfor %}
                 </tbody>
             </table>
         </div>
+        <hr>
+        <p>Total de empleados {{ title }}: <strong>{{ total_empleado }}</strong></p>
     </div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 from config.wsgi import *
 from django.contrib.auth.models import Group, Permission
-
+from django.contrib.auth import get_user_model
 from datetime import time
 from datetime import date
 from django.utils.crypto import get_random_string
@@ -8,23 +8,11 @@ from core.erp.models import *
 from core.user.models import User
 from faker import Faker
 
+
 group = Group.objects.create(name='Administrador')
 group.permissions.set(Permission.objects.all())
 group.save()
 
-user = User()
-user.id = 1
-user.first_name = 'Joel Gabriel'
-user.last_name = 'German Valdez'
-user.username = 'JoelG'
-user.email = 'joelgerman08@gmail.com'
-user.is_active = True
-user.is_superuser = True
-user.is_staff = True
-user.set_password('german2023')
-user.save()
-user.groups.add(group)
-print(f'Bienvenido {user.first_name}')
 
 
 # Agregar datos en el modelo Candidatos
@@ -51,7 +39,7 @@ def crear_candidatos(num_registros):
 
 
 if __name__ == "__main__":
-    num_registros = 10
+    num_registros = 20
     crear_candidatos(num_registros)
     print(f"Se han creado {num_registros} registros en el modelo Candidatos.")
 
@@ -158,7 +146,7 @@ for _ in range(10):
     max_salary = round(min_salary + random.uniform(100, 500), 2)
     Vacants.objects.create(
         posicion=position,
-        description=description,
+        description=positions,
         min_salary=min_salary,
         max_salary=max_salary
     )
@@ -179,7 +167,7 @@ departments = Departments.objects.all()
 positions = EmployeePositions.objects.all()
 turns = EmployeeTurn.objects.all()
 
-for _ in range(10):
+for _ in range(20):
     person = random.choice(candidates)
     department = random.choice(departments)
     position = random.choice(positions)
@@ -187,44 +175,55 @@ for _ in range(10):
     salary = round(random.uniform(1000, 5000), 2)
     estado = random.choice(['Contratado', 'Despedido', 'Vacaciones', 'Licencia'])
     hiring_date = date(random.randint(2000, 2022), random.randint(1, 12), random.randint(1, 28))
-    Employee.objects.create(
-        person=person,
-        department=department,
-        position=position,
-        turn=turn,
-        salary=salary,
-        estado=estado,
-        hiring_date=hiring_date
-    )
+    if not Employee.objects.filter(person=person).exists():
+        Employee.objects.create(
+            person=person,
+            department=department,
+            position=position,
+            turn=turn,
+            salary=salary,
+            estado=estado,
+            hiring_date=hiring_date
+        )
 print('Guardados')
 
-user = User()
-user.id = 1
-user.employee = 1
-user.username = 'JoelG'
-user.email = 'joelgerman08@gmail.com'
-user.is_active = True
-user.is_superuser = True
-user.is_staff = True
-user.set_password('german2023')
-user.save()
-user.groups.add(group)
-print(f'Bienvenido {user.username}')
+User = get_user_model()
+def create_users_from_employees():
+    employees = Employee.objects.all()
+    group_id = 1
+    group = Group.objects.get(id=group_id)
 
-Headings.objects.create(name='SALARIO', type='remuneracion', order=1, has_quantity=True)
-Headings.objects.create(name='REEMBOLSO', type='remuneracion', order=2, has_quantity=False)
-Headings.objects.create(name='MOVILIZACION', type='remuneracion', order=3, has_quantity=False)
-Headings.objects.create(name='DECIMO TERCERO MENSUAL', type='remuneracion', order=4, has_quantity=False)
-Headings.objects.create(name='DECIMO CUARTO MENSUAL', type='remuneracion', order=5, has_quantity=False)
-Headings.objects.create(name='BONIFICACION', type='remuneracion', order=6, has_quantity=False)
+    for employee in employees:
+        if not User.objects.filter(username=employee.get_full_name()).exists():
+            user = User.objects.create_user(
+                username=employee.person.cedula,
+                password=employee.person.cedula,
+                employee=employee,
+            )
+            user.groups.set([group])
+            print(f'Se creó el usuario para {employee.get_full_name()}')
+        else:
+            print(f'El usuario para {employee.get_full_name()} ya existe')
+if __name__ == "__main__":
+    create_users_from_employees()
+    print('User created')
 
-Headings.objects.create(name='PRESTAMO A LA EMPRESA', type='descuentos', order=1, has_quantity=False)
-Headings.objects.create(name='PRESTAMO HIPOTECARIO', type='descuentos', order=2, has_quantity=False)
-Headings.objects.create(name='PRESTAMO QUIROGRAFARIO', type='descuentos', order=3, has_quantity=False)
-Headings.objects.create(name='OTROS DESCUENTOS', type='descuentos', order=4, has_quantity=False)
-Headings.objects.create(name='PRESTAMO BANCO', type='descuentos', order=5, has_quantity=False)
-Headings.objects.create(name='CREDITO DEVIES', type='descuentos', order=6, has_quantity=False)
-Headings.objects.create(name='EXTENSION DE SALUD', type='descuentos', order=7, has_quantity=False)
+# Remuneraciones
+Headings.objects.create(name='Salario', type='remuneracion', order=1, has_quantity=True)
+Headings.objects.create(name='Reembolso', type='remuneracion', order=2, has_quantity=False)
+Headings.objects.create(name='Movilizacion', type='remuneracion', order=3, has_quantity=False)
+Headings.objects.create(name='Decimo Tercero Mensual', type='remuneracion', order=4, has_quantity=False)
+Headings.objects.create(name='Decimo Cuarto Mensual', type='remuneracion', order=5, has_quantity=False)
+Headings.objects.create(name='Bonificacion', type='remuneracion', order=6, has_quantity=False)
+
+# Descuentos
+Headings.objects.create(name='Prestamo a la Empresa', type='descuentos', order=1, has_quantity=False)
+Headings.objects.create(name='Prestamo Hipotecario', type='descuentos', order=2, has_quantity=False)
+Headings.objects.create(name='Prestamo Quirografario', type='descuentos', order=3, has_quantity=False)
+Headings.objects.create(name='Otros Descuentos', type='descuentos', order=4, has_quantity=False)
+Headings.objects.create(name='Prestamo Banco', type='descuentos', order=5, has_quantity=False)
+Headings.objects.create(name='Extension de Salud', type='descuentos', order=6, has_quantity=False)
+
 current_date = datetime.datetime.now().date()
 number_list = [0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1]
 
@@ -236,7 +235,7 @@ for day in range(1, 30):
     assistance.day = day
     assistance.date_joined = date_joined
     assistance.save()
-    for employee in Employee.objects.filter(person__isnull=False):
+    for employee in Employee.objects.filter(estado='Contratado'):
         detail = AssistanceDetail()
         detail.assistance_id = assistance.id
         detail.employee = employee

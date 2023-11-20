@@ -153,10 +153,8 @@ class EmployeePositions(models.Model):
 class Vacants(models.Model):
     posicion = models.ForeignKey(EmployeePositions, on_delete=models.CASCADE, verbose_name='Posiciones')
     description = models.CharField(max_length=512, null=True, blank=True)
-    min_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,
-                                     verbose_name='Mínimo salario')
-    max_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,
-                                     verbose_name='Máximo salario')
+    min_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True, verbose_name='Mínimo salario')
+    max_salary = models.DecimalField(default=0.00, max_digits=8, decimal_places=2, null=True, blank=True,verbose_name='Máximo salario')
 
     def __str__(self):
         return self.posicion.name
@@ -184,8 +182,6 @@ class Selection(models.Model):
     def __str__(self):
         return f'{self.person.firstname} {self.person.lastname}'
 
-    # def __str__(self):
-    #     return f'{person.firstname} {self.lastname}'
     def get_full_name(self):
         return f'{self.person.firstname} {self.person.lastname}'
 
@@ -202,7 +198,7 @@ class Selection(models.Model):
     class Meta:
         verbose_name = 'Seleccion'
         verbose_name_plural = 'Selecciones'
-        # ordering = [id]
+
 
 
 class EmployeeTurn(models.Model):
@@ -227,8 +223,6 @@ class EmployeeTurn(models.Model):
 
         return item
 
-        # item['end_turn'] = item['end_turn'].strftime('%H:%M:%S')
-
     class Meta:
         verbose_name = 'Turno'
         verbose_name_plural = 'Turnos'
@@ -246,7 +240,7 @@ class Employee(models.Model):
     )
 
     codigo = models.CharField(max_length=64, default=generate_employee_code, verbose_name='Codigo Empleado')
-    person = models.ForeignKey(Candidatos, on_delete=models.PROTECT, verbose_name='Empleado')
+    person = models.OneToOneField(Candidatos, on_delete=models.PROTECT, verbose_name='Empleado')
     department = models.ForeignKey(Departments, on_delete=models.CASCADE, verbose_name='Departamento')
     position = models.ForeignKey(EmployeePositions, on_delete=models.CASCADE, verbose_name='Posición')
     turn = models.ForeignKey(EmployeeTurn, on_delete=models.CASCADE, verbose_name='Turno')
@@ -312,10 +306,8 @@ def send_hiring_notification(employee):
 def email_hiring(sender, instance, created, **kwargs):
     if created:
         send_hiring_notification(instance)
-        print('Mensaje enviado')
     if instance.estado == 'Contratado':
         send_hiring_notification(instance)
-        print('Mensaje enviado X2')
 
 
 post_save.connect(email_hiring, sender=Employee)

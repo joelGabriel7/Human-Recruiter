@@ -25,7 +25,7 @@ class User(AbstractUser):
         item['date_joined'] = self.date_joined.strftime('%Y-%m-%d')
         item['image'] = self.get_image()
         item['groups'] = [{'id': g.id, 'name': g.name} for g in self.groups.all()]
-        item['full_name'] = self.get_full_name()
+        item['full_name'] = self.employee.get_full_name()
 
         if self.employee:
             item['employee__firstname'] = self.employee.person.firstname

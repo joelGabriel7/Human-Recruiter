@@ -43,7 +43,6 @@ class EmpleadoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
             action = request.POST['action']
             if action == 'searchdata':
                 search_value = request.POST.get('search[value]', '')
-
                 employees = Employee.objects.annotate(
                     full_name=Concat('person__firstname', Value(' '), 'person__lastname')
                 ).filter(
@@ -210,18 +209,21 @@ def generar_informe_empleados(request):
     company = Company.objects.first()
     current_day = datetime.today()
     estado = request.GET.get('estado')
+    total_empleado = Employee.objects.filter(estado=estado).count()
+
     if estado:
-        empleados = Employee.objects.filter(estado=estado)
+        empleados = Employee.objects.filter(estado=estado).order_by('person__employee')
     else:
         empleados = Employee.objects.all()
     context = {
         'empleados': empleados,
         'company': company,
         'fecha': current_day,
-        'title': estado
+        'title': estado,
+        "total_empleado":total_empleado
     }
     html_string = render_to_string('pdf_report_employee.html', context)
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename=informe_empleados.pdf'
+    response['Content-Disposition'] = f'inline; filename=informe_empleados_{estado}.pdf'
     HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(response)
     return response

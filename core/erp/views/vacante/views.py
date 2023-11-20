@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import *
 
 from core.erp.forms import *
 from core.erp.mixins import *
@@ -92,7 +92,6 @@ class VacantsCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Cre
             if action == 'add':
                 form = self.get_form()
                 data = form.save()
-
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data)
@@ -163,3 +162,45 @@ class VacantsDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Del
         context['list_url'] = reverse_lazy('erp:vacante_list')
         context['create_url'] = reverse_lazy('erp:vacante_create')
         return context
+
+
+class ApplyVacants(LoginRequiredMixin, CreateView):
+    model = Candidatos
+    template_name = 'vacante/apply_form.html'
+    form_class = ApplicationForm
+    success_url = reverse_lazy('erp:vacante_list')
+
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['selected_vacant_id'] = self.kwargs['vacant_id']
+        return kwargs
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'apply':
+                form = self.get_form()
+                if form.is_valid():
+                    form.save()
+                else:
+                    print(form.errors)
+                    data['error'] = 'Formulario no válido.'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
+
+
+
+
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context['title'] = 'Formalario de aplicación'
+            context['action'] = 'apply'
+            context['selected_vacant_id'] = int(self.kwargs['vacant_id'])
+            context['list_url'] = self.success_url
+            return context
+
+

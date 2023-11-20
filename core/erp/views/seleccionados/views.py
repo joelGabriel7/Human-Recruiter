@@ -111,8 +111,9 @@ class SelectCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Crea
         return reverse_lazy('erp:select_list')
 
     def post(self, request, *args, **kwargs):
+        action = request.POST['action']
         form = self.get_form()
-        if form.is_valid():
+        if  action =='add':
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
@@ -121,6 +122,7 @@ class SelectCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Crea
         context = super().get_context_data(**kwargs)
         context['title'] = 'Crear Seleccionado'
         context['entity'] = 'Seleccionado'
+        context['action'] = 'add'
         context['list_url'] = reverse_lazy('erp:select_list')
         return context
 
