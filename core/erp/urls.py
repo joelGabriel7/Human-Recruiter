@@ -46,7 +46,8 @@ urlpatterns = [
     path('vacante/add/', VacantsCreateView.as_view(), name='vacante_create'),
     path('vacante/edit/<int:pk>/', VacantsUpdateView.as_view(), name='vacante_update'),
     path('vacante/delete/<int:pk>/', VacantsDeleteView.as_view(), name='vacante_delete'),
-    path('vacante/apply/<int:vacant_id>/', ApplyVacants.as_view(), name='aplicacion vacante'),
+    path('vacante/apply/<int:vacant_id>/', ApplyVacants.as_view(), name='vacante_apply'),
+    path('vacante/apply/form/',  page_thanks, name='page_thanks'),
     # path('vacante/apply/<int:vacant_id>/', VacantsDeleteView.as_view(), name='vacante_delete'),
 
 

@@ -218,6 +218,7 @@ $(function () {
         useCurrent: false,
         locale: 'es',
         date: new Date(),
+        minDate: new Date(),
     });
 
     input_year_month.on('change.datetimepicker', function (e) {

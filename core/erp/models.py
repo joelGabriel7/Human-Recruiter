@@ -228,7 +228,6 @@ class EmployeeTurn(models.Model):
         verbose_name_plural = 'Turnos'
         # ordering = [id]
 
-    #
 
 
 class Employee(models.Model):

@@ -123,7 +123,7 @@ $(function () {
         theme: 'bootstrap4',
         language: "es"
     });
-
+salary.list();
     $('.btnSearch').on('click', function () {
         salary.list();
     });
@@ -159,7 +159,7 @@ $(function () {
                         targets: [0],
                         class: 'text-left',
                         render: function (data, type, row) {
-                            return data.toUpperCase();
+                            return data;
                         }
                     },
                     {

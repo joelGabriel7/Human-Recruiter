@@ -86,8 +86,8 @@ class SelectListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Templa
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Lista de Aplicantes'
-        context['entity'] = 'Aplicantes'
+        context['title'] = 'Lista de Candidato'
+        context['entity'] = 'Candidato'
         context['list_url'] = reverse_lazy('erp:select_list')
         context['create_url'] = reverse_lazy('erp:select_create')
         context['form'] = SelectionForm()
@@ -120,8 +120,8 @@ class SelectCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Crea
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Crear Seleccionado'
-        context['entity'] = 'Seleccionado'
+        context['title'] = 'Crear Candidato'
+        context['entity'] = 'Candidatos'
         context['action'] = 'add'
         context['list_url'] = reverse_lazy('erp:select_list')
         return context
@@ -151,8 +151,8 @@ class SelectUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Edita a un seleccionado'
-        context['entity'] = 'Seleccionados'
+        context['title'] = 'Edita a un Candidato'
+        context['entity'] = 'Candidato'
         context['action'] = 'edit'
         context['list_url'] = reverse_lazy('erp:select_list')
         context['create_url'] = reverse_lazy('erp:select_create')
@@ -177,7 +177,7 @@ class SelectDeleteView(DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Elimina a un seleccionado'
-        context['entity'] = 'Seleccionado'
+        context['title'] = 'Elimina a un Candidato'
+        context['entity'] = 'Candidato'
         context['list_url'] = reverse_lazy('erp:select_list')
         return context

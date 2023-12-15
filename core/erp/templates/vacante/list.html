@@ -1,9 +1,7 @@
 {% extends 'list.html' %}
 {% load static %}
 {% block head_list %}
-
     <script src="{% static 'vacantes/list.js' %}"></script>
-{#    <script src="{% static 'departaments/list.js' %}"></script>#}
 {% endblock %}
 
 {% block columns %}
@@ -28,4 +26,25 @@
     <a href="{{ list_url }}" class="btn btn-success btn-flat">
         <i class="fas fa-sync"></i>  Actualizar
     </a>
+{% endblock %}
+
+{% block javascript %}
+	 <div class="modal fade" id="ModalShareForm" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog  modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold">
+                        <i class="fas fa-share"></i> Compartir el formulario
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                <a href="{{ form_url }}" target="_blank">{{ form_url }} </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
