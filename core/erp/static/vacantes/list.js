@@ -50,7 +50,8 @@ $(function () {
                 render: function (data, type, row) {
                     var buttons = '<a href="/erp/vacante/edit/' + row.id + '/" class="btn btn-success btn-xs btn-flat"><i class="fas fa-edit"></i></a> ';
                     buttons += '<a href="/erp/vacante/delete/' + row.id + '/" type="button" class="btn btn-danger btn-xs btn-flat"><i class="fas fa-trash-alt"></i></a> ';
-                    buttons += '<a href="/erp/vacante/apply/' + row.id + '/" type="button" class="btn btn-primary btn-xs btn-flat"><i class="fas fa-circle-check"></i></a>';
+                    buttons += '<a href="/erp/vacante/apply/' + row.id + '/" type="button" target="_blank"  rel="apply" class="btn btn-primary btn-xs btn-flat "><i class="fas fa-circle-check"></i></a>';
+                    // buttons += '<a href="/erp/vacante/apply/' + row.id + '/" type="button" class="btn btn-primary btn-xs btn-flat share-form"><i class="fas fa-circle-check"></i></a>';
                     return buttons;
                 }
             },
@@ -59,4 +60,14 @@ $(function () {
 
         }
     });
+
+ $('#data tbody').on('click', 'a[rel="apply"]', function () {
+     $("#ModalShareForm").modal('show');
+})
 });
+
+//ModalShareForm
+
+$('#data tbody').on('click', 'a[rel="apply"]', function () {
+     $("#ModalShareForm").modal('show');
+})

@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
@@ -41,7 +42,6 @@ class VacantsListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListV
             if action == 'searchdata':
                 queryset = Vacants.objects.all().order_by('id')
                 search_value = request.POST.get('search[value]', '')
-
                 if search_value:
                     queryset = queryset.filter(
                         Q(posicion__name__contains=search_value) |
@@ -53,7 +53,6 @@ class VacantsListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListV
                 paginator = Paginator(queryset, request.POST.get('length', 10))
                 page_number = int(request.POST.get('start', 0)) // int(request.POST.get('length', 10)) + 1
                 page = paginator.get_page(page_number)
-
                 data = {
                     'data': [item.toJSON() for item in page],
                     'recordsTotal': queryset.count(),
@@ -69,6 +68,8 @@ class VacantsListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListV
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        url = settings.DOMAIN if not settings.DEBUG else self.request.META['HTTP_HOST']
+        form_url = f'http://{url}/erp/vacante/apply/{1}/'
         context['title'] = 'Listados de Vacantes'
         context['create_url'] = reverse_lazy('erp:vacante_create')
         context['list_url'] = reverse_lazy('erp:vacante_list')
@@ -164,11 +165,11 @@ class VacantsDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Del
         return context
 
 
-class ApplyVacants(LoginRequiredMixin, CreateView):
+class ApplyVacants(CreateView):
     model = Candidatos
     template_name = 'vacante/apply_form.html'
     form_class = ApplicationForm
-    success_url = reverse_lazy('erp:vacante_list')
+    success_url = reverse_lazy('erp:page_thanks')
 
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -177,6 +178,7 @@ class ApplyVacants(LoginRequiredMixin, CreateView):
         kwargs = super().get_form_kwargs()
         kwargs['selected_vacant_id'] = self.kwargs['vacant_id']
         return kwargs
+
     def post(self, request, *args, **kwargs):
         data = {}
         try:
@@ -185,6 +187,7 @@ class ApplyVacants(LoginRequiredMixin, CreateView):
                 form = self.get_form()
                 if form.is_valid():
                     form.save()
+                    return  redirect('erp:page_thanks')
                 else:
                     print(form.errors)
                     data['error'] = 'Formulario no válido.'
@@ -192,15 +195,13 @@ class ApplyVacants(LoginRequiredMixin, CreateView):
             data['error'] = str(e)
         return JsonResponse(data)
 
-
-
-
     def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context['title'] = 'Formalario de aplicación'
-            context['action'] = 'apply'
-            context['selected_vacant_id'] = int(self.kwargs['vacant_id'])
-            context['list_url'] = self.success_url
-            return context
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'apply'
+        context['selected_vacant_id'] = int(self.kwargs['vacant_id'])
+        context['list_url'] = self.success_url
+        return context
 
 
+def page_thanks(request):
+    return render(request, 'thanks_page.html')

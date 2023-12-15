@@ -95,3 +95,7 @@ header .btn-actions a:hover svg{
 .aside-menu ul li a.active svg{
 	fill: #58E37B ;
 }
+
+.text-center{
+	text-align: center;
+}
