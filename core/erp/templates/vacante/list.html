@@ -4,6 +4,8 @@
     <script src="{% static 'vacantes/list.js' %}"></script>
 {% endblock %}
 
+
+
 {% block columns %}
     <tr>
         <th scope="col" style="width: 10%;">Nro</th>
@@ -21,18 +23,18 @@
 
 {% block buttons_list %}
     <a href="{{ create_url }}" class="btn btn-primary btn-flat btnTest">
-        <i class="fas fa-plus"></i>  Crea una Vacante
+        <i class="fas fa-plus"></i> Crea una Vacante
     </a>
     <a href="{{ list_url }}" class="btn btn-success btn-flat">
-        <i class="fas fa-sync"></i>  Actualizar
+        <i class="fas fa-sync"></i> Actualizar
     </a>
 {% endblock %}
 
 {% block javascript %}
-	 <div class="modal fade" id="ModalShareForm" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog  modal-md modal-dialog-centered" role="document">
+    <div class="modal fade" id="ModalShareForm" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title font-weight-bold">
                         <i class="fas fa-share"></i> Compartir el formulario
                     </h5>
@@ -41,10 +43,45 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                <a href="{{ form_url }}" target="_blank">{{ form_url }} </a>
+                    <!-- Agrega estos botones a tu modal -->
+                    <button type="button" class="btn btn-primary" id="openLink">Ir al Formulario</button>
+                    <button type="button" class="btn btn-success" id="copyLink">Copiar enlace</button>
+
+                    <!-- Asegúrate de tener un elemento con el id "formLink" que contenga el enlace -->
+                    <div id="linkContent">
+                        <a href="#" id="formLink" target="_blank"></a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
+
+
+    <script>
+
+      $(document).on('click', '[data-toggle="modal"]', function () {
+        let path = $(this).attr('href');
+        let url = window.location.origin + path; // Obtén la URL completa
+        $('#formLink').attr('href', url);
+        $('#ModalShareForm').modal('show');
+    });
+
+    $('#openLink').on('click', function () {
+        let url = $('#formLink').attr('href');
+        window.open(url, '_blank');
+    });
+
+    $('#copyLink').on('click', async function () {
+        let url = $('#formLink').attr('href');
+
+        try {
+            await navigator.clipboard.writeText(url);
+             Swal.fire('Copiado', 'Enlace copiado al portapapeles.', 'success')
+        } catch (err) {
+            Swal.fire('Error', 'Hubo un problema al intentar copiar el enlace.', 'error');
+        }
+    });
+    </script>
 
 {% endblock %}
