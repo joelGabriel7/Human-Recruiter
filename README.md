@@ -1,91 +1,104 @@
-
 # Human-Recruiter
 
-## Human Recruiter es un sistema de gestion de recursos humanos que cuenta con varias funcionalidades
-### Funcionamientos
+**Human-Recruiter** es un sistema de gestión de recursos humanos que ofrece una amplia gama de funcionalidades para optimizar el manejo de empleados, reclutadores y seguridad.
 
-* Recursos Humanos
-* Reclutadores
-* Seguridad
-  
-## Recursos Humanos 
-### modulos:
-  * Gestion de empleados
-  * Asistencias
-  * Departamentos
-  * Puesto de trabajo
-  * Horarios
-  * Items de descuentos
-  * Los salarios o nomina.
+## Funcionalidades
 
-## Reclutadores 
-### modulos:
- * Gestion de vacantes
- * Gestion de personas
- * Gestion de candidatos que esta ultima esta relacionada con la de vacantes y personas, cabe mencionar que personas esta relacionada con empleados, es decir para crear un empleado primero debe estar en personas.
+### Recursos Humanos
+- **Gestión de empleados**
+- **Asistencias**
+- **Departamentos**
+- **Puestos de trabajo**
+- **Horarios**
+- **Items de descuentos**
+- **Salarios o nómina**
 
-## Seguridad
-### modulos:
-* Gestion de usuarios lo que signifca, lo usuarios que tendran acceso al sistema,
-* Control de acceso , este se encargaran de registrar todos los dispositivos que ingresan al sistemas
-  
-## funcionamientos Extras 
-* Editar perfil de usuario
-* Editar contraseña,
-* Entidad compañia donde la compañia o empresa que adquiera el sisteam podra editar su propia informacion
+### Reclutadores
+- **Gestión de vacantes**
+- **Gestión de personas**: Relacionado con la gestión de candidatos y empleados. Para crear un empleado, primero debe estar registrado en el módulo de personas.
+- **Gestión de candidatos**: Integrado con vacantes y personas.
 
-# Arquitectura del proyecto
-La arquitectura usada para ese proyecto es la basica que utiliza django que es MVT lo que significa Model View Template!
+### Seguridad
+- **Gestión de usuarios**: Controla los usuarios que tendrán acceso al sistema.
+- **Control de acceso**: Registra todos los dispositivos que ingresan al sistema.
 
-# Tecnologias
+### Funcionalidades Extras
+- **Editar perfil de usuario**
+- **Cambiar contraseña**
+- **Entidad compañía**: Permite que la empresa editora pueda modificar su propia información.
 
-* Django
-* HTML
-* CSS
-* JS
-* JQUERY
+## Arquitectura del Proyecto
 
-# Plugins
+El proyecto sigue la arquitectura MVT (Model-View-Template) de Django, proporcionando una estructura organizada para el desarrollo.
 
-* Datatable
-* Select2
-* SweetAlert
-* Jquery Confirm
-* AdminLTE3
+## Tecnologías
 
-# Bases de datos
-## Es compatible con las siguientes Bases de datos
+- **Django**
+- **HTML**
+- **CSS**
+- **JavaScript**
+- **jQuery**
 
-* PostgreSQL
-* MySQL
-  
-# Guia de Instalación
+## Plugins
 
-##### 1) Descomprimir el proyecto en una carpeta de tu sistema operativo
+- **Datatable**
+- **Select2**
+- **SweetAlert**
+- **jQuery Confirm**
+- **AdminLTE3**
 
-##### 2) Crear un entorno virtual para posteriormente instalar las librerias del proyecto
+## Bases de Datos
 
-Para windows:
+El proyecto usa **SQLite** por defecto. Para usar otras bases de datos como **PostgreSQL** o **MySQL**, realiza los siguientes pasos:
 
-```bash
-python3 -m venv venv 
-```
-##### 3) Activar el entorno virtual de nuestro proyecto
+1. **Configura la base de datos**: Modifica `db.py` en la carpeta de configuración.
+2. **Actualiza el archivo de configuración**: Cambia `sqlite` por la base de datos que elijas en el archivo `settings.py`.
+3. **Llena los datos necesarios** para tu nueva base de datos.
+4. **Aplique las migraciones correspondientes y cree un superusuario**
 
-Para windows:
+## Instalación y Configuración
 
-```bash
-cd venv\Scripts\activate.bat 
-```
+Siga estos pasos para configurar el proyecto en su entorno local:
 
-##### 4) Instalar todas las librerias del proyecto que se encuentran en el archivo de requirements.txt
+1. **Clonar o Descargar el repositorio**:
+   ```
+   git clone [URL del repositorio]
+   cd [nombre del directorio]
+   ```
 
-```bash
-pip install -r requirements.txt
-```
+2. **Crear y activar un entorno virtual**:
+   ```
+   python -m venv venv
+   source venv/bin/activate  
+   # En Windows para activar `venv\Scripts\activate`
+   ```
 
-##### 5) Iniciar el servidor del proyecto
+3. **Instalar las dependencias**:
+   ```
+   pip install -r requirements.txt
+   ```
 
-```bash
-python manage.py runserver 
-```
+4. **Configurar la base de datos**:
+   - Por defecto, el proyecto está configurado para usar SQLite. 
+   - Si desea usar PostgreSQL o MySQL debera realizar los siguientes pasos:
+
+    1. **Configura la base de datos**: Modifica `db.py` en la carpeta de configuración.
+    2. **Actualiza el archivo de configuración**: Cambia `sqlite` por la base de datos que elijas en el archivo `settings.py`.
+    3. **Llena los datos necesarios** para tu nueva base de datos.
+    
+
+5. **Crear y aplicar las migraciones**:
+   ```
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
+
+6. **Crear un superusuario** (opcional, pero recomendado para acceder al panel de administración):
+   ```
+   python manage.py createsuperuser
+   ```
+
+7. **Ejecutar el servidor de desarrollo**:
+   ```
+   python manage.py runserver
+   ```

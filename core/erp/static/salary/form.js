@@ -27,7 +27,7 @@ let salary = {
                     tblHeadings = $('#tblHeadings').DataTable({
                         autoWidth: false,
                         destroy: true,
-                        paging:false,
+                        paging: false,
                         data: request.detail,
                         columns: request.columns,
                         columnDefs: [
@@ -111,7 +111,7 @@ let salary = {
         let total_assets = 0.00;
         let total_discounts = 0.00;
         let total_charge;
-         console.log("Valores iniciales:");
+        console.log("Valores iniciales:");
         console.log("total_discounts:", total_discounts);
         console.log("total_assets:", total_assets);
         $.each(headings, function (index, value) {
