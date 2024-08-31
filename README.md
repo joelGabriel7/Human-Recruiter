@@ -93,10 +93,16 @@ Siga estos pasos para configurar el proyecto en su entorno local:
    python manage.py migrate
    ```
 
-6. **Crear un superusuario** (opcional, pero recomendado para acceder al panel de administración):
-   ```
-   python manage.py createsuperuser
-   ```
+6.**Configura el superusuario automáticamente:**
+
+    Hemos creado un script que automatiza la creación de un superusuario y la asignación de permisos. Ejecuta el siguiente comando para configurar el usuario administrador:
+
+    ```bash
+         python  user_init.py
+    ```
+
+    Este comando creará un usuario con el nombre de usuario `root` y la contraseña `root`!
+
 
 7. **Ejecutar el servidor de desarrollo**:
    ```
